@@ -1,5 +1,6 @@
 package com.example.demo;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
@@ -11,6 +12,7 @@ import com.vaadin.flow.component.textfield.TextField;
 
 
 @Route("")
+@RouteAlias("exerciseEdit")
 public class ExerciseEditor extends VerticalLayout{
     private String[] exampleMetrics = {"Pace", "Distance", "Elevation"};
     public ExerciseEditor(){
@@ -41,6 +43,10 @@ public class ExerciseEditor extends VerticalLayout{
         metrics.setItems(exampleMetrics);//put array of objects (Strings in this case) into combobox
         Button editMetric = new Button("Edit Metric");//declare button
         Button newMetric = new Button("New Metric");//declare another button
+        newMetric.addClickListener(e ->//set up button as a link to metric editor...
+        newMetric.getUI().ifPresent(ui ->
+           ui.navigate("metricEdit"))
+        );
         metricLayout.setAlignItems(Alignment.END);//align buttons to bottom of layout
         metricLayout.add(metrics,editMetric,newMetric);//add combobox and buttons to layout
         add(metricLayout);//add layout to screen
