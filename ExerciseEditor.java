@@ -29,7 +29,7 @@ public class ExerciseEditor extends VerticalLayout{
         add(nameField);
     }
     private void setupMetricInput(){
-        HorizontalLayout metricLayout = new HorizontalLayout();
+        HorizontalLayout metricLayout = new HorizontalLayout();//declare layout
             /*
             Example code for putting real objects in combobox (ie performance metric):
 
@@ -37,21 +37,21 @@ public class ExerciseEditor extends VerticalLayout{
             comboBox.setItems(SomeDatabaseClass.getMetrics());
             comboBox.setItemLabelGenerator(Metric::getName);
             add(comboBox);*/
-        ComboBox<String> metrics = new ComboBox<>("Performance Metric:");
-        metrics.setItems(exampleMetrics);
-        Button editMetric = new Button("Edit Metric");
-        Button newMetric = new Button("New Metric");
-        metricLayout.setAlignItems(Alignment.END);
-        metricLayout.add(metrics,editMetric,newMetric);
-        add(metricLayout);
+        ComboBox<String> metrics = new ComboBox<>("Performance Metric:");//declare combobox
+        metrics.setItems(exampleMetrics);//put array of objects (Strings in this case) into combobox
+        Button editMetric = new Button("Edit Metric");//declare button
+        Button newMetric = new Button("New Metric");//declare another button
+        metricLayout.setAlignItems(Alignment.END);//align buttons to bottom of layout
+        metricLayout.add(metrics,editMetric,newMetric);//add combobox and buttons to layout
+        add(metricLayout);//add layout to screen
     }
     private void setupExitButtons(){
-        HorizontalLayout lastRow = new HorizontalLayout();
-        Button submit = new Button("Submit");
+        HorizontalLayout lastRow = new HorizontalLayout();//declare layout
+        Button submit = new Button("Submit");//declaring buttons...
         Button cancel = new Button("Cancel");
         Button delete = new Button("Delete");
-        lastRow.add(submit,cancel,delete);
-        add(lastRow);
+        lastRow.add(submit,cancel,delete);//add all the buttons to layout
+        add(lastRow);//add layout
 
     }
 }
