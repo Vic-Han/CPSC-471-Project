@@ -11,7 +11,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
 @Route("")
-@RouteAlias("ProfScreen")
+@RouteAlias("profScreen")
 public class ProfileScreen extends VerticalLayout {
     private String[] exampleGender = {"Male", "Female", "Other"};
     private String[] profileType = {"Trainer", "Athlete"};
