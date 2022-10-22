@@ -10,7 +10,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
 @Route("")
-@RouteAlias("s1")
+@RouteAlias("one")
 public class s1 extends VerticalLayout{
     public s1(){
         setupTitle();
