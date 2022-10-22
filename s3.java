@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -10,25 +9,19 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
 @Route("")
-@RouteAlias("one")
-public class s1 extends VerticalLayout{
-    public s1(){
-        setupTitle();
-        setupVariableEditor();
+@RouteAlias("three")
+public class s3 extends VerticalLayout{
+    public s3(){
+        setupNutrientEditor();
         setupButtons();
     }
 
-    private void setupTitle(){
-        H1 title = new H1("Variable Editor");
-        add(title);
-    }
-
     
-    private void setupVariableEditor(){
+    private void setupNutrientEditor(){
         RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
         radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        radioGroup.setLabel("Choose a variable to edit");
-        radioGroup.setItems("Food", "Nutrient", "Weight", "Exercise Peformance");
+        radioGroup.setLabel("Choose a nutrient");
+        radioGroup.setItems("Protein", "Carbs", "Fat", "Calories");
         add(radioGroup);
     }
 

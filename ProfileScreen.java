@@ -41,12 +41,11 @@ public class ProfileScreen extends VerticalLayout {
     }
 
     private void date(){
-    DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
-    singleFormatI18n.setDateFormat("yyyy-MM-dd");
-
-    DatePicker singleFormatDatePicker = new DatePicker("Date of Birth:");
-    singleFormatDatePicker.setI18n(singleFormatI18n);
-    add(singleFormatDatePicker);
+        DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
+        singleFormatI18n.setDateFormat("yyyy-MM-dd");
+        DatePicker singleFormatDatePicker = new DatePicker("Date of Birth:");
+        singleFormatDatePicker.setI18n(singleFormatI18n);
+        add(singleFormatDatePicker);
 
     }
     private void setupGenderInput(){
