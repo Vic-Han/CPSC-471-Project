@@ -15,10 +15,13 @@ import com.vaadin.flow.component.textfield.TextField;
 @RouteAlias("exerciseEdit")
 public class ExerciseEditor extends VerticalLayout{
     private String[] exampleMetrics = {"Pace", "Distance", "Elevation"};
+    private VerticalLayout metricUIList;
     public ExerciseEditor(){
         setupTitle();
         setupNameInput();
-        setupMetricInput();
+        setupMetricList();
+        addMetricInput();
+        setupAddMetric();
         setupExitButtons();
     }
 
@@ -30,14 +33,18 @@ public class ExerciseEditor extends VerticalLayout{
         TextField nameField = new TextField("Name:");
         add(nameField);
     }
-    private void setupMetricInput(){
+    private void setupMetricList(){
+        metricUIList = new VerticalLayout();
+        add(metricUIList);
+    }
+    private void addMetricInput(){
         HorizontalLayout metricLayout = new HorizontalLayout();//declare layout
             /*
             Example code for putting real objects in combobox (ie performance metric):
 
             ComboBox<Metric> comboBox = new ComboBox<>("Performance Metric");
             comboBox.setItems(SomeDatabaseClass.getMetrics());
-            comboBox.setItemLabelGenerator(Metric::getName);
+            comboBox.setItemLabelGenerator(Metric::getName());
             add(comboBox);*/
         ComboBox<String> metrics = new ComboBox<>("Performance Metric:");//declare combobox
         metrics.setItems(exampleMetrics);//put array of objects (Strings in this case) into combobox
@@ -49,7 +56,14 @@ public class ExerciseEditor extends VerticalLayout{
         );
         metricLayout.setAlignItems(Alignment.END);//align buttons to bottom of layout
         metricLayout.add(metrics,editMetric,newMetric);//add combobox and buttons to layout
-        add(metricLayout);//add layout to screen
+        metricUIList.add(metricLayout);//add layout to metricUIList
+    }
+    private void setupAddMetric(){
+        Button addMetric = new Button("Add metric");
+        addMetric.addClickListener(e ->
+            addMetricInput()
+        );
+        add(addMetric);
     }
     private void setupExitButtons(){
         HorizontalLayout lastRow = new HorizontalLayout();//declare layout
