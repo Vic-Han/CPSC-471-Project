@@ -1,3 +1,6 @@
+
+package com.example.demo;
+
 public class Food{
   private String name;
   private int User_ID;
