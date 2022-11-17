@@ -16,9 +16,9 @@ public class MetricEditor extends Dialog{
 
     //Note: This class does not actually save metric to an exercise.
     //if constructed with arraylist of metrics, it will add itself to that arraylist upon submission
-
-    ExerciseEditor parentEditor;
-    protected List<Exercise> exerciseList;
+    private int userID;
+    private Metric metric;
+    private Editor<Metric> parent;
 
     //component declarations:
     private VerticalLayout layout = new VerticalLayout();
@@ -67,7 +67,6 @@ public class MetricEditor extends Dialog{
     private void setupExitButtons(){
         HorizontalLayout lastRow = new HorizontalLayout();//declare layout
         Button submit = new Button("Submit", e-> submit());//declaring buttons...
-        Button cancel = new Button("Cancel", e-> close());
         Button delete = new Button("Delete");
         lastRow.add(submit,cancel,delete);//add all the buttons to layout
         layout.add(lastRow);//add layout
@@ -75,14 +74,13 @@ public class MetricEditor extends Dialog{
     private void addLayout(){
         add(layout);
     }
-    protected void submit(){
-        Metric thisMetric = new Metric(nameField.getValue(), unitField.getValue());//construct metric object
-        //metric should add itself to database upon construction
-        if (parentEditor.getList() != null){// if called from exercise editor
-            parentEditor.getList().add(thisMetric);//add to list from exercise editor
-            parentEditor.refreshGrid();
-        }
-        //otherwise, if called from main screen
-        close();
+    private void submit(){
+        metric.update();
+        parent.addobject(metric);
+        done();
+    }
+    private void delete()
+    {
+
     }
 }

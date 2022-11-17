@@ -17,10 +17,16 @@ import com.vaadin.flow.component.textfield.TextField;
 
 
 
-@Route("exerciseEdit")
-public class ExerciseEditor implements Editor{
+@Route("")
+public class ExerciseEditor implements Editor<Metric>{
     protected List<Metric> metricList;
-    private Grid<Metric> metricGrid;//declared here so all functions have access
+    private Grid<Metric> metricGrid;
+    private Editor<Exercise> parent;
+    Exercise exercise;
+    int userID;
+    String exerciseName;
+    
+    /* 
     public ExerciseEditor(){
         setupTitle();
         setupNameInput();
@@ -99,5 +105,6 @@ public class ExerciseEditor implements Editor{
         add(lastRow);//add layout
 
     }
+    */
 }
 

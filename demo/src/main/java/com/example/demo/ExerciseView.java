@@ -6,9 +6,10 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-public class ExerciseView implements Editor{
+public class ExerciseView implements Editor<Exercise>{
     private HorizontalLayout editOrCreate;
     private VerticalLayout editorLayout;
+    private int userID;
     private Exercise[] exampleArr = {new Exercise("Ruck"), new Exercise("Squats"), new Exercise("Bench Press")};
     public ExerciseView(){
         setupEOCLayout();

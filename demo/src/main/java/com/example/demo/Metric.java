@@ -14,14 +14,15 @@ public class Metric {
         return UserID;
     }
     public void setName(String name){
-        metName = name;
+       
         //SQL
+        metName = name;
     }
     //public String getUnit()
     //{
     //}
     public void setUnit()
     {
-        
+
     }
 }
