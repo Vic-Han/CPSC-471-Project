@@ -15,8 +15,13 @@ public class Metric {
     }
     public void setName(String name){
         metName = name;
+        //SQL
     }
     //public String getUnit()
     //{
     //}
+    public void setUnit()
+    {
+        
+    }
 }
