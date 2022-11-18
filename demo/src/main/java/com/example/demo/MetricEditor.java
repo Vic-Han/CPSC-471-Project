@@ -34,9 +34,13 @@ public class MetricEditor extends Dialog{
         setupExitButtons();
         addLayout();//add all the contents to dialog
     }
-    public MetricEditor(ExerciseEditor parent){
+    public MetricEditor(ExerciseEditor parentEditor, Metric metric){
         this();
-        parentEditor= parent;
+        parent = parentEditor;
+        userID = parent.getUserID();
+    }
+    public MetricEditor(ExerciseEditor parentEditor){
+        this(parentEditor,Metric(parentEditor.getUserID(),""));
     }
     private void setupTitle(){
         H1 title = new H1("Metric Editor");
