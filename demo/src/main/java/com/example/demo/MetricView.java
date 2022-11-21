@@ -33,17 +33,18 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
 
         //make edit exercise button...
         editMet.addClickListener(clickEvent -> {
-            MetricEditor editor = new MetricEditor(this,chooseMet.getItemAt(chooseMet.getSelectedIndex()));
+            MetricEditor editor = new MetricEditor(this,chooseMet.getValue());
             editor.open();
         });
         add(editMet);
-        delMet.addClickListener(clickEvent -> {deleteObject(chooseMet.getItemAt(chooseMet.getSelectedIndex()))});
+        delMet.addClickListener(clickEvent -> {deleteObject(chooseMet.getValue());});
     }
     @Override
     public void fetchData(){
+        /* 
         PreparedStatement query1 = con.prepareStatement("SELECT Metric_Name FROM  PERFORMAMCE_METRIC WHERE Owner_ID = ? ;");
         query1.setInt(1,userID);
-
+        */
 
 
         chooseMet.setItems(metricList);
@@ -55,7 +56,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     }
     @Override
     public void deleteObject(Metric metric) {
-        
+        /*
         metricList.remove(metric);
         PreparedStatement query1 = c.PrepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
         query1.setInt(1,userID);
@@ -67,7 +68,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         query3.setInt(1,userID);
         query3.setString(2,metric.getName());
         // run queries
-
+        */
 
         fetchData();
     }

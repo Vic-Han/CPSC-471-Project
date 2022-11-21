@@ -7,7 +7,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
+import java.sql.*;
 public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private HorizontalLayout editOrCreate;
     private VerticalLayout editorLayout;
@@ -29,6 +29,7 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         newEx.addClickListener(clickEvent -> {
             ExerciseEditor editor = new ExerciseEditor(this);
             //editor.open();
+            // route alias?
         });
         editOrCreate.add(newEx);
         //make combobox...
@@ -37,12 +38,12 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         editOrCreate.add(chooseEx);
         //make edit exercise button...
         editEx.addClickListener(clickEvent -> {
-            ExerciseEditor editor = new ExerciseEditor(this,chooseEx.getItemAt(chooseEx.getSelectedIndex()));
+            ExerciseEditor editor = new ExerciseEditor(this,chooseEx.getValue());
         });
         editOrCreate.add(editEx);
 
         delEx.addClickListener(ClickEvent -> {
-            deleteObject(chooseEx.getItemAt(chooseEx.getSelectedIndex()));
+            deleteObject(chooseEx.getValue());
         });
         editOrCreate.add(delEx);
         add(editOrCreate);
@@ -64,8 +65,8 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     */
     @Override
     public void fetchData(){
-        PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE Owner_ID = ? ;");
-        query1.setInt(1,userID);
+        //PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE Owner_ID = ? ;");
+        //query1.setInt(1,userID);
 
 
 
@@ -73,12 +74,12 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     }
     @Override
     public void addObject(Exercise exercise) {
-        metricList.add(metric);
+        exerciseList.add(exercise);
         fetchData();
     }
     @Override
     public void deleteObject(Exercise exercise) {
-        
+        /*
         exerciseList.remove(exercise);
         PreparedStatement query1 = c.prepareStatement("DELETE FROM EXERCISE WHERE User_ID = ? AND NAME = ? ;");
         query1.setInt(1,userID);
@@ -90,7 +91,7 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         query3.setInt(1,userID);
         query3.setString(2,exercise.getName());
         // run queries
-
+        */
 
         fetchData();
         return;
