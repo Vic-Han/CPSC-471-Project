@@ -17,7 +17,7 @@ public class Demo {
     public void initializeConnection(){
         
         try{
-            dbConnect = DriverManager.getConnection("jdbc:mysql://localhost/food_inventory", "user1", "ensf");
+            dbConnect = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
             
         } catch (SQLException e) {
             e.printStackTrace();
