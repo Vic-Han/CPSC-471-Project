@@ -41,7 +41,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     }
     @Override
     public void fetchData(){
-        PreparedStatement query1 = con.prepareStatement("SELECT Metric_Name FROM  PERFORMAMCE_METRIC WHERE Owner_ID = ? ;");
+        PreparedStatement query1 = com.prepareStatement("SELECT Metric_Name FROM  PERFORMAMCE_METRIC WHERE Owner_ID = ? ;");
         query1.setInt(1,userID);
 
 
@@ -57,7 +57,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     public void deleteObject(Metric metric) {
         
         metricList.remove(metric);
-        PreparedStatement query1 = c.PrepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
+        PreparedStatement query1 = c.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
         query1.setInt(1,userID);
         query1.setString(2,metric.getName());
         PreparedStatement query2 = c.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
