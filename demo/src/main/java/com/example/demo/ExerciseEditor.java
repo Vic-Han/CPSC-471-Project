@@ -3,6 +3,7 @@ import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
@@ -18,21 +19,26 @@ import com.vaadin.flow.component.textfield.TextField;
 
 
 @Route("")
-public class ExerciseEditor implements Editor<Metric>{
+public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     protected List<Metric> metricList;
     private Grid<Metric> metricGrid;
     private Editor<Exercise> parent;
     Exercise exercise;
     int userID;
-    String exerciseName;
+    TextField nameFeild = new TextField("Exercise Name");
     
-    /* 
-    public ExerciseEditor(){
+    public Exercise(Editor<Exercise> parentEditor, Exericse ex)
+    {
+        parent = parentEditor;
+        exercise = ex;
         setupTitle();
         setupNameInput();
         setupMetricGrid();
         setupAddMetric();
         setupExitButtons();
+    }
+    public ExerciseEditor(Editor<Exercise> parentEditor){
+        this(parentEditor,new Exercise(parentEditor.getUserID()));
     }
     public List<Metric> getList(){
         return metricList;

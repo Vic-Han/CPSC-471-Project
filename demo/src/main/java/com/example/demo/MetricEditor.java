@@ -16,6 +16,7 @@ public class MetricEditor extends Dialog{
 
     //Note: This class does not actually save metric to an exercise.
     //if constructed with arraylist of metrics, it will add itself to that arraylist upon submission
+    // keys and backend classes
     private int userID;
     private Metric metric;
     private Editor<Metric> parent;
@@ -30,17 +31,17 @@ public class MetricEditor extends Dialog{
         setupTitle();//all of these add to the verticalLayout, not the actual dialog
         setupNameInput();
         setupUnitInput();
-        setupExView();
+        //setupExView();
         setupExitButtons();
         addLayout();//add all the contents to dialog
     }
-    public MetricEditor(ExerciseEditor parentEditor, Metric metric){
+    public MetricEditor(Editor<Metric> parentEditor, Metric metric){
         this();
         parent = parentEditor;
         userID = parent.getUserID();
     }
-    public MetricEditor(ExerciseEditor parentEditor){
-        this(parentEditor,Metric(parentEditor.getUserID(),""));
+    public MetricEditor(Editor<Metric> parentEditor){
+        this(parentEditor,new Metric(parentEditor.getUserID()));
     }
     private void setupTitle(){
         H1 title = new H1("Metric Editor");
@@ -55,6 +56,7 @@ public class MetricEditor extends Dialog{
         unitField = new TextField("Unit of measurement:");
         layout.add(unitField);
     }
+    /* 
     private void setupExView(){
         exerciseGrid = new Grid<>(Exercise.class, false);
         exerciseGrid.addColumn(Exercise::getName).setHeader("Linked exercises:")
@@ -67,24 +69,24 @@ public class MetricEditor extends Dialog{
         exerciseGrid.setItems(exerciseList);
         exerciseGrid.setAllRowsVisible(true);
         layout.add(exerciseGrid);
-    }
+    }*/
     private void setupExitButtons(){
         HorizontalLayout lastRow = new HorizontalLayout();//declare layout
         Button submit = new Button("Submit", e-> submit());//declaring buttons...
         Button delete = new Button("Delete");
-        lastRow.add(submit,cancel,delete);//add all the buttons to layout
+        lastRow.add(submit,delete);//add all the buttons to layout
         layout.add(lastRow);//add layout
     }
     private void addLayout(){
         add(layout);
     }
     private void submit(){
-        metric.update();
-        parent.addobject(metric);
-        done();
+        metric.update(nameField.getText(),unitField.getText());
+        parent.addObject(metric);
+        this.close();
     }
     private void delete()
     {
-
+        parent.deleteObject(metric);
     }
 }

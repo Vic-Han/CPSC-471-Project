@@ -1,48 +1,57 @@
 package com.example.demo;
-
+import java.sql.*;
 import java.rmi.server.RemoteObject;
 import java.util.ArrayList;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-
-public class MetricView implements Editor<Metric>{
-    private ArrayList<Metric> metricList = {new Metric("Pace", "mins/km"), new Metric("Distance", "km")};
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+public class MetricView extends VerticalLayout implements Editor<Metric>{
+    private ArrayList<Metric> metricList = new ArrayList<Metric>();
     private int userID;
+
+    private Button newMet = new Button("New Metric");
+    private Button editMet = new Button("Edit Metric");
+    private Button delMet = new Button("Delete Metric");
+    ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
     public MetricView(){
         setup();
     }
     private void setup(){
         //make new metric button...
-        Button newMet = new Button("New Metric");
         newMet.addClickListener(clickEvent -> {
             MetricEditor editor = new MetricEditor(this);
             editor.open();
         });
         add(newMet);
-        //make combobox...
-        ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
-        chooseMet.setItems(metricList);
-        chooseMet.setItemLabelGenerator(Metric::getName);
-        Metric selectedMetric = chooseMet.getItemAt(chooseMet.getSelectedIndex());
 
+        //make combobox...
+        fetchData();
+        chooseMet.setItemLabelGenerator(Metric::getName);
         add(chooseMet);
+
         //make edit exercise button...
-        Button editMet = new Button("Edit Metric");
         editMet.addClickListener(clickEvent -> {
-            MetricEditor editor = new ExistingMetricEditor(this,selectedMetric);
+            MetricEditor editor = new MetricEditor(this,chooseMet.getItemAt(chooseMet.getSelectedIndex()));
             editor.open();
         });
         add(editMet);
+        delMet.addClickListener(clickEvent -> {deleteObject(chooseMet.getItemAt(chooseMet.getSelectedIndex()))});
     }
-    fetchData(){
+    @Override
+    public void fetchData(){
+        PreparedStatement query1 = con.prepareStatement("SELECT Metric_Name FROM  PERFORMAMCE_METRIC WHERE Owner_ID = ? ;");
+        query1.setInt(1,userID);
 
+
+
+        chooseMet.setItems(metricList);
     }
     @Override
     public void addObject(Metric metric) {
         metricList.add(metric);
-        
+        fetchData();
     }
     @Override
     public void deleteObject(Metric metric) {
@@ -54,10 +63,13 @@ public class MetricView implements Editor<Metric>{
         PreparedStatement query2 = c.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
         query2.setInt(1,userID);
         query2.setString(2,metric.getName());
-        PreparedStatement query3 = c.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ‘MetricName’;");
-        query3.setString(1,name);
-        query3.setString(2,exName);
+        PreparedStatement query3 = c.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ?;");
+        query3.setInt(1,userID);
+        query3.setString(2,metric.getName());
         // run queries
+
+
+        fetchData();
     }
     @Override
     public int getUserID() {

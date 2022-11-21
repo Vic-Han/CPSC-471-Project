@@ -1,9 +1,17 @@
 package com.example.demo;
-
+import java.sql.*;  
 public class Exercise {
     private String exName;
     private int userID;
-    public Exercise(){}
+    public Exercise(int ID){
+        userID = ID;
+        exName = "";
+        PreparedStatement query = c.prepareStatement("INSERT INTO EXERCISE VALUES(?,?);");
+        query.setInt(1, ID);
+        query.setString(2, exName);
+        query.executeUpdate();
+
+    }
     public Exercise(String name, int ID){
         exName = name;
         userID = ID;
