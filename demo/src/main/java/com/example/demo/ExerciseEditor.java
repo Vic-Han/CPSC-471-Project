@@ -27,7 +27,7 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     int userID;
     TextField nameFeild = new TextField("Exercise Name");
     
-    public Exercise(Editor<Exercise> parentEditor, Exericse ex)
+    public ExerciseEditor(Editor<Exercise> parentEditor, Exercise ex)
     {
         parent = parentEditor;
         exercise = ex;

@@ -1,5 +1,6 @@
 package com.example.demo;
 import java.sql.*;  
+import java.util.ArrayList;
 public class Exercise {
     private String exName;
     private int userID;
@@ -36,10 +37,14 @@ public class Exercise {
     
         exName = name;
     }
-    //public ArrayList<Metric> getMetrics()
-    //{
+    public ArrayList<Metric> getMetrics()
+    {
+        PreparedStatement query1 = c.prepareStatement("SELECT Name FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_owner_ID = ? AND Exercise_name = ?");
+        query1.setInt(1,userID);
+        query1.setString(2,exName);
 
-    //}
+        return new ArrayList<Metric>();
+    }
     public void removeMetric(Metric metric)
     {
         PreparedStatement query = c.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE  Exercise_name = ? AND Metric_name = ? AND Metric_user_ID = ?; ");

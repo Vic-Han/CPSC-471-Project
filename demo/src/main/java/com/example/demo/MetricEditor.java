@@ -1,4 +1,4 @@
-//package com.example.demo;
+package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-
+import java.sql.*;
 
 public class MetricEditor extends Dialog{
 
@@ -81,7 +81,7 @@ public class MetricEditor extends Dialog{
         add(layout);
     }
     private void submit(){
-        metric.update(nameField.getText(),unitField.getText());
+        metric.update(nameField.getValue(),unitField.getValue());
         parent.addObject(metric);
         this.close();
     }
