@@ -1,7 +1,8 @@
 package com.example.demo;
 import com.vaadin.flow.router.Route;
 
-import java.sql.PreparedStatement;
+import java.net.ConnectException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     private ArrayList<Metric> exMetricList;
     private Grid<Metric> metricGrid;
     private Editor<Exercise> parent;
+    private Connection con;
     Exercise exercise;
     int userID;
     TextField nameFeild = new TextField("Exercise Name");
@@ -38,6 +40,7 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         fetchData();
         setupTitle();
         setupNameInput();
+        initConnection();
         ////setupMetricGrid();
         //setupAddMetric();
         setupExitButtons();
@@ -45,7 +48,15 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     public ExerciseEditor(Editor<Exercise> parentEditor){
         this(parentEditor,new Exercise(parentEditor.getUserID()));
     }
-    
+    public void initConnection()
+    {
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     private void setupTitle(){
         H1 title = new H1("Exercise Editor");
         add(title);
@@ -137,18 +148,39 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     public void deleteObject(Metric metric)
     {
         allMetricList.remove(metric);
-         /* 
-        PreparedStatement query1 = com.PrepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
-        query1.setInt(1,userID);
-        query1.setString(2,metric.getName());
-        PreparedStatement query2 = com.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
-        query2.setInt(1,userID);
-        query2.setString(2,metric.getName());
-        PreparedStatement query3 = com.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ?;");
-        query3.setInt(1,userID);
-        query3.setString(2,metric.getName());
-        // run queries
-        */
+        try
+        {
+            PreparedStatement query1 = con.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
+            query1.setInt(1,userID);
+            query1.setString(2,metric.getName());
+            query1.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            PreparedStatement query2 = con.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
+            query2.setInt(1,userID);
+            query2.setString(2,metric.getName());
+            query2.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            PreparedStatement query3 = con.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ?;");
+            query3.setInt(1,userID);
+            query3.setString(2,metric.getName());
+            query3.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
 
         fetchData();
     }
@@ -158,4 +190,3 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         return userID;
     }
 }
-
