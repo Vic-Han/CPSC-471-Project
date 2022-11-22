@@ -31,11 +31,11 @@ public class ExampleLayout extends VerticalLayout {
         TextField tf = new TextField("add shit");
         Button b = new Button("enter");
         b.addClickListener(clickEvent -> {
-            Exercise test = new Exercise("",1);
-            ArrayList<Metric> testList = new ArrayList<Metric>();
-            testList.add(new Metric("Distance", 1));
-            test.update("Running", testList);
-            tf.setValue("jkdh"); 
+            Exercise test = new Exercise("Biking",1);
+            ArrayList<Metric> testList = test.getMetrics();
+            testList.get(1).setUnit("km/h");
+            Metric wind = new Metric("wind",1);
+            tf.setValue(testList.get(1).getUnit());
         });
         add(tf);
         add(b);

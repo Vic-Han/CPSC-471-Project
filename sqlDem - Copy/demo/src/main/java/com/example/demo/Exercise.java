@@ -10,6 +10,7 @@ public class Exercise {
         userID = ID;
         exName = "";
         initConnection();
+        // works
         try{
             PreparedStatement query = con.prepareStatement("INSERT INTO EXERCISE VALUES(?,?);");
             query.setString(1, "");
@@ -38,7 +39,7 @@ public class Exercise {
         return exName;
     }
     public void setName(String name){
-
+        // works
         try
         {
             PreparedStatement query1 = con.prepareStatement("UPDATE EXERCISE SET Name = ? WHERE User_ID = ? AND Name = ?;");
@@ -50,7 +51,6 @@ public class Exercise {
         catch(SQLException e)
         {
             e.printStackTrace();
-            exName = "Error";
         }
         try
         {
@@ -78,9 +78,10 @@ public class Exercise {
     }
     public ArrayList<Metric> getMetrics()
     {
+        // I think it works not too many tests
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT Name FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_owner_ID = ? AND Exercise_name = ?");
+            PreparedStatement query1 = con.prepareStatement("SELECT Metric_name FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Exercise_name = ?");
             query1.setInt(1,userID);
             query1.setString(2,exName);
             rs = query1.executeQuery();
@@ -89,15 +90,27 @@ public class Exercise {
         {
             e.printStackTrace();
         }
-
-        return new ArrayList<Metric>();
+        ArrayList<Metric> metricList = new ArrayList<Metric>();
+        // works
+        try{
+            while(rs.next())
+            {
+                Metric temp = new Metric(rs.getString(1),userID);
+                metricList.add(temp);
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return metricList;
     }
     public void removeMetric(Metric metric)
     {
         
         try
         {
-            PreparedStatement query = con.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE  Exercise_name = ? AND Metric_name = ? AND Metric_user_ID = ?; ");
+            PreparedStatement query = con.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Exercise_name = ? AND Metric_name = ? AND Metric_user_ID = ?; ");
             query.setString(1, exName);
             query.setString(2, metric.getName());
             query.setInt(3,userID);
@@ -111,9 +124,10 @@ public class Exercise {
     }
     public void addMetric(Metric metric)
     {
+        // works
         try
         {
-            PreparedStatement query = con.prepareStatement("INSERT INTO METRIC_DESCIRBES_EXERCISE VALUES(?,?,?);");
+            PreparedStatement query = con.prepareStatement("INSERT INTO METRIC_DESCRIBES_EXERCISE VALUES(?,?,?);");
             query.setString(1, metric.getName());
             query.setInt(2, userID);
             query.setString(3,exName);
@@ -122,6 +136,7 @@ public class Exercise {
         catch(SQLException e)
         {
             e.printStackTrace();
+            exName ="Failed";
         }
     }
     public void update(String name,ArrayList<Metric> newMetricList)
@@ -136,7 +151,6 @@ public class Exercise {
         {
             addMetric(newMetricList.get(index));
         }
-        exName = name;
     }
     public int getID()
     {

@@ -6,7 +6,7 @@ public class Metric {
     private Connection con;
     private ResultSet rs;
     public Metric(String name, int id){
-        setName(name);
+        metName = name;
         UserID = id;
         initConnection();
     }
@@ -15,6 +15,7 @@ public class Metric {
         metName = "";
         UserID = id;
         initConnection();
+        //works
         try{
             PreparedStatement query = con.prepareStatement("INSERT INTO PERFORMANCE_METRIC VALUES(?,?,?);");
             query.setString(1, "");
@@ -44,9 +45,8 @@ public class Metric {
     }
     public void setName(String name){
        
-        
+        // works
         try{
-            //PreparedStatement query1 = con.prepareStatement("UPDATE PERFORMANCE_METRIC SET Metric_name = \"Distance\" WHERE Owner_ID = 1 AND Metric_name = \"\";");
             PreparedStatement query1 = con.prepareStatement("UPDATE PERFORMANCE_METRIC SET Metric_name = ? WHERE Owner_ID = ? AND Metric_name = ?;");
             query1.setString(1,name);
             query1.setInt(2,UserID);
@@ -56,7 +56,6 @@ public class Metric {
         catch(SQLException e)
         {
             e.printStackTrace();
-            metName = "Error";
         }
         try
         {
@@ -86,10 +85,10 @@ public class Metric {
     }
     public String getUnit()
     {
-         
+        //works 
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT units FROM PERFORMANCE_METRIC WHERE Name = ? AND Owner_ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT Units FROM PERFORMANCE_METRIC WHERE Metric_name = ? AND Owner_ID = ?;");
             query1.setString(1,metName);
             query1.setInt(2,UserID);
             rs = query1.executeQuery();
@@ -98,15 +97,17 @@ public class Metric {
         {
             e.printStackTrace();
         }
+        // works
         try
         {
+            rs.next();
             return rs.getString(1);
         }
         catch(SQLException e)
         {
             e.printStackTrace();
-            return "";
         }
+        return "Error";
     }
     public void setUnit(String unit)
     {
