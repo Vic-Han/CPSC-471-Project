@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.sql.*;
+import com.vaadin.flow.router.Route;
 public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private HorizontalLayout editOrCreate;
     private VerticalLayout editorLayout;

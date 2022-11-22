@@ -22,7 +22,7 @@ import com.vaadin.flow.component.textfield.TextField;
 
 
 
-@Route("")
+@Route("exedit")
 public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     private ArrayList<Metric> allMetricList;
     private ArrayList<Metric> exMetricList;
@@ -32,7 +32,6 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     Exercise exercise;
     int userID;
     TextField nameFeild = new TextField("Exercise Name");
-    
     public ExerciseEditor(Editor<Exercise> parentEditor, Exercise ex)
     {
         parent = parentEditor;
@@ -65,7 +64,6 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         TextField nameField = new TextField("Name:");
         add(nameField);
     }
-    
 
     private void setupMetricGrid(){
         //setup grid...

@@ -5,11 +5,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-@Route("exlay")
+@Route("")
 public class ExampleLayout extends VerticalLayout {
     private Connection dbConnect;
     public ExampleLayout(){
@@ -30,13 +31,11 @@ public class ExampleLayout extends VerticalLayout {
         TextField tf = new TextField("add shit");
         Button b = new Button("enter");
         b.addClickListener(clickEvent -> {
-            try{
-                PreparedStatement query = dbConnect.prepareStatement("INSERT INTO test_shit VALUES(?);");
-                query.setString(1, tf.getValue());
-                query.executeUpdate();
-            } catch(SQLException e){
-                e.printStackTrace();
-            }    
+            Exercise test = new Exercise("",1);
+            ArrayList<Metric> testList = new ArrayList<Metric>();
+            testList.add(new Metric("Distance", 1));
+            test.update("Running", testList);
+            tf.setValue("jkdh"); 
         });
         add(tf);
         add(b);

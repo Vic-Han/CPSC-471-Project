@@ -5,22 +5,20 @@ public class Exercise {
     private String exName;
     private int userID;
     private Connection con;
+    private ResultSet rs;
     public Exercise(int ID){
         userID = ID;
         exName = "";
         initConnection();
-        try
-        {
-        PreparedStatement query = con.prepareStatement("INSERT INTO EXERCISE VALUES(?,?);");
-        query.setInt(1, ID);
-        query.setString(2, exName);
-        query.executeUpdate();
+        try{
+            PreparedStatement query = con.prepareStatement("INSERT INTO EXERCISE VALUES(?,?);");
+            query.setString(1, "");
+            query.setInt(2, userID);
+            query.executeUpdate();
         }
-        catch(SQLException e)
-        {
+        catch (SQLException e) {
             e.printStackTrace();
-        }
-
+        }  
     }
     public Exercise(String name, int ID){
         exName = name;
@@ -40,17 +38,19 @@ public class Exercise {
         return exName;
     }
     public void setName(String name){
-        exName = name;
 
         try
         {
-            PreparedStatement query1 = con.prepareStatement("UPDATE EXERCISE SET Name = ?;");
+            PreparedStatement query1 = con.prepareStatement("UPDATE EXERCISE SET Name = ? WHERE User_ID = ? AND Name = ?;");
             query1.setString(1,name);
-            query1.executeQuery();
+            query1.setInt(2,userID);
+            query1.setString(3,exName);
+            query1.executeUpdate();
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            exName = "Error";
         }
         try
         {
@@ -83,12 +83,13 @@ public class Exercise {
             PreparedStatement query1 = con.prepareStatement("SELECT Name FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_owner_ID = ? AND Exercise_name = ?");
             query1.setInt(1,userID);
             query1.setString(2,exName);
-            query1.executeUpdate();
+            rs = query1.executeQuery();
         }
         catch(SQLException e)
         {
             e.printStackTrace();
         }
+
         return new ArrayList<Metric>();
     }
     public void removeMetric(Metric metric)
@@ -135,6 +136,7 @@ public class Exercise {
         {
             addMetric(newMetricList.get(index));
         }
+        exName = name;
     }
     public int getID()
     {
