@@ -20,7 +20,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
 
-@Route("")
+@Route("asd")
 public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private int userID;
     private Editor<ExerciseSubmission> parent;

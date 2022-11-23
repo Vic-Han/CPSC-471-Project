@@ -46,9 +46,21 @@ public class Food{
   public void setName(String name){
 
   }
-  public int getGramsPerServing()
+  public int getGramsPerServing() throws SQLException
   {
-    return 0;
+    try
+    {
+        PreparedStatement query1 = con.prepareStatement("SELECT Grams_Per_Servings FROM FOOD WHERE Name = ? AND User_ID = ?;");
+        query1.setString(1,foodName);
+        query1.setInt(2,UserID);
+        ResultSet rs = query1.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+    catch(SQLException e)
+    {
+        throw new SQLException();
+    }
   }
   public void setGramsPerServing(int grams)
   {
@@ -63,9 +75,21 @@ public class Food{
             e.printStackTrace();
         }  
    }
-  public int getmlPerServing()
+  public int getmlPerServing() throws SQLException
   {
-    return 0;
+    try
+    {
+        PreparedStatement query1 = con.prepareStatement("SELECT Milliters_Per_Serving FROM FOOD WHERE Name = ? AND User_ID = ?;");
+        query1.setString(1,foodName);
+        query1.setInt(2,UserID);
+        ResultSet rs = query1.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+    catch(SQLException e)
+    {
+        throw new SQLException();
+    }
   }
   public void setmlPerServing(int ml)
   {
@@ -80,9 +104,21 @@ public class Food{
         e.printStackTrace();
     }
   }
-  public int getCarbs()
+  public int getCarbs() throws SQLException
   {
-    return 0; 
+    try
+    {
+        PreparedStatement query1 = con.prepareStatement("SELECT Carbs FROM FOOD WHERE Name = ? AND User_ID = ?;");
+        query1.setString(1,foodName);
+        query1.setInt(2,UserID);
+        ResultSet rs = query1.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+    catch(SQLException e)
+    {
+        throw new SQLException();
+    } 
   }
   public void setCarbs(int carb)
   {
@@ -97,9 +133,21 @@ public class Food{
         e.printStackTrace();
     }
   }
-  public int getProtien()
+  public int getProtien() throws SQLException
   {
-    return 0;
+    try
+    {
+        PreparedStatement query1 = con.prepareStatement("SELECT Protein FROM FOOD WHERE Name = ? AND User_ID = ?;");
+        query1.setString(1,foodName);
+        query1.setInt(2,UserID);
+        ResultSet rs = query1.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+    catch(SQLException e)
+    {
+        throw new SQLException();
+    }
   }
   public void setProtein(int protein)
   {
@@ -114,9 +162,21 @@ public class Food{
         e.printStackTrace();
     }
   }
-  public int getFats()
+  public int getFats() throws SQLException
   {
-    return 0;
+    try
+    {
+        PreparedStatement query1 = con.prepareStatement("SELECT Fats FROM FOOD WHERE Name = ? AND User_ID = ?;");
+        query1.setString(1,foodName);
+        query1.setInt(2,UserID);
+        ResultSet rs = query1.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+    catch(SQLException e)
+    {
+        throw new SQLException();
+    }
   }
   public void setFats(int fat)
   {
@@ -133,7 +193,20 @@ public class Food{
   }
   public int getCalories() throws SQLException
   {
-    return 0;
+     //works 
+    try
+    {
+        PreparedStatement query1 = con.prepareStatement("SELECT Calories FROM FOOD WHERE Name = ? AND User_ID = ?;");
+        query1.setString(1,foodName);
+        query1.setInt(2,UserID);
+        ResultSet rs = query1.executeQuery();
+        rs.next();
+        return rs.getInt(1);
+    }
+    catch(SQLException e)
+    {
+        throw new SQLException();
+    }
   }
   public void setCalories(int calorie)
   {

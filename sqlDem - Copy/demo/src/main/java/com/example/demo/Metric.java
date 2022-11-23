@@ -4,7 +4,6 @@ public class Metric {
     private String metName;
     private int UserID;
     private Connection con;
-    private ResultSet rs;
     public Metric(String name, int id){
         metName = name;
         UserID = id;
@@ -83,7 +82,7 @@ public class Metric {
         
         metName = name;
     }
-    public String getUnit()
+    public String getUnit() throws SQLException
     {
         //works 
         try
@@ -91,23 +90,15 @@ public class Metric {
             PreparedStatement query1 = con.prepareStatement("SELECT Units FROM PERFORMANCE_METRIC WHERE Metric_name = ? AND Owner_ID = ?;");
             query1.setString(1,metName);
             query1.setInt(2,UserID);
-            rs = query1.executeQuery();
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
-        // works
-        try
-        {
+            ResultSet rs = query1.executeQuery();
             rs.next();
             return rs.getString(1);
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            throw new SQLException();
         }
-        return "Error";
+        // works
     }
     public void setUnit(String unit)
     {

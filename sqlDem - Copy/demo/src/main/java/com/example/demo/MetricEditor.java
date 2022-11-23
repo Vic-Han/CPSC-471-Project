@@ -36,10 +36,17 @@ public class MetricEditor extends Dialog{
         setupExitButtons();
         addLayout();//add all the contents to dialog
     }
-    public MetricEditor(Editor<Metric> parentEditor, Metric metric){
-        this();
+    public MetricEditor(Editor<Metric> parentEditor, Metric inputMetric){
         parent = parentEditor;
         userID = parent.getUserID();
+        metric = inputMetric;
+        setupTitle();//all of these add to the verticalLayout, not the actual dialog
+        setupNameInput();
+        setupUnitInput();
+        initConnection();
+        //setupExView();
+        setupExitButtons();
+        addLayout();//add all the contents to dialog
     }
     public MetricEditor(Editor<Metric> parentEditor){
         this(parentEditor,new Metric(parentEditor.getUserID()));
@@ -84,6 +91,7 @@ public class MetricEditor extends Dialog{
         HorizontalLayout lastRow = new HorizontalLayout();//declare layout
         Button submit = new Button("Submit", e-> submit());//declaring buttons...
         Button delete = new Button("Delete");
+        delete.addClickListener(clickEvent ->{delete();});
         lastRow.add(submit,delete);//add all the buttons to layout
         layout.add(lastRow);//add layout
     }
@@ -98,5 +106,6 @@ public class MetricEditor extends Dialog{
     private void delete()
     {
         parent.deleteObject(metric);
+        this.close();
     }
 }
