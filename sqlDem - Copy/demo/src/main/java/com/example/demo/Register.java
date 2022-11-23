@@ -24,6 +24,7 @@ public class Register extends VerticalLayout {
     private String gender;
     private boolean coach;
     private int userID;
+    private Connection con;
 
 
     public Register (){
@@ -96,13 +97,13 @@ public class Register extends VerticalLayout {
         try
         {
             PreparedStatement query = con.prepareStatement("INSERT INTO USER VALUES(?,?,?,?,?,?,?);");
-            query.setInt(1, height);
-            query.setInt(2, weight);
-            query.setString(3, fname);
-            query.setString(4, lname);
-            query.setDate(5, birthDay);
-            query.setString(6, gender);
-            query.setInt(7, userID);
+            query.setInt(1, userID);
+            query.setDate(2, birthDay);
+            query.setString(3, gender);
+            query.setString(4, fname);
+            query.setString(5, lname);
+            query.setInt(6, weight);
+            query.setInt(7, height);
             query.executeUpdate();
         }
         catch (SQLException e) {
