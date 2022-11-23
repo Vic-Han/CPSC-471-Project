@@ -7,7 +7,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class SubmitExercise implements Editor<Exercise>{
+import javax.swing.event.ChangeListener;
+
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
+
+public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private int userID;
     private Editor<ExerciseSubmission> parent;
     private ArrayList<MetricPair> metrics;
@@ -15,6 +26,12 @@ public class SubmitExercise implements Editor<Exercise>{
     private ExerciseSubmission exSubmission;
     private ArrayList<Exercise> exercises;
     private Connection con;
+
+    //front end shit..
+    ComboBox exCB = new ComboBox<>("Exercises");
+    Grid<MetricPair> grid = new Grid<>(MetricPair.class, false);
+
+
     public void initConnection()
     {
         try{
@@ -30,9 +47,25 @@ public class SubmitExercise implements Editor<Exercise>{
         metrics = new ArrayList<MetricPair>();
         exSubmission = new ExerciseSubmission();
         exercises = new ArrayList<Exercise>();
+        
+        initExList();
+ 
     }
     public SubmitExercise(Editor<ExerciseSubmission> parent, ExerciseSubmission exSubmission){
-
+        initConnection();
+        this.parent = parent;
+        metrics = new ArrayList<MetricPair>();
+        this.exSubmission = exSubmission;//set submission object
+        try{//set exercise and metrics (list of metrics and values)
+            exercise = exSubmission.getExercise();
+            metrics = exSubmission.getMetricList();
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        exercises = new ArrayList<Exercise>();
+        initExList();
+        initMetList();//initializes with data from submission
     }
     private void rewriteMetrics(){
         exSubmission.setMetricList(metrics);
@@ -40,10 +73,81 @@ public class SubmitExercise implements Editor<Exercise>{
     private void clearMetrics(){
         //clear metric layout
     }
+    private void initExList(){
+        VerticalLayout exLayout = new VerticalLayout();
+        //setup combobox
+        exCB.setItems(exercises);
+        if (exercise != null){//if existing submission, preset correct exercise
+            exCB.setValue(exercise);
+        }
+        exLayout.add(exCB);
+        //setup buttons
+        HorizontalLayout exButtons = new HorizontalLayout();
+        Button select = new Button("Select Exercise");
+        Button edit = new Button("Edit Exercise");
+        Button newEx = new Button("Create Exercise");
+        select.addClickListener(ClickEvent ->{
+            exercise = (Exercise)exCB.getValue();
+            initMetList(exercise);});
+        newEx.addClickListener(ClickEvent ->{
+            Dialog exEditor = new Dialog();
+            exEditor.add(new ExerciseEditor(this));
+            exEditor.open();});
+        edit.addClickListener(ClickEvent ->{
+            Dialog exEditor = new Dialog();
+            exEditor.add(new ExerciseEditor(this, (Exercise)exCB.getValue()));
+            exEditor.open();});
+        exButtons.add(select);
+        exButtons.add(edit);
+        exButtons.add(newEx);
+        exLayout.add(exButtons);
+
+        add(exLayout);
+    }
+    private void initMetList(Exercise ex){//initialize with selected exercise
+        //init metrics with 0 values
+        for (Metric m : ex.getMetrics()){
+            MetricPair mp = new MetricPair(m, 0);
+            metrics.add(mp);
+        }
+        
+        grid.addColumn(MetricPair::getName).setHeader("Metric:")
+        .setAutoWidth(true).setFlexGrow(1);
+        //add number fields
+        grid.addComponentColumn(m -> {
+            NumberField nf = new NumberField();
+            nf.setValue((double) m.getVal());
+            nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
+            return nf;
+        }).setWidth("70px").setFlexGrow(0);    
+        grid.setItems(metrics);
+        add(grid);
+
+        Button submitValues = new Button("Submit Values");
+        submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
+        add(submitValues);
+
+    }
+    private void initMetList(){//initialize with submission values
+        grid.addColumn(MetricPair::getName).setHeader("Metric:")
+        .setAutoWidth(true).setFlexGrow(1);
+        //add number fields
+        grid.addComponentColumn(m -> {
+            NumberField nf = new NumberField();
+            nf.setValue((double) m.getVal());
+            nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
+            return nf;
+        }).setWidth("70px").setFlexGrow(0);    
+        grid.setItems(metrics);
+        add(grid);
+
+        Button submitValues = new Button("Submit Values");
+        submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
+        add(submitValues);
+    }
     @Override
     public void addObject(Exercise exercise) {
-        exercises.add(exercise);
-        
+        exercises.add(exercise);   
     }
 
     @Override
