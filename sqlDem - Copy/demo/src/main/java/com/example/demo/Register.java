@@ -11,7 +11,10 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Route;
 
+
+@Route("reg")
 public class Register extends VerticalLayout { 
     private String[] exampleGender = {"Male", "Female", "Other"};
     private String[] profileType = {"Coach", "Athlete"};

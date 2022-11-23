@@ -77,11 +77,16 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     */
     @Override
     public void fetchData(){
+        exerciseList.clear();
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE Owner_ID = ? ;");
             query1.setInt(1,userID);
-            query1.executeUpdate();
+            ResultSet rs = query1.executeQuery();
+            while (rs.next()){
+                Exercise tmp = new Exercise(rs.getString(1), userID);
+                exerciseList.add(tmp);
+            }
         }
         catch(SQLException e)
         {

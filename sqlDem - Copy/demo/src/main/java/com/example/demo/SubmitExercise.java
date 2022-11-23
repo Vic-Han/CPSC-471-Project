@@ -3,6 +3,7 @@ package com.example.demo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -36,15 +37,21 @@ public class SubmitExercise implements Editor<Exercise>{
     private void rewriteMetrics(){
         exSubmission.setMetricList(metrics);
     }
+    private void clearMetrics(){
+        //clear metric layout
+    }
     @Override
-    public void addObject(Exercise obj) {
-        // TODO Auto-generated method stub
+    public void addObject(Exercise exercise) {
+        exercises.add(exercise);
         
     }
 
     @Override
     public void deleteObject(Exercise exercise) {
         exercises.remove(exercise);
+        if (this.exercise == exercise){
+            clearMetrics();
+        }
         try{
             PreparedStatement query1 = con.prepareStatement("DELETE FROM EXERCISE WHERE User_ID = ? AND NAME = ? ;");
             query1.setInt(1,userID);
@@ -77,22 +84,33 @@ public class SubmitExercise implements Editor<Exercise>{
         {
             e.printStackTrace();
         }
-
-        fetchData();
-        return;
         
     }
 
     @Override
     public void fetchData() {
-        // TODO Auto-generated method stub
-        
+        exercises.clear();
+        try
+        {
+            PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE Owner_ID = ? ;");
+            query1.setInt(1,userID);
+            ResultSet rs = query1.executeQuery();
+            while (rs.next()){
+                Exercise tmp = new Exercise(rs.getString(1), userID);
+                exercises.add(tmp);
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+
     }
+        
 
     @Override
     public int getUserID() {
-        // TODO Auto-generated method stub
-        return 0;
+        return userID;
     }
 
     
