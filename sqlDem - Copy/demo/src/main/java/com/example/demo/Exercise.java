@@ -5,7 +5,6 @@ public class Exercise {
     private String exName;
     private int userID;
     private Connection con;
-    private ResultSet rs;
     public Exercise(int ID){
         userID = ID;
         exName = "";
@@ -76,34 +75,29 @@ public class Exercise {
     
         exName = name;
     }
-    public ArrayList<Metric> getMetrics()
+    public ArrayList<Metric> getMetrics() throws SQLException
     {
         // I think it works not too many tests
         try
         {
+            ArrayList<Metric> metricList = new ArrayList<Metric>();
             PreparedStatement query1 = con.prepareStatement("SELECT Metric_name FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Exercise_name = ?");
             query1.setInt(1,userID);
             query1.setString(2,exName);
-            rs = query1.executeQuery();
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
-        ArrayList<Metric> metricList = new ArrayList<Metric>();
-        // works
-        try{
+            ResultSet rs = query1.executeQuery();
             while(rs.next())
             {
                 Metric temp = new Metric(rs.getString(1),userID);
                 metricList.add(temp);
             }
+            return metricList;
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            throw new SQLException("Error");
         }
-        return metricList;
+       
     }
     public void removeMetric(Metric metric)
     {
@@ -139,17 +133,24 @@ public class Exercise {
             exName ="Failed";
         }
     }
-    public void update(String name,ArrayList<Metric> newMetricList)
+    public void update(String name,ArrayList<Metric> newMetricList) throws SQLException
     {
         setName(name);
-        ArrayList<Metric> oldList = getMetrics();
-        for(int index = 0; index < oldList.size(); index++)
+        try
         {
-            removeMetric(oldList.get(index));
+            ArrayList<Metric> oldList = getMetrics();
+            for(int index = 0; index < oldList.size(); index++)
+            {
+                removeMetric(oldList.get(index));
+            }
+            for(int index = 0; index < newMetricList.size(); index++)
+            {
+                addMetric(newMetricList.get(index));
+            }
         }
-        for(int index = 0; index < newMetricList.size(); index++)
+        catch(SQLException e)
         {
-            addMetric(newMetricList.get(index));
+            throw new SQLException();
         }
     }
     public int getID()
