@@ -14,10 +14,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.router.Route;
 
+@Route("")
 public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private int userID;
     private Editor<ExerciseSubmission> parent;
@@ -28,10 +31,11 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private Connection con;
 
     //front end shit..
-    ComboBox exCB = new ComboBox<>("Exercises");
+    ComboBox<Exercise> exCB = new ComboBox<>("Choose exercise:");
+    VerticalLayout metricLayout = new VerticalLayout();
     Grid<MetricPair> grid = new Grid<>(MetricPair.class, false);
 
-
+    //ctors..
     public void initConnection()
     {
         try{
@@ -47,7 +51,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         metrics = new ArrayList<MetricPair>();
         exSubmission = new ExerciseSubmission();
         exercises = new ArrayList<Exercise>();
-        
+        initTitle();
         initExList();
  
     }
@@ -64,14 +68,30 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             e.printStackTrace();
         }
         exercises = new ArrayList<Exercise>();
+        initTitle();
         initExList();
         initMetList();//initializes with data from submission
     }
+    public SubmitExercise(){//default ctor testing only
+        initConnection();
+        metrics = new ArrayList<MetricPair>();
+        exSubmission = new ExerciseSubmission();
+        exercises = new ArrayList<Exercise>();
+        
+        initTitle();
+        initExList();
+ 
+    }
+    //methods..
     private void rewriteMetrics(){
         exSubmission.setMetricList(metrics);
     }
     private void clearMetrics(){
-        //clear metric layout
+        metricLayout = new VerticalLayout();
+    }
+    private void initTitle(){
+        H1 title = new H1("Submit An Exercise:");
+        add(title);
     }
     private void initExList(){
         VerticalLayout exLayout = new VerticalLayout();
@@ -105,27 +125,36 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         add(exLayout);
     }
     private void initMetList(Exercise ex){//initialize with selected exercise
+        clearMetrics();
         //init metrics with 0 values
-        for (Metric m : ex.getMetrics()){
-            MetricPair mp = new MetricPair(m, 0);
-            metrics.add(mp);
+        try
+        {
+            for (Metric m : ex.getMetrics()){
+                MetricPair mp = new MetricPair(m, 0);
+                metrics.add(mp);
+            }
+            
+            grid.addColumn(MetricPair::getName).setHeader("Metric:")
+            .setAutoWidth(true).setFlexGrow(1);
+            //add number fields
+            grid.addComponentColumn(m -> {
+                NumberField nf = new NumberField();
+                nf.setValue((double) m.getVal());
+                nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
+                return nf;
+            }).setWidth("70px").setFlexGrow(0);    
+            grid.setItems(metrics);
+            metricLayout.add(grid);
+    
+            Button submitValues = new Button("Submit Values");
+            submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
+            metricLayout.add(submitValues);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
         }
         
-        grid.addColumn(MetricPair::getName).setHeader("Metric:")
-        .setAutoWidth(true).setFlexGrow(1);
-        //add number fields
-        grid.addComponentColumn(m -> {
-            NumberField nf = new NumberField();
-            nf.setValue((double) m.getVal());
-            nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
-            return nf;
-        }).setWidth("70px").setFlexGrow(0);    
-        grid.setItems(metrics);
-        add(grid);
-
-        Button submitValues = new Button("Submit Values");
-        submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
-        add(submitValues);
 
     }
     private void initMetList(){//initialize with submission values
@@ -139,12 +168,13 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             return nf;
         }).setWidth("70px").setFlexGrow(0);    
         grid.setItems(metrics);
-        add(grid);
+        metricLayout.add(grid);
 
         Button submitValues = new Button("Submit Values");
         submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
-        add(submitValues);
+        metricLayout.add(submitValues);
     }
+    //inherited methods..
     @Override
     public void addObject(Exercise exercise) {
         exercises.add(exercise);   
@@ -208,7 +238,8 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         {
             e.printStackTrace();
         }
-
+        initExList();
+        clearMetrics();
     }
         
 

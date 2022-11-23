@@ -10,6 +10,9 @@ public class MetricPair {
     public Metric getMetric(){
         return metric;
     }
+    public String getName(){
+        return metric.getName();
+    }
     public int getVal(){
         return metricVal;
     }
