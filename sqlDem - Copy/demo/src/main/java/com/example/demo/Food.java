@@ -44,7 +44,16 @@ public class Food{
         return foodName;
   }
   public void setName(String name){
-
+    try{
+        PreparedStatement query = con.prepareStatement("UPDATE FOOD SET Name = ? WHERE Name = ? AND User_ID = ?;");
+        query.setString(1,name);
+        query.setString(2, foodName);
+        query.setInt(3, UserID);
+        query.executeUpdate();
+    }
+    catch (SQLException e) {
+        e.printStackTrace();
+    }
   }
   public int getGramsPerServing() throws SQLException
   {

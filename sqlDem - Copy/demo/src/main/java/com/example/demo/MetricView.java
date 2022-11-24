@@ -2,23 +2,30 @@ package com.example.demo;
 import java.sql.*;
 import java.rmi.server.RemoteObject;
 import java.util.ArrayList;
-
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+//@Route("")
 public class MetricView extends VerticalLayout implements Editor<Metric>{
     private ArrayList<Metric> metricList = new ArrayList<Metric>();
     private int userID;
-
+    private Connection con;
     private Button newMet = new Button("New Metric");
     private Button editMet = new Button("Edit Metric");
     private Button delMet = new Button("Delete Metric");
     ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
-    public MetricView(){
+    public MetricView(int ID){
         setup();
+        userID = ID;
+    }
+    public MetricView(){
+        this(1);
     }
     private void setup(){
+        initConnection();
         //make new metric button...
         newMet.addClickListener(clickEvent -> {
             MetricEditor editor = new MetricEditor(this);
@@ -30,7 +37,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         fetchData();
         chooseMet.setItemLabelGenerator(Metric::getName);
         add(chooseMet);
-
+        
         //make edit exercise button...
         editMet.addClickListener(clickEvent -> {
             MetricEditor editor = new MetricEditor(this,chooseMet.getValue());
@@ -38,16 +45,39 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         });
         add(editMet);
         delMet.addClickListener(clickEvent -> {deleteObject(chooseMet.getValue());});
+        add(delMet);
+    }
+    public void initConnection()
+    {
+         
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }   
     }
     @Override
     public void fetchData(){
-        /* 
-        PreparedStatement query1 = con.prepareStatement("SELECT Metric_Name FROM  PERFORMAMCE_METRIC WHERE Owner_ID = ? ;");
-        query1.setInt(1,userID);
-        */
+        try
+        {
 
+        
+            PreparedStatement query1 = con.prepareStatement("SELECT Metric_Name FROM PERFORMANCE_METRIC WHERE Owner_ID = ?;");
+            query1.setInt(1,userID);
+            ResultSet rs = query1.executeQuery();
+            metricList = new ArrayList<Metric>();
+            while(rs.next())
+            {
+                Metric temp = new Metric(rs.getString(1),userID);
+                metricList.add(temp);
+            }
+            chooseMet.setItems(metricList);
+        }
+        catch(SQLException e)
+        {
 
-        chooseMet.setItems(metricList);
+        }
     }
     @Override
     public void addObject(Metric metric) {
@@ -56,19 +86,26 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     }
     @Override
     public void deleteObject(Metric metric) {
-        /*
+        try{
         metricList.remove(metric);
-        PreparedStatement query1 = c.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
+        PreparedStatement query1 = con.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
         query1.setInt(1,userID);
         query1.setString(2,metric.getName());
-        PreparedStatement query2 = c.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
+        query1.executeUpdate();
+        PreparedStatement query2 = con.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
         query2.setInt(1,userID);
         query2.setString(2,metric.getName());
-        PreparedStatement query3 = c.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ?;");
+        query2.executeUpdate();
+        PreparedStatement query3 = con.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ?;");
         query3.setInt(1,userID);
         query3.setString(2,metric.getName());
+        query3.executeUpdate();
         // run queries
-        */
+        }
+        catch(SQLException e)
+        {
+
+        }
 
         fetchData();
     }
