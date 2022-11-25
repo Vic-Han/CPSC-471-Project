@@ -67,19 +67,15 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
 
     private void setupMetricGrid(){
         //setup grid...
-        try{
-            metricGrid = new Grid<>(Metric.class, false);
-            metricGrid.addColumn(Metric::getName).setHeader("Metric")
-            .setAutoWidth(true).setFlexGrow(1);
-            metricGrid.addColumn(Metric.getUnit()).setHeader("Unit")
-            .setAutoWidth(true).setFlexGrow(1);
-            fetchData();
-            metricGrid.setAllRowsVisible(true);
-        }
-        catch(SQLException e)
-        {
+        
+        metricGrid = new Grid<>(Metric.class, false);
+        metricGrid.addColumn(Metric::getName).setHeader("Metric")
+        .setAutoWidth(true).setFlexGrow(1);
+        metricGrid.addColumn(Metric::getUnit).setHeader("Unit")
+        .setAutoWidth(true).setFlexGrow(1);
+        fetchData();
+        metricGrid.setAllRowsVisible(true);
 
-        }
         //add menu options...
         metricGrid.addComponentColumn(met -> {
             MenuBar menuBar = new MenuBar();

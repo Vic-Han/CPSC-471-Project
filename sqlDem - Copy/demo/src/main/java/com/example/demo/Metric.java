@@ -82,7 +82,7 @@ public class Metric {
         
         metName = name;
     }
-    public String getUnit() throws SQLException
+    public String getUnit()
     {
         //works 
         try
@@ -96,7 +96,7 @@ public class Metric {
         }
         catch(SQLException e)
         {
-            throw new SQLException();
+            return new String("");
         }
         // works
     }
