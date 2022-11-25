@@ -18,8 +18,10 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     private Button delMet = new Button("Delete Metric");
     ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
     public MetricView(int ID){
-        setup();
         userID = ID;
+        setup();
+        
+
     }
     public MetricView(){
         this(1);
@@ -62,7 +64,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     {
         try
         {
-            PreparedStatement query = con.prepareStatement("SELECT Metric_name FROM FOOD WHERE Owner_ID = ?;");
+            PreparedStatement query = con.prepareStatement("SELECT Metric_name FROM PERFORMANCE_METRIC WHERE Owner_ID = ?;");
             query.setInt(1, userID);
             ResultSet rs = query.executeQuery();
             metricList = new ArrayList<Metric>();
@@ -76,6 +78,8 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         {
 
         }
+
+
     }
     @Override
     public void addObject(Metric metric) {
@@ -98,7 +102,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         query3.setInt(1,userID);
         query3.setString(2,metric.getName());
         query3.executeUpdate();
-        // run queries
+    
         }
         catch(SQLException e)
         {

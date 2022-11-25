@@ -1,147 +1,123 @@
 package com.example.demo;
+import java.sql.*;
+import java.rmi.server.RemoteObject;
 import java.util.ArrayList;
-
-import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import java.sql.*;
-import com.vaadin.flow.router.Route;
+@Route("ExView")
 public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
-    private HorizontalLayout editOrCreate;
-    private VerticalLayout editorLayout;
+    private ArrayList<Metric> metricList = new ArrayList<Metric>();
     private int userID;
-    private ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
     private Connection con;
-    private Button newEx = new Button("New Exercise");
-    private Button editEx = new Button("Edit Exercise");
-    private Button delEx = new Button("Delete Exercise");
-    private ComboBox<Exercise> chooseEx = new ComboBox<Exercise>("Choose exercise");
+    private Button newMet = new Button("New Metric");
+    private Button editMet = new Button("Edit Metric");
+    private Button delMet = new Button("Delete Metric");
+    ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
     public ExerciseView(int ID){
-        setupEOCLayout();
         userID = ID;
-        initConnection();
-        //setupEditorLayout();
+        setup();
+        
+
     }
-    private void setupEOCLayout(){
-        editOrCreate = new HorizontalLayout();
-        //make new exercise button...
-        newEx.addClickListener(clickEvent -> {
-            ExerciseEditor editor = new ExerciseEditor(this);
-            add(editor);
-            // route alias?
+    public ExerciseView(){
+        this(1);
+    }
+    private void setup(){
+        /* 
+        initConnection();
+        //make new metric button...
+        newMet.addClickListener(clickEvent -> {
+            MetricEditor editor = new MetricEditor(this);
+            editor.open();
         });
-        editOrCreate.add(newEx);
+        add(newMet);
+
         //make combobox...
         fetchData();
-        chooseEx.setItemLabelGenerator(Exercise::getName);
-        editOrCreate.add(chooseEx);
+        chooseMet.setItemLabelGenerator(Metric::getName);
+        add(chooseMet);
+        
         //make edit exercise button...
-        editEx.addClickListener(clickEvent -> {
-            ExerciseEditor editor = new ExerciseEditor(this,chooseEx.getValue());
-            add(editor);
+        editMet.addClickListener(clickEvent -> {
+            MetricEditor editor = new MetricEditor(this,chooseMet.getValue());
+            editor.open();
         });
-        editOrCreate.add(editEx);
-
-        delEx.addClickListener(ClickEvent -> {
-            deleteObject(chooseEx.getValue());
-        });
-        editOrCreate.add(delEx);
-        add(editOrCreate);
+        add(editMet);
+        delMet.addClickListener(clickEvent -> {deleteObject(chooseMet.getValue());});
+        add(delMet);
+        */
     }
     public void initConnection()
     {
+         
         try{
             con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
             
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }   
     }
-    /* 
-    private void setupEditorLayout(){
-        editorLayout = new VerticalLayout();
-        add(editorLayout);
-    }
-    private void refreshEditorLayout(){
-        editorLayout.removeAll();
-        editorLayout.add(new ExerciseEditor());
-    }
-    private void refreshEditorLayout(Exercise ex){
-        editorLayout.removeAll();
-        editorLayout.add(new ExerciseEditor());//should add ExistingExerciseEditor but that doesn't exist yet
-        editorLayout.add(new Paragraph("Should be editting "+ ex.getName()));
-    }
-    */
     @Override
-    public void fetchData(){
-        exerciseList.clear();
+    public void fetchData()
+    {
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE Owner_ID = ? ;");
-            query1.setInt(1,userID);
-            ResultSet rs = query1.executeQuery();
-            while (rs.next()){
-                Exercise tmp = new Exercise(rs.getString(1), userID);
-                exerciseList.add(tmp);
+            PreparedStatement query = con.prepareStatement("SELECT Metric_name FROM PERFORMANCE_METRIC WHERE Owner_ID = ?;");
+            query.setInt(1, userID);
+            ResultSet rs = query.executeQuery();
+            metricList = new ArrayList<Metric>();
+            while(rs.next())
+            {
+                metricList.add(new Metric(rs.getString(1),userID));
             }
+            chooseMet.setItems(metricList);
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+
         }
 
-        chooseEx.setItems(exerciseList);
+
     }
     @Override
-    public void addObject(Exercise exercise) {
-        exerciseList.add(exercise);
+    public void addObject(Exercise exericse) {
         fetchData();
     }
     @Override
     public void deleteObject(Exercise exercise) {
-        
-        exerciseList.remove(exercise);
+        /* 
         try{
-            PreparedStatement query1 = con.prepareStatement("DELETE FROM EXERCISE WHERE User_ID = ? AND NAME = ? ;");
-            query1.setInt(1,userID);
-            query1.setString(2,exercise.getName());
-            query1.executeUpdate();
+        metricList.remove(metric);
+        PreparedStatement query1 = con.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
+        query1.setInt(1,userID);
+        query1.setString(2,metric.getName());
+        query1.executeUpdate();
+        PreparedStatement query2 = con.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
+        query2.setInt(1,userID);
+        query2.setString(2,metric.getName());
+        query2.executeUpdate();
+        PreparedStatement query3 = con.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ?;");
+        query3.setInt(1,userID);
+        query3.setString(2,metric.getName());
+        query3.executeUpdate();
+    
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
-        }
-        try
-        {
-            PreparedStatement query2 = con.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Exercise_name = ?;");
-            query2.setInt(1,userID);
-            query2.setString(2,exercise.getName());
-            query2.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
-        try
-        {
-            PreparedStatement query3 = con.prepareStatement("DELETE FROM EXERCISE_SUBMISSION User_ID = ? AND Exercise_name = ?;");
-            query3.setInt(1,userID);
-            query3.setString(2,exercise.getName());
-            query3.executeUpdate();
-            }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
+
         }
 
         fetchData();
-        return;
+        */
     }
     @Override
     public int getUserID() {
         return userID;
     }
+
+
 }
