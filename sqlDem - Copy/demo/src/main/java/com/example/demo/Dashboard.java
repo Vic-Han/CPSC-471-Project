@@ -28,13 +28,19 @@ public class Dashboard extends VerticalLayout {
     private int userID;
     MealView meals;
     WorkoutView workouts;
-    public Dashboard(){
+    public Dashboard(int userID){
+        this.userID = userID;
         testDay = java.sql.Date.valueOf(LocalDate.now());
         setupDateLayout();
         setupHeader(LocalDate.now());
         setupWorkoutLayout(LocalDate.now());
         setupMealLayout(LocalDate.now());
     }
+
+    public Dashboard(){
+        this(1);
+    }
+
     private void setupDateLayout(){
         HorizontalLayout dateLayout = new HorizontalLayout();
         datePick = new DatePicker(LocalDate.now());

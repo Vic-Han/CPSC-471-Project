@@ -21,7 +21,8 @@ public class HomeScreen extends AppLayout{
     Tab graph;
     private VerticalLayout content;
     private int userID;
-    public HomeScreen() {
+    public HomeScreen(int userID) {
+        this.userID = userID;
         DrawerToggle toggle = new DrawerToggle();
 
         H1 title = new H1("Health Tracker");
@@ -30,11 +31,15 @@ public class HomeScreen extends AppLayout{
 
         Tabs tabs = getTabs();
         content = new VerticalLayout();
-        content.add(new Dashboard());
+        content.add(new Dashboard(userID));
         setContent(content);
 
         addToDrawer(tabs);
         addToNavbar(toggle, title);
+    }
+
+    public HomeScreen(){
+        this(1);
     }
 
     private Tabs getTabs() {
@@ -58,7 +63,7 @@ public class HomeScreen extends AppLayout{
         content.removeAll();
 
         if (tab.equals(dashboard)) {
-            content.add(new Dashboard());
+            content.add(new Dashboard(userID));
         } else if (tab.equals(profile)) {
             content.add(new Paragraph("This is the profile tab"));
         } else if (tab.equals(food)) {
