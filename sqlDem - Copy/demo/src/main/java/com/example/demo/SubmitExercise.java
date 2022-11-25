@@ -23,7 +23,7 @@ import com.vaadin.flow.router.Route;
 @Route("asd")
 public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private int userID;
-    private Editor<ExerciseSubmission> parent;
+    private WorkoutEditor parent;
     private ArrayList<MetricPair> metrics;
     private Exercise exercise;
     private ExerciseSubmission exSubmission;
@@ -45,19 +45,21 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             e.printStackTrace();
         }
     }
-    public SubmitExercise(Editor<ExerciseSubmission> parent){
+    public SubmitExercise(WorkoutEditor parent){
         initConnection();
+        userID = parent.getUserID();
         this.parent = parent;
         metrics = new ArrayList<MetricPair>();
-        exSubmission = new ExerciseSubmission();
+        exSubmission = new ExerciseSubmission(this.parent.workoutID(),userID);
         exercises = new ArrayList<Exercise>();
         initTitle();
         initExList();
  
     }
-    public SubmitExercise(Editor<ExerciseSubmission> parent, ExerciseSubmission exSubmission){
+    public SubmitExercise(WorkoutEditor parent, ExerciseSubmission exSubmission){
         initConnection();
         this.parent = parent;
+        userID = parent.getUserID();
         metrics = new ArrayList<MetricPair>();
         this.exSubmission = exSubmission;//set submission object
         try{//set exercise and metrics (list of metrics and values)
@@ -75,7 +77,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     public SubmitExercise(){//default ctor testing only
         initConnection();
         metrics = new ArrayList<MetricPair>();
-        exSubmission = new ExerciseSubmission();
+        exSubmission = new ExerciseSubmission(this.parent.workoutID(),userID);
         exercises = new ArrayList<Exercise>();
         
         initTitle();

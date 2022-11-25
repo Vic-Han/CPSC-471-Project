@@ -20,11 +20,11 @@ public class Workout {
         this.workoutID = workoutID;
         this.userID = userID;
     }
-    public Workout(int userID){
+    public Workout(int userID, Date date){
         initConnection();
         this.userID = userID;
-        setID();
-        insertWorkout();
+        workoutID = setID();
+        insertWorkout(userID,date);
         
     }
     //methods..
@@ -97,48 +97,57 @@ public class Workout {
             e.printStackTrace();
         }
     }
-    private void setID(){//look for most likely next available ID
+    private int setID(){//look for most likely next available ID
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT COUNT(Workout_ID) FROM WORKOUT;");
-            int maybeID = query1.executeQuery().getInt(1);
-            verifyID(maybeID);
+            ResultSet count = query1.executeQuery();
+            count.next();
+            int maybeID = count.getInt(1);
+            return verifyID(maybeID);
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            return 0;
         }
     }
-    private void verifyID(int maybeID){ //check if ID is actually valid.  If so, set ID
+
+    private int verifyID(int maybeID){ //check if ID is actually valid.  If so, set ID
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT * FROM WORKOUT WHERE Workout_ID = ?;");
             query1.setInt(1, maybeID);
             ResultSet existing = query1.executeQuery();
             if (existing.next()){//if not empty
-                maybeID++;
-                verifyID(maybeID);// try next possible ID
+                return verifyID(maybeID + 1);// try next possible ID
             }
             else{
-                workoutID = maybeID;
+                return maybeID;
             }
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            return 0;
         }
     }
-    private void insertWorkout(){//put workout into database
+    private void insertWorkout(int userID, Date day){//put workout into database
         try
         {
-            PreparedStatement query1 = con.prepareStatement("INSERT INTO WORKOUT(Workout_ID, Day_owner_ID) VALUES(?,?);");
+            PreparedStatement query1 = con.prepareStatement("VALUES(?,?,?);");
             query1.setInt(1, workoutID);
             query1.setInt(2, userID);
+            query1.setDate(3,day);
             query1.executeUpdate();
         }
         catch(SQLException e)
         {
             e.printStackTrace();
         }
+    }
+    public int getID()
+    {
+        return workoutID;
     }
 }

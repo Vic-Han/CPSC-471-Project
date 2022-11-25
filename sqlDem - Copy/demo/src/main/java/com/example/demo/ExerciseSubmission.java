@@ -3,6 +3,8 @@ package com.example.demo;
 import java.sql.*;
 import java.util.ArrayList;
 
+import org.w3c.dom.UserDataHandler;
+
 
 public class ExerciseSubmission {
     private int submissionID;
@@ -20,10 +22,10 @@ public class ExerciseSubmission {
         initConnection();
         this.submissionID = submissionID;
     }
-    public ExerciseSubmission(){
+    public ExerciseSubmission(int workoutID,int userID){
         initConnection();
-        setID();
-        insertSubmission();
+        submissionID = setID();
+        insertSubmission(workoutID, userID);
 
         
     }
@@ -98,50 +100,57 @@ public class ExerciseSubmission {
         }
     }
     //private helper methods for constructors:
-    private void setID(){//look for most likely next available ID
+    private int setID(){//look for most likely next available ID
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT COUNT(Submission_ID) FROM   EXERCISE_SUBMISSION;");
-            int maybeID = query1.executeQuery().getInt(1);
-            verifyID(maybeID);
+            PreparedStatement query1 = con.prepareStatement("SELECT COUNT(Submission_ID) FROM Exercise_Submission;");
+            ResultSet count = query1.executeQuery();
+            count.next();
+            int maybeID = count.getInt(1);
+            return verifyID(maybeID);
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            return 0;
         }
     }
-    public int getID(){
-        return submissionID;
-    }
-    private void verifyID(int maybeID){ //check if ID is actually valid.  If so, set ID
+
+    private int verifyID(int maybeID){ //check if ID is actually valid.  If so, set ID
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT * FROM EXERCISE_SUBMISSION WHERE Submission_ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT * FROM Exercise_Submission WHERE Submission_ID = ?;");
             query1.setInt(1, maybeID);
             ResultSet existing = query1.executeQuery();
             if (existing.next()){//if not empty
-                maybeID++;
-                verifyID(maybeID);// try next possible ID
+                return verifyID(maybeID + 1);// try next possible ID
             }
             else{
-                submissionID = maybeID;
+                return maybeID;
             }
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            return 0;
         }
     }
-    private void insertSubmission(){
+    private void insertSubmission(int workoutID, int userID){
         try
         {
-            PreparedStatement query1 = con.prepareStatement("INSERT INTO EXERCISE_SUBMISSION(Submission_ID) VALUES(?);");
+            PreparedStatement query1 = con.prepareStatement("INSERT INTO EXERCISE_SUBMISSION(Submission_ID) VALUES(?,\"\",?,?);");
             query1.setInt(1, submissionID);
+            query1.setInt(2, userID);
+            query1.setInt(3, workoutID);
             query1.executeUpdate();
         }
         catch(SQLException e)
         {
             e.printStackTrace();
         }
+    }
+    public int getID()
+    {
+        return submissionID;
     }
 }

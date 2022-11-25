@@ -1,12 +1,6 @@
 package com.example.demo;
 import com.vaadin.flow.router.Route;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
+import java.sql.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -31,12 +25,14 @@ public class ExampleLayout extends VerticalLayout {
         TextField tf = new TextField("add shit");
         Button b = new Button("enter");
         b.addClickListener(clickEvent -> {
-                Food test = new Food(1,"Egg");
-                test.update("Egg",50,50,6,7,99,80);
-                try{
-                    tf.setValue(Integer.toString(test.getGramsPerServing()));
-                }
-                catch(SQLException e)
+            Date temp = new Date(2002,04, 07);
+            Workout testWorkout = new Workout(1,temp);
+            ExerciseSubmission test = new ExerciseSubmission(testWorkout.getID(),1);
+                //try{
+                    
+                    //tf.setValue();
+                //}
+                //catch(SQLException e)
                 {
 
                 }
