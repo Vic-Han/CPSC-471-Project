@@ -119,7 +119,7 @@ public class Metric {
     }
     public void update(String name, String unit)
     {
-        setName(name);
         setUnit(unit);
+        setName(name);
     }
 }
