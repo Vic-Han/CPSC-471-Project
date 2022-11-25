@@ -65,7 +65,7 @@ public class HomeScreen extends AppLayout{
         if (tab.equals(dashboard)) {
             content.add(new Dashboard(userID));
         } else if (tab.equals(profile)) {
-            content.add(new Paragraph("This is the profile tab"));
+            content.add(new ProfileScreen(userID));
         } else if (tab.equals(food)) {
             content.add(new FoodView(userID));
         } else if (tab.equals(exercise)) {
