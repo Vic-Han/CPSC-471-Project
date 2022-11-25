@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-@Route("ex")
+//@Route("")
 public class ExampleLayout extends VerticalLayout {
     private Connection dbConnect;
     public ExampleLayout(){
@@ -31,11 +31,15 @@ public class ExampleLayout extends VerticalLayout {
         TextField tf = new TextField("add shit");
         Button b = new Button("enter");
         b.addClickListener(clickEvent -> {
-            Exercise test = new Exercise("Biking",1);
-            ArrayList<Metric> testList = test.getMetrics();
-            testList.get(1).setUnit("km/h");
-            Metric wind = new Metric("wind",1);
-            tf.setValue(testList.get(1).getUnit());
+                Food test = new Food(1,"Egg");
+                test.update("Egg",50,50,6,7,99,80);
+                try{
+                    tf.setValue(Integer. toString(test.getGramsPerServing()));
+                }
+                catch(SQLException e)
+                {
+
+                }
         });
         add(tf);
         add(b);

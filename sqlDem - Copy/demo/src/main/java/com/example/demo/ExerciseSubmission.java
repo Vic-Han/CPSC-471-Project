@@ -98,8 +98,7 @@ public class ExerciseSubmission {
         }
     }
     //private helper methods for constructors:
-    private void setID(){
-        //look for most likely next available ID
+    private void setID(){//look for most likely next available ID
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT COUNT(Submission_ID) FROM   EXERCISE_SUBMISSION;");
@@ -111,8 +110,10 @@ public class ExerciseSubmission {
             e.printStackTrace();
         }
     }
-    private void verifyID(int maybeID){
-        //check if ID is actually valid.  If so, set ID
+    public int getID(){
+        return submissionID;
+    }
+    private void verifyID(int maybeID){ //check if ID is actually valid.  If so, set ID
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT * FROM EXERCISE_SUBMISSION WHERE Submission_ID = ?;");

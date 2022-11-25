@@ -67,14 +67,19 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
 
     private void setupMetricGrid(){
         //setup grid...
-        metricGrid = new Grid<>(Metric.class, false);
-        metricGrid.addColumn(Metric::getName).setHeader("Metric")
+        try{
+            metricGrid = new Grid<>(Metric.class, false);
+            metricGrid.addColumn(Metric::getName).setHeader("Metric")
             .setAutoWidth(true).setFlexGrow(1);
-        metricGrid.addColumn(Metric::getUnit).setHeader("Unit")
+            metricGrid.addColumn(Metric.getUnit()).setHeader("Unit")
             .setAutoWidth(true).setFlexGrow(1);
-        fetchData();
-        metricGrid.setAllRowsVisible(true);
+            fetchData();
+            metricGrid.setAllRowsVisible(true);
+        }
+        catch(SQLException e)
+        {
 
+        }
         //add menu options...
         metricGrid.addComponentColumn(met -> {
             MenuBar menuBar = new MenuBar();
@@ -116,8 +121,15 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         HorizontalLayout lastRow = new HorizontalLayout();//declare layout
         Button submit = new Button("Submit");//declaring buttons...
         submit.addAttachListener(ClickEvent -> {
-            exercise.update(nameFeild.getValue(),exMetricList);
-            parent.addObject(exercise);
+            try
+            {
+                exercise.update(nameFeild.getValue(),exMetricList);
+                parent.addObject(exercise);
+            }
+            catch(SQLException e)
+            {
+                e.printStackTrace();
+            }
         });
         Button delete = new Button("Delete");
         delete.addAttachListener(ClickEvent -> {
@@ -132,9 +144,16 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     @Override
     public void fetchData()
     {
+        try
+        {
         exMetricList = exercise.getMetrics();
         nameFeild.setValue(exercise.getName());
-        //PreparedStatement query1 = c.prepareStatement();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        //PreparedStatement query1 = c.prepareStatement(SELECT metric_name FROM PERFORMANCE_METRIC);
     }
     @Override
     public void addObject(Metric metric)
