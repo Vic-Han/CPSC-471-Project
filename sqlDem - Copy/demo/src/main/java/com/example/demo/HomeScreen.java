@@ -51,7 +51,7 @@ public class HomeScreen extends AppLayout{
         exercise = new Tab("Exercises");
         performanceMetric = new Tab("Performance Metrics");
         graph = new Tab("Graph");
-
+        
         tabs.add(dashboard, profile, food, exercise, performanceMetric, graph);
         tabs.addSelectedChangeListener(
                 event -> setContent(event.getSelectedTab()));

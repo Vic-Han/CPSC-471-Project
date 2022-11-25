@@ -108,15 +108,14 @@ public class Register extends VerticalLayout {
     }
 
     public void submit(){
-
+        int newId = setID();
         if (weight.getValue() == null)
         {
             return;
         }
         try
         {
-            PreparedStatement query = con.prepareStatement("INSERT INTO USER VALUES(?,?,?,?,?,?,?,?);");
-            int newId = setID();
+            PreparedStatement query = con.prepareStatement("INSERT INTO USER VALUES(?,?,?,?,?,?,?,?,?);");
             query.setInt(1, newId);
             query.setDate(2, java.sql.Date.valueOf(singleFormatDatePicker.getValue())); //birthday
             query.setString(3, gender.getValue()); // gender
@@ -125,8 +124,9 @@ public class Register extends VerticalLayout {
             query.setInt(6, height.getValue().intValue()); // height
             query.setInt(7, weight.getValue().intValue()); // weight
             query.setString(8, password.getValue()); // password
+            query.setString(9,type.getValue());
             query.executeUpdate();
-            add(new HomeScreen(newId));
+            //add(new HomeScreen(newId));
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -137,8 +137,10 @@ public class Register extends VerticalLayout {
     private int setID(){//look for most likely next available ID
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT COUNT(USER_ID) FROM USER;");
-            int maybeID = query1.executeQuery().getInt(1);
+            PreparedStatement query1 = con.prepareStatement("SELECT COUNT(ID) FROM USER;");
+            ResultSet count = query1.executeQuery();
+            count.next();
+            int maybeID = count.getInt(1);
             return verifyID(maybeID);
         }
         catch(SQLException e)
@@ -151,7 +153,7 @@ public class Register extends VerticalLayout {
     private int verifyID(int maybeID){ //check if ID is actually valid.  If so, set ID
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT * FROM USER WHERE USER_ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT * FROM USER WHERE ID = ?;");
             query1.setInt(1, maybeID);
             ResultSet existing = query1.executeQuery();
             if (existing.next()){//if not empty
