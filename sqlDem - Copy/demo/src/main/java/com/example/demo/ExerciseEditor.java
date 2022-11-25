@@ -64,7 +64,7 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         TextField nameField = new TextField("Name:");
         add(nameField);
     }
-
+    
     private void setupMetricGrid(){
         //setup grid...
         
