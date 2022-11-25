@@ -18,89 +18,19 @@ import com.vaadin.flow.router.Route;
 
 
 @Route("ProfScreen")
-public class ProfileScreen extends VerticalLayout{ 
-    private int userID;
-    private String[] exampleGender = {"Male", "Female", "Other"};
-    private String[] profileType = {"Coach", "Athlete"};
-    private LocalDate date;
-    private Date birthDay;
-    private boolean coach;
-    private Connection con;
-    TextField fName = new TextField("First Name:");
-    TextField lName = new TextField("Last Name:");
-    NumberField height = new NumberField("Height(cm):");
-    NumberField weight = new NumberField("Weight(kg):");
-    ComboBox<String> gender = new ComboBox<>("Gender:");//declare combobox
-    ComboBox<String> type = new ComboBox<>("Profile Type:");//declare combobox
-    DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
-    DatePicker singleFormatDatePicker = new DatePicker("Date of Birth:");
+public class ProfileScreen extends Register{ 
+     private int userID;
 
-    public ProfileScreen (int userID) {
-        this.userID = userID;
-        setupTitle();
-        setupNameFieldInput();
-        date();
-        setupGenderInput();
-        setupProfileType();
-        makeOrCancel();
-        initConnection();
-        retrieveInfo();
-    }
+     public ProfileScreen(int userID)
 
-    public void initConnection()
-    {
-        try{
-            con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setupTitle(){
-        H1 title = new H1("Register");
-        add(title);
-    }
-
-    private void setupNameFieldInput(){
-        add(fName);
-        add(lName);
-        add(height);
-        add(weight);
-    }
-
-    private void date(){
-        singleFormatI18n.setDateFormat("yyyy-MM-dd");
-        singleFormatDatePicker.setI18n(singleFormatI18n);
-        add(singleFormatDatePicker);
-
-    }
-    private void setupGenderInput(){
-        HorizontalLayout genderLayout = new HorizontalLayout();//declare layout
-        gender.setItems(exampleGender);//put array of objects (Strings in this case) into combobox
-        genderLayout.add(gender);//add combobox to layout
-        add(genderLayout);//add layout to screen
-    }
-
-    private void setupProfileType(){
-        HorizontalLayout profileTypeLayout = new HorizontalLayout();//declare layout
-        type.setItems(profileType);//put array of objects (Strings in this case) into combobox
-        profileTypeLayout.add(type);//add combobox to layout
-        add(profileTypeLayout);//add layout to screen
-    }
-
-    private void makeOrCancel(){
-        HorizontalLayout buttons = new HorizontalLayout();
-        Button make = new Button("Make");
-       // make.addClickListener(clickEvent -> {submit();});
-        Button cancel = new Button("Cancel");
-        cancel.addClickListener(e ->//set up button as a link to register...
-        cancel.getUI().ifPresent(ui ->
-           ui.navigate(""))
-        );
-        buttons.add(make,cancel);
-        add(buttons);
-    }
+     {
+         super();
+         this.userID = userID;
+         retrieveInfo();
+         title.setText("Profile");
+         make.setText("Update");
+         cancel.setText("Logout");
+     }
 
     public void submit(){
 
@@ -108,21 +38,7 @@ public class ProfileScreen extends VerticalLayout{
         {
             return;
         }
-        try
-        {
-            PreparedStatement query = con.prepareStatement("INSERT INTO USER VALUES(?,?,?,?,?,?,?);");
-            query.setInt(1, userID);
-            query.setDate(2, java.sql.Date.valueOf(singleFormatDatePicker.getValue())); //birthday
-            query.setString(3, gender.getValue()); // gender
-            query.setString(4, fName.getValue()); //fname
-            query.setString(5, lName.getValue()); // lname
-            query.setInt(6, height.getValue().intValue()); // height
-            query.setInt(7, weight.getValue().intValue()); // weight
-            query.executeUpdate();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+        updateInfo();
 
     }
 
@@ -233,13 +149,74 @@ public class ProfileScreen extends VerticalLayout{
     }
 
     public void retrieveInfo(){
-        retrieveBirthDay();
+      //  retrieveBirthDay();
         retrieveFname();
         retrieveHeight();
         retrieveLname();
         retrieveWeight();
         retrieveGender();
 
+    }
+
+    public void updateFname(){
+        try
+        {
+            PreparedStatement query2 = con.prepareStatement("Update USER SET First_name = ? WHERE ID = ?");
+            query2.setString(1, fName.getValue()); //fname
+            query2.setInt(2, userID);
+            query2.executeUpdate();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void updateLname(){
+        try
+        {
+            PreparedStatement query2 = con.prepareStatement("Update USER SET Last_name = ? WHERE ID = ?");
+            query2.setString(1, lName.getValue()); 
+            query2.setInt(2, userID);
+            query2.executeUpdate();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void updateHeight(){
+        try
+        {
+            PreparedStatement query2 = con.prepareStatement("Update USER SET height = ? WHERE ID = ?");
+            query2.setInt(1, height.getValue().intValue()); 
+            query2.setInt(2, userID);
+            query2.executeUpdate();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updateWeight(){
+        try
+        {
+            PreparedStatement query2 = con.prepareStatement("Update USER SET weight = ? WHERE ID = ?");
+            query2.setInt(1, weight.getValue().intValue()); 
+            query2.setInt(2, userID);
+            query2.executeUpdate();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updateInfo(){
+        updateFname();
+        updateLname();
+        updateWeight();
+        updateHeight();
     }
 }
 

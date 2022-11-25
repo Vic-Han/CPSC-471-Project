@@ -22,17 +22,24 @@ public class Register extends VerticalLayout {
     private LocalDate date;
     private Date birthDay;
     private boolean coach;
-    private int userID;
-    private Connection con;
-    TextField fName = new TextField("First Name:");
-    TextField lName = new TextField("Last Name:");
-    TextField password = new TextField("Password:");
-    NumberField height = new NumberField("Height(cm):");
-    NumberField weight = new NumberField("Weight(kg):");
-    ComboBox<String> gender = new ComboBox<>("Gender:");//declare combobox
-    ComboBox<String> type = new ComboBox<>("Profile Type:");//declare combobox
-    DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
-    DatePicker singleFormatDatePicker = new DatePicker("Date of Birth:");
+    protected Connection con;
+    protected TextField fName = new TextField("First Name:");
+    protected TextField lName = new TextField("Last Name:");
+    protected TextField password = new TextField("Password:");
+    protected NumberField height = new NumberField("Height(cm):");
+    protected NumberField weight = new NumberField("Weight(kg):");
+    protected ComboBox<String> gender = new ComboBox<>("Gender:");//declare combobox
+    protected ComboBox<String> type = new ComboBox<>("Profile Type:");//declare combobox
+    protected DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
+    protected DatePicker singleFormatDatePicker = new DatePicker("Date of Birth:");
+    protected Button make = new Button("Make");
+    protected H1 title = new H1("Register");
+    protected Button cancel = new Button("Cancel");
+    protected HorizontalLayout buttons = new HorizontalLayout();
+
+
+
+
 
 
     public Register (){
@@ -58,7 +65,6 @@ public class Register extends VerticalLayout {
     }
 
     private void setupTitle(){
-        H1 title = new H1("Register");
         add(title);
     }
 
@@ -90,11 +96,7 @@ public class Register extends VerticalLayout {
     }
 
     private void makeOrCancel(){
-        HorizontalLayout buttons = new HorizontalLayout();
-        Button make = new Button("Make");
         make.addClickListener(clickEvent -> {submit();});
-        
-        Button cancel = new Button("Cancel");
         cancel.addClickListener(e ->//set up button as a link to register...
         cancel.getUI().ifPresent(ui ->
            ui.navigate(""))
@@ -170,4 +172,3 @@ public class Register extends VerticalLayout {
         }
     }
 }
-
