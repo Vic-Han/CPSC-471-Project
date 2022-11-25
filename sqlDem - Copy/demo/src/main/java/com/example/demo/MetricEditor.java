@@ -29,24 +29,12 @@ public class MetricEditor extends Dialog{
     TextField nameField;
     TextField unitField;
 
-    public MetricEditor(){
-        setupTitle();//all of these add to the verticalLayout, not the actual dialog
-        setupNameInput();
-        setupUnitInput();
-        initConnection();
-        //setupExView();
-        setupExitButtons();
-        addLayout();//add all the contents to dialog
-    }
     public MetricEditor(Editor<Metric> parentEditor, Metric inputMetric){
         parent = parentEditor;
         userID = parent.getUserID();
         metric = inputMetric;
-        setupTitle();//all of these add to the verticalLayout, not the actual dialog
-        setupNameInput();
-        setupUnitInput();
         initConnection();
-        //setupExView();
+        setupFields();//all of these add to the verticalLayout, not the actual dialog
         setupExitButtons();
         addLayout();//add all the contents to dialog
     }
@@ -62,17 +50,14 @@ public class MetricEditor extends Dialog{
             e.printStackTrace();
         }
     }
-    private void setupTitle(){
+    private void setupFields(){
         H1 title = new H1("Metric Editor");
         layout.add(title);
-    }
-    private void setupNameInput(){
         nameField = new TextField("Metric name:");
+        nameField.setValue(metric.getName());
         layout.add(nameField);
-    }
-    
-    private void setupUnitInput(){
         unitField = new TextField("Unit of measurement:");
+        unitField.setValue(metric.getUnit());
         layout.add(unitField);
     }
 

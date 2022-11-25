@@ -69,7 +69,7 @@ public class HomeScreen extends AppLayout{
         } else if (tab.equals(food)) {
             content.add(new FoodView(userID));
         } else if (tab.equals(exercise)) {
-          //  content.add(new ExerciseView(userID));
+            content.add(new ExerciseView(userID));
         } else if (tab.equals(performanceMetric)) {
             content.add(new MetricView());
         }else {
