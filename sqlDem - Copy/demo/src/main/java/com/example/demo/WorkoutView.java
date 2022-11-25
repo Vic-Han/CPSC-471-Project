@@ -8,8 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-@Route("foodView")
-public class FoodView extends VerticalLayout implements Editor<Food>{
+public class WorkoutView implements Editor<Workout>{
     private ArrayList<Food> foodList = new ArrayList<Food>();
     private int userID;
     private Connection con;
@@ -17,17 +16,15 @@ public class FoodView extends VerticalLayout implements Editor<Food>{
     private Button editFood = new Button("Edit Food");
     private Button delFood = new Button("Delete Food");
     ComboBox<Food> chooseFood = new ComboBox<Food>("Choose Food");
-    public FoodView(int ID)
+    public WorkoutView(int ID)
     {
         userID = ID;
         setup();
     }
-    public FoodView()
-    {
-        this(1);
-    }
+   
     public void setup()
     {
+        /* 
         initConnection();
         newFood.addClickListener(clickEvent -> {
             FoodEditor editor = new FoodEditor(this);
@@ -48,7 +45,7 @@ public class FoodView extends VerticalLayout implements Editor<Food>{
         add(editFood);
         delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
         add(delFood);
-
+        */
 
     }
     public void initConnection()
@@ -86,8 +83,9 @@ public class FoodView extends VerticalLayout implements Editor<Food>{
         }
     }
     @Override
-    public void deleteObject(Food food)
+    public void deleteObject(Workout workout)
     {
+        /* 
         try
         {
             PreparedStatement query = con.prepareStatement("DELETE FROM FOOD WHERE User_ID = ? AND Name = ?;");
@@ -100,15 +98,12 @@ public class FoodView extends VerticalLayout implements Editor<Food>{
 
         }
         fetchData();
+        */
     }
     @Override
-    public void addObject(Food food)
+    public void addObject(Workout workout)
     {
 
     }
-
-
-
-
 
 }

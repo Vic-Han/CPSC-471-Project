@@ -8,7 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-//@Route("")
+@Route("metView")
 public class MetricView extends VerticalLayout implements Editor<Metric>{
     private ArrayList<Metric> metricList = new ArrayList<Metric>();
     private int userID;
@@ -58,19 +58,17 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         }   
     }
     @Override
-    public void fetchData(){
+    public void fetchData()
+    {
         try
         {
-
-        
-            PreparedStatement query1 = con.prepareStatement("SELECT Metric_Name FROM PERFORMANCE_METRIC WHERE Owner_ID = ?;");
-            query1.setInt(1,userID);
-            ResultSet rs = query1.executeQuery();
+            PreparedStatement query = con.prepareStatement("SELECT Metric_name FROM FOOD WHERE Owner_ID = ?;");
+            query.setInt(1, userID);
+            ResultSet rs = query.executeQuery();
             metricList = new ArrayList<Metric>();
             while(rs.next())
             {
-                Metric temp = new Metric(rs.getString(1),userID);
-                metricList.add(temp);
+                metricList.add(new Metric(rs.getString(1),userID));
             }
             chooseMet.setItems(metricList);
         }
