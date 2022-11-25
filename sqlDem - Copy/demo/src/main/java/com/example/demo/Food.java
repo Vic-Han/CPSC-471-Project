@@ -54,6 +54,7 @@ public class Food{
     catch (SQLException e) {
         e.printStackTrace();
     }
+    foodName = name;
   }
   public int getGramsPerServing() throws SQLException
   {
@@ -236,9 +237,9 @@ public class Food{
     setCalories(calories);
     setCarbs(carb);
     setGramsPerServing(gram);
-    setName(name);
     setmlPerServing(ml);
     setProtein(protein);
+    setName(name);
   }
   
 

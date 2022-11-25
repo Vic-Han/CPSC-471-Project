@@ -100,6 +100,7 @@ public class FoodEditor extends Dialog{
         Button submit = new Button("Submit");//declaring buttons...
         submit.addClickListener(ClickEvent -> {submit();});
         Button delete = new Button("Delete");
+        delete.addClickListener(ClickEvent -> {delete();});
         lastRow.add(submit,delete);//add all the buttons to layout
         add(lastRow);//add layout
 
@@ -110,5 +111,9 @@ public class FoodEditor extends Dialog{
         fats.getValue().intValue(),protein.getValue().intValue(),carbohydrates.getValue().intValue(),calories.getValue().intValue());
         parent.fetchData();
         this.close();
+    }
+    private void delete()
+    {
+
     }
 }
