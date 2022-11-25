@@ -89,8 +89,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     @Override
     public void deleteObject(Metric metric) {
         try{
-        metricList.remove(metric);
-        PreparedStatement query1 = con.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
+        PreparedStatement query1 = con.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND Metric_NAME = ? ;");
         query1.setInt(1,userID);
         query1.setString(2,metric.getName());
         query1.executeUpdate();

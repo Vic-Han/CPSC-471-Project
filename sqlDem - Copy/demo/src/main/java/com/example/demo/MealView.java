@@ -12,10 +12,10 @@ public class MealView implements Editor<Meal>{
     private ArrayList<Food> foodList = new ArrayList<Food>();
     private int userID;
     private Connection con;
-    private Button newMEal = new Button("New Food");
-    private Button editFood = new Button("Edit Food");
-    private Button delFood = new Button("Delete Food");
-    ComboBox<Food> chooseFood = new ComboBox<Food>("Choose Food");
+    private Button newMeal = new Button("New Meal");
+    private Button editMeal = new Button("Edit Meal");
+    private Button delMeal = new Button("Delete Meal");
+    ComboBox<Food> chooseFood = new ComboBox<Food>("Choose Meal");
     public MealView(int ID)
     {
         userID = ID;

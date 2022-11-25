@@ -31,17 +31,18 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     private Connection con;
     Exercise exercise;
     int userID;
-    TextField nameFeild = new TextField("Exercise Name");
+    TextField nameField = new TextField("Exercise Name");
     public ExerciseEditor(Editor<Exercise> parentEditor, Exercise ex)
     {
+        userID = parentEditor.getUserID();
         parent = parentEditor;
         exercise = ex;
+        initConnection();
         fetchData();
         setupTitle();
         setupNameInput();
-        initConnection();
-        ////setupMetricGrid();
-        //setupAddMetric();
+        setupMetricGrid();
+        setupAddMetric();
         setupExitButtons();
     }
     public ExerciseEditor(Editor<Exercise> parentEditor){
@@ -119,7 +120,7 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         submit.addAttachListener(ClickEvent -> {
             try
             {
-                exercise.update(nameFeild.getValue(),exMetricList);
+                exercise.update(nameField.getValue(),exMetricList);
                 parent.addObject(exercise);
             }
             catch(SQLException e)
@@ -142,8 +143,12 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     {
         try
         {
-        exMetricList = exercise.getMetrics();
-        nameFeild.setValue(exercise.getName());
+            exMetricList = exercise.getMetrics();
+            nameField.setValue(exercise.getName());
+            for(int index = 0; index< exMetricList.size(); index++){
+                //metricGrid.getContainerDataSource().addItem(itemId);
+                
+            }
         }
         catch(SQLException e)
         {

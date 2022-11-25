@@ -10,13 +10,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 @Route("ExView")
 public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
-    private ArrayList<Metric> metricList = new ArrayList<Metric>();
+    private ArrayList<Exercise> exList = new ArrayList<Exercise>();
     private int userID;
     private Connection con;
-    private Button newMet = new Button("New Metric");
-    private Button editMet = new Button("Edit Metric");
-    private Button delMet = new Button("Delete Metric");
-    ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
+    private Button newEx = new Button("New Exercise");
+    private Button editEx = new Button("Edit Exercise");
+    private Button delEx = new Button("Delete Exercise");
+    ComboBox<Exercise> chooseEx = new ComboBox<Exercise>("Choose Exercise");
+    ExerciseEditor current;
     public ExerciseView(int ID){
         userID = ID;
         setup();
@@ -27,29 +28,31 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         this(1);
     }
     private void setup(){
-        /* 
+        
         initConnection();
         //make new metric button...
-        newMet.addClickListener(clickEvent -> {
-            MetricEditor editor = new MetricEditor(this);
-            editor.open();
+        newEx.addClickListener(clickEvent -> {
+            //remove(current);
+            current = new ExerciseEditor(this);
+            add(current);
         });
-        add(newMet);
+        add(newEx);
 
         //make combobox...
         fetchData();
-        chooseMet.setItemLabelGenerator(Metric::getName);
-        add(chooseMet);
+        chooseEx.setItemLabelGenerator(Exercise::getName);
+        add(chooseEx);
         
         //make edit exercise button...
-        editMet.addClickListener(clickEvent -> {
-            MetricEditor editor = new MetricEditor(this,chooseMet.getValue());
-            editor.open();
+        editEx.addClickListener(clickEvent -> {
+            remove(current);
+            current = new ExerciseEditor(this,chooseEx.getValue());
+            add(current);
         });
-        add(editMet);
-        delMet.addClickListener(clickEvent -> {deleteObject(chooseMet.getValue());});
-        add(delMet);
-        */
+        add(editEx);
+        delEx.addClickListener(clickEvent -> {deleteObject(chooseEx.getValue());});
+        add(delEx);
+        
     }
     public void initConnection()
     {
@@ -64,23 +67,24 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     @Override
     public void fetchData()
     {
+         
         try
         {
-            PreparedStatement query = con.prepareStatement("SELECT Metric_name FROM PERFORMANCE_METRIC WHERE Owner_ID = ?;");
+            PreparedStatement query = con.prepareStatement("SELECT Name FROM EXERCISE WHERE User_ID = ?;");
             query.setInt(1, userID);
             ResultSet rs = query.executeQuery();
-            metricList = new ArrayList<Metric>();
+            exList = new ArrayList<Exercise>();
             while(rs.next())
             {
-                metricList.add(new Metric(rs.getString(1),userID));
+                exList.add(new Exercise(rs.getString(1),userID));
             }
-            chooseMet.setItems(metricList);
+            chooseEx.setItems(exList);
         }
         catch(SQLException e)
         {
 
         }
-
+        
 
     }
     @Override
