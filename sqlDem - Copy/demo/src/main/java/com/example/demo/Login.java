@@ -3,6 +3,7 @@ import java.sql.*;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -12,12 +13,17 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;  
 
 
-@Route("")
+// @Route("")
 public class Login extends VerticalLayout{
     private int userID;
     private Connection con;
     PasswordField passwordField = new PasswordField();
     NumberField numberField = new NumberField("User ID:");
+    Button login = new Button ("Login");
+    Button register = new Button("Register");
+
+
+
 
  
     public void initConnection()
@@ -31,8 +37,6 @@ public class Login extends VerticalLayout{
         }   
     }
     
-
-
     public Login(){
         setupTitle();
         setupNameFieldInput();
@@ -59,10 +63,8 @@ public class Login extends VerticalLayout{
 
     private void sendToRegister(){
         HorizontalLayout buttons = new HorizontalLayout();
-        Button login = new Button ("Login");
         login.addClickListener(clickEvent -> {validate();});
-        Button register = new Button("Register");
-        register.addClickListener(e ->//set up button as a link to metric editor...
+        register.addClickListener(e ->//set up button as a link to register...
         register.getUI().ifPresent(ui ->
            ui.navigate("reg"))
         );
@@ -72,8 +74,7 @@ public class Login extends VerticalLayout{
 
      private void validate(){
         if (numberField.getValue() == null)
-        {
-           
+        {     
             return;
         }
         try {
@@ -87,6 +88,7 @@ public class Login extends VerticalLayout{
             passwordField.setValue("success");
         else
             passwordField.setValue("fail");
+            // maybe add error message 
         }
 
         catch(SQLException e)
