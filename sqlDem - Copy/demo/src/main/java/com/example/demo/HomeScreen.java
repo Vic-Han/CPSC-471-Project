@@ -11,7 +11,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
 
-@Route("HomeScreen")
+//@Route("HomeScreen")
 public class HomeScreen extends AppLayout{
     Tab dashboard;
     Tab profile;

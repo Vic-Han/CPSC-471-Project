@@ -15,7 +15,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 
-@Route("reg")
+//@Route("reg")
 public class Register extends VerticalLayout { 
     private String[] exampleGender = {"Male", "Female", "Other"};
     private String[] profileType = {"Coach", "Athlete"};

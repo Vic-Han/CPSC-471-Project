@@ -17,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 
-@Route("ProfScreen")
+//@Route("ProfScreen")
 public class ProfileScreen extends Register{ 
      private int userID;
 
