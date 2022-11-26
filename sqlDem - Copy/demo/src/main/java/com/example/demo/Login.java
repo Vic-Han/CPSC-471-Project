@@ -4,6 +4,8 @@ import java.sql.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -12,7 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;  
 
 
-// @Route("")
+//@Route("")
 public class Login extends VerticalLayout{
     private int userID;
     private Connection con;
@@ -20,6 +22,8 @@ public class Login extends VerticalLayout{
     NumberField numberField = new NumberField("User ID:");
     Button login = new Button ("Login");
     Button register = new Button("Register");
+    Button forgotPassword = new Button("Forgot username or password");
+    LoginController controller;
 
 
 
@@ -36,12 +40,14 @@ public class Login extends VerticalLayout{
         }   
     }
     
-    public Login(){
+    public Login(LoginController controller){
         setupTitle();
         setupNameFieldInput();
         setPasswordFieldINput();
         sendToRegister();
         initConnection();
+        this.controller = controller;
+        
 
     }
      
@@ -63,11 +69,13 @@ public class Login extends VerticalLayout{
     private void sendToRegister(){
         HorizontalLayout buttons = new HorizontalLayout();
         login.addClickListener(clickEvent -> {validate();});
-        register.addClickListener(e ->//set up button as a link to register...
-        register.getUI().ifPresent(ui ->
-           ui.navigate("reg"))
-        );
-        buttons.add(login, register);
+        register.addClickListener(e -> controller.registerUser());
+        forgotPassword.addClickListener(e ->{
+            Dialog d = new Dialog();
+            d.add(new Paragraph("That really sucks, you're on your own buddy"));
+            d.open();
+        });
+        buttons.add(login, register, forgotPassword);
         add(buttons);
     }
 
@@ -78,19 +86,21 @@ public class Login extends VerticalLayout{
         }
         try {
 
-        PreparedStatement query1 = con.prepareStatement("select first_name from USER where password = ? AND ID = ?;");
+        PreparedStatement query1 = con.prepareStatement("select First_name from USER where Password = ? AND ID = ?;");
         query1.setString(1, passwordField.getValue());
         query1.setInt(2, numberField.getValue().intValue());
         ResultSet rs = query1.executeQuery();
         
-        if (rs.next())
-            passwordField.setValue("success");
-        else
-            passwordField.setValue("fail");
-            // maybe add error message 
+        if (rs.next()){
+            controller.loginSuccess(userID);;
+        }
+        else{
+            Dialog d = new Dialog();
+            d.add(new Paragraph("UserID or password did not match.  Please try again"));
+            d.open();
         }
 
-        catch(SQLException e)
+        }catch(SQLException e)
         {
             e.printStackTrace();
             passwordField.setValue("exception");

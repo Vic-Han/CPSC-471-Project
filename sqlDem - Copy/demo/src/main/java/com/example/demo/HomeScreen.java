@@ -21,11 +21,12 @@ public class HomeScreen extends AppLayout{
     Tab graph;
     private VerticalLayout content;
     private int userID;
+    private LoginController controller;
     public HomeScreen(int userID) {
         this.userID = userID;
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1("Health Tracker");
+        H1 title = new H1("Health Tracker.......UserID: "+ userID);
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 
@@ -37,8 +38,12 @@ public class HomeScreen extends AppLayout{
         addToDrawer(tabs);
         addToNavbar(toggle, title);
     }
+    public HomeScreen(int userID, LoginController controller) {
+        this(userID);
+        this.controller = controller;
+    }
 
-    public HomeScreen(){
+    public HomeScreen(){//testing only.. get rid of this shit asap
         this(1);
     }
 
@@ -52,7 +57,7 @@ public class HomeScreen extends AppLayout{
         performanceMetric = new Tab("Performance Metrics");
         graph = new Tab("Graph");
         
-        tabs.add(dashboard, profile, food, exercise, performanceMetric, graph);
+        tabs.add( dashboard, profile, food, exercise, performanceMetric, graph);
         tabs.addSelectedChangeListener(
                 event -> setContent(event.getSelectedTab()));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
@@ -66,7 +71,7 @@ public class HomeScreen extends AppLayout{
             content.add(new Dashboard(userID));
         } else if (tab.equals(profile)) 
         {
-            content.add(new AthleteProfile(userID));
+            content.add(new ProfileScreen(userID, controller));
         } else if (tab.equals(food)) 
         {
             content.add(new FoodView(userID));
@@ -74,7 +79,7 @@ public class HomeScreen extends AppLayout{
             content.add(new ExerciseView(userID));
         } else if (tab.equals(performanceMetric)) {
             content.add(new MetricView());
-        }else {
+        } else {
             content.add(new Paragraph("This is the graph tab"));
         }
     }

@@ -20,6 +20,7 @@ import com.vaadin.flow.router.Route;
 //@Route("ProfScreen")
 public class ProfileScreen extends Register{ 
      private int userID;
+     private LoginController controller;
 
      public ProfileScreen(int userID)
 
@@ -29,10 +30,15 @@ public class ProfileScreen extends Register{
          retrieveInfo();
          title.setText("Profile");
          make.setText("Update");
-         cancel.setText("Logout");
+         cancel.setText("Logout");//need to make this do something useful
      }
+    public ProfileScreen(int userID, LoginController controller){
+        this(userID);
+        this.controller = controller;
+    }
 
-    public void submit(){
+    @Override
+    protected void submit(){
 
         if (weight.getValue() == null)
         {
@@ -40,6 +46,10 @@ public class ProfileScreen extends Register{
         }
         updateInfo();
 
+    }
+    @Override
+    protected void cancelRegister(){
+        controller.logout();
     }
 
     public void retrieveFname() {
@@ -107,13 +117,14 @@ public class ProfileScreen extends Register{
     public void retrieveBirthDay() {
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT date_of_birth from USER WHERE ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT Date_of_birth FROM USER WHERE ID = ?;");
             query1.setInt(1, userID);
             ResultSet rs = query1.executeQuery();
             rs.next();
             Date dummy = rs.getDate(1);
-            LocalDate temp = dummy.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-         //   singleFormatDatePicker.setValue(rs.getDate(1).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            //LocalDate temp = dummy.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate temp = dummy.toLocalDate();
+            singleFormatDatePicker.setValue(temp);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -123,7 +134,7 @@ public class ProfileScreen extends Register{
     public void retrieveGender() {
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT sex from USER WHERE ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT Sex FROM USER WHERE ID = ?;");
             query1.setInt(1, userID);
             ResultSet rs = query1.executeQuery();
             rs.next();
@@ -133,15 +144,33 @@ public class ProfileScreen extends Register{
             e.printStackTrace();
         }
     }
+    public void retrievePassword() {
+        try
+        {
+            PreparedStatement query1 = con.prepareStatement("SELECT Password FROM USER WHERE ID = ?;");
+            query1.setInt(1, userID);
+            ResultSet rs = query1.executeQuery();
+            rs.next();
+            password.setValue(rs.getString(1));
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void retrieveProfType() {
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT sex from USER WHERE ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT * from COACH WHERE Coach_ID = ?;");
             query1.setInt(1, userID);
             ResultSet rs = query1.executeQuery();
-            rs.next();
-            type.setValue(rs.getString(1));
+            if (rs.next()){
+                type.setValue("Coach");
+            }
+            else{
+                type.setValue("Athlete");
+            }
+            
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -155,6 +184,9 @@ public class ProfileScreen extends Register{
         retrieveLname();
         retrieveWeight();
         retrieveGender();
+        retrievePassword();
+        retrieveBirthDay();
+        retrieveProfType();
 
     }
 

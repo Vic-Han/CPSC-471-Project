@@ -37,7 +37,7 @@ public class Dashboard extends VerticalLayout {
         setupMealLayout(LocalDate.now());
     }
 
-    public Dashboard(){
+    public Dashboard(){//testing only
         this(1);
     }
 
