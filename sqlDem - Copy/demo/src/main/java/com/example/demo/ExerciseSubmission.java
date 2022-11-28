@@ -3,6 +3,9 @@ package com.example.demo;
 import java.sql.*;
 import java.util.ArrayList;
 
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Paragraph;
+
 
 public class ExerciseSubmission {
     private int submissionID;
@@ -28,7 +31,7 @@ public class ExerciseSubmission {
         
     }
    
-    public Exercise getExercise() throws SQLException{
+    public Exercise getExercise(){
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT Exercise_name, User_ID FROM  EXERCISE_SUBMISSION WHERE Submission_ID = ?;");
@@ -40,7 +43,10 @@ public class ExerciseSubmission {
         }
         catch(SQLException e)
         {
-            throw new SQLException();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Error fetching Exercise from database"));
+            d.open();
+            return new Exercise(null, submissionID);
         }
     }
     public void setExercise(Exercise exercise){
@@ -57,7 +63,7 @@ public class ExerciseSubmission {
             e.printStackTrace();
         }
     }
-    public ArrayList<MetricPair> getMetricList() throws SQLException{
+    public ArrayList<MetricPair> getMetricList(){
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT Metric_name, Metric_owner_ID, Metric_value FROM METRIC_MEASURES_SUBMISSION WHERE Submission_ID = ?;");
@@ -74,7 +80,10 @@ public class ExerciseSubmission {
         }
         catch(SQLException e)
         {
-            throw new SQLException();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Failed to fetch associated metrics from database"));
+            d.open();
+            return new ArrayList<MetricPair>();
         }
     }
     public void setMetricList(ArrayList<MetricPair> newList){
@@ -142,6 +151,27 @@ public class ExerciseSubmission {
         catch(SQLException e)
         {
             e.printStackTrace();
+        }
+    }
+    public void deleteSubmission(){
+        try{
+            //delete relationships with metrics
+            PreparedStatement query1 = con.prepareStatement("DELETE FROM METRIC_MEASURES_SUBMISSION WHERE Submission_ID = ?;");
+            query1.setInt(1, submissionID);
+            query1.executeUpdate();
+            //delete whole fucking submission from submission table
+            PreparedStatement query2 = con.prepareStatement("DELETE FROM EXERCISE_SUBMISSION WHERE Submission_ID = ?;");
+            query2.setInt(1, submissionID);
+            query2.executeUpdate();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Submission deleted"));
+            d.open();
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Submission failed to delete"));
+            d.open();
         }
     }
 }

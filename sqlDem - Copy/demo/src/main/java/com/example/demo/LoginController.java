@@ -14,7 +14,7 @@ public class LoginController extends VerticalLayout{
    }
    public void loginSuccess(int userID){
         remove(l);
-        h = new HomeScreen(userID);
+        h = new HomeScreen(userID,this);
         add(h);
    }
    public void registerUser(){
