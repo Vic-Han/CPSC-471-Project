@@ -23,17 +23,58 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
     private int userID;
     private Connection con;
     private ArrayList<Food> foodList; 
+    private FoodSubmission foodSub;
+    private Editor<FoodSubmission> parent;
+    private HorizontalLayout mealview_components; 
+    private NumberField quantity = new NumberField("Quantity");
+    private ComboBox<String> units = new ComboBox<String>("Unit");
+    private HorizontalLayout serving_input;
+    private HorizontalLayout buttons;
+    private Button submitButton = new Button("Submit");
+    private Button deleteButton = new Button("Delete");
     private Button newFood = new Button("New Food");
     private Button editFood = new Button("Edit Food");
     private Button delFood = new Button("Delete Food");
     private ComboBox<Food> chooseFood = new ComboBox<Food>("Choose Food");
-    public SubmitFood(int ID)
+  
+    public SubmitFood(Editor<FoodSubmission> parentEditor, FoodSubmission currentsub)
     {
-    
-    }
-    public SubmitFood(int ID, int mealID, String foodName)
-    {
+        userID = parentEditor.getUserID();
+        parent = parentEditor;
+        foodSub = currentsub;
+        initConnection();
+        setupButtons();
+       
 
+
+
+    }
+    private void setupButtons(){
+        fetchData();
+        chooseFood.setItemLabelGenerator(Food::getName);
+        mealview_components.add(chooseFood);
+
+        newFood.addClickListener(clickEvent -> {
+            FoodEditor editor = new FoodEditor(this);
+            editor.open();
+        });
+        mealview_components.add(newFood);
+
+
+        editFood.addClickListener(clickEvent -> {
+            FoodEditor editor = new FoodEditor(chooseFood.getValue(),this);
+            editor.open();
+        });
+        mealview_components.add(editFood);
+        delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
+        mealview_components.add(delFood);
+        add(mealview_components);
+
+        
+    }
+    public SubmitFood(Editor<FoodSubmission> parentEditor, int mealID)
+    {
+        this(parentEditor,new FoodSubmission(parentEditor.getUserID(), mealID));
     }
     public void initConnection()
     {
