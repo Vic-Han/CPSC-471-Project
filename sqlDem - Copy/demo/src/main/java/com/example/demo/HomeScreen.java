@@ -78,7 +78,7 @@ public class HomeScreen extends AppLayout{
         } else if (tab.equals(exercise)) {
             content.add(new ExerciseView(userID));
         } else if (tab.equals(performanceMetric)) {
-            content.add(new MetricView());
+            content.add(new MetricView(userID));
         } else {
             content.add(new Paragraph("This is the graph tab"));
         }

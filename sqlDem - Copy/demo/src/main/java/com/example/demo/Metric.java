@@ -1,5 +1,8 @@
 package com.example.demo;
 import java.sql.*;
+
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Paragraph;
 public class Metric {
     private String metName;
     private int UserID;
@@ -18,12 +21,15 @@ public class Metric {
         try{
             PreparedStatement query = con.prepareStatement("INSERT INTO PERFORMANCE_METRIC(Metric_name, Owner_ID, Units) VALUES(?,?,?);");
             query.setString(1, "");
-            query.setInt(2, id);
+            query.setInt(2, UserID);
             query.setString(3, "");
             query.executeUpdate();
         }
         catch (SQLException e) {
             e.printStackTrace();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("fuck you"+ UserID));
+            d.open();
         }  
     }
     public void initConnection()

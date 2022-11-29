@@ -23,9 +23,9 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         
 
     }
-    public MetricView(){
+    /*public MetricView(){
         this(1);
-    }
+    }*/
     private void setup(){
         initConnection();
         //make new metric button...

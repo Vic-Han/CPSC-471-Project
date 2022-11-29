@@ -60,7 +60,7 @@ public class Food{
   {
     try
     {
-        PreparedStatement query1 = con.prepareStatement("SELECT Grams_Per_Servings FROM FOOD WHERE Name = ? AND User_ID = ?;");
+        PreparedStatement query1 = con.prepareStatement("SELECT Grams_Per_Serving FROM FOOD WHERE Name = ? AND User_ID = ?;");
         query1.setString(1,foodName);
         query1.setInt(2,UserID);
         ResultSet rs = query1.executeQuery();
@@ -75,7 +75,7 @@ public class Food{
   public void setGramsPerServing(int grams)
   {
         try{
-            PreparedStatement query = con.prepareStatement("UPDATE FOOD SET Grams_Per_Servings = ? WHERE Name = ? AND User_ID = ?;");
+            PreparedStatement query = con.prepareStatement("UPDATE FOOD SET Grams_Per_Serving = ? WHERE Name = ? AND User_ID = ?;");
             query.setInt(1,grams);
             query.setString(2, foodName);
             query.setInt(3, UserID);

@@ -8,6 +8,7 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -42,14 +43,14 @@ public class FoodEditor extends Dialog{
     {
         this(new Food(parentEditor.getUserID()),parentEditor);
     }
-    public FoodEditor()
+    /*public FoodEditor()
     {   
         food = new Food(1,"Egg");
         setupTitle();
         setupTextFields();
         setupNutritionFacts();
         setupExitButtons();
-    }  
+    }  */
 
     private void setupTitle(){
         H1 title = new H1("Food Editor");
@@ -68,7 +69,9 @@ public class FoodEditor extends Dialog{
         }
         catch(SQLException e)
         {
-
+            Dialog d = new Dialog();
+            d.add(new Paragraph(food.getName()+", "+ userID));
+            d.open();
         }
     }
     private void setupNutritionFacts(){
@@ -114,6 +117,7 @@ public class FoodEditor extends Dialog{
     }
     private void delete()
     {
-
+        parent.deleteObject(food);
+        this.close();
     }
 }

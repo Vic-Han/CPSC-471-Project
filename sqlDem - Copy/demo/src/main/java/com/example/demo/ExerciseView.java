@@ -6,6 +6,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 //@Route("ExView")
@@ -17,7 +18,6 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private Button editEx = new Button("Edit Exercise");
     private Button delEx = new Button("Delete Exercise");
     ComboBox<Exercise> chooseEx = new ComboBox<Exercise>("Choose Exercise");
-    ExerciseEditor current;
     public ExerciseView(int ID){
         userID = ID;
         setup();
@@ -33,8 +33,9 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         //make new metric button...
         newEx.addClickListener(clickEvent -> {
             //remove(current);
-            current = new ExerciseEditor(this);
-            add(current);
+            Dialog d = new Dialog();
+            d.add(new ExerciseEditor(this));
+            d.open();
         });
         add(newEx);
 
@@ -45,9 +46,9 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         
         //make edit exercise button...
         editEx.addClickListener(clickEvent -> {
-            remove(current);
-            current = new ExerciseEditor(this,chooseEx.getValue());
-            add(current);
+            Dialog d = new Dialog();
+            d.add(new ExerciseEditor(this, chooseEx.getValue()));
+            d.open();
         });
         add(editEx);
         delEx.addClickListener(clickEvent -> {deleteObject(chooseEx.getValue());});
