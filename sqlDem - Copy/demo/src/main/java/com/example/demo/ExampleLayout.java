@@ -4,7 +4,7 @@ import java.sql.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-@Route("test")
+//@Route("test")
 public class ExampleLayout extends VerticalLayout {
     private Connection dbConnect;
     public ExampleLayout(){

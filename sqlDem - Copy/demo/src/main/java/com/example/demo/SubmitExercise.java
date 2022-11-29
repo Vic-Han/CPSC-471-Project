@@ -20,7 +20,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
 
-@Route("asd")
+//@Route("asd")
 public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private int userID;
     private WorkoutEditor parent;
@@ -50,7 +50,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         userID = parent.getUserID();
         this.parent = parent;
         metrics = new ArrayList<MetricPair>();
-        exSubmission = new ExerciseSubmission(this.parent.workoutID(),userID);
+        exSubmission = new ExerciseSubmission();
         exercises = new ArrayList<Exercise>();
         initTitle();
         initExList();
@@ -62,13 +62,10 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         userID = parent.getUserID();
         metrics = new ArrayList<MetricPair>();
         this.exSubmission = exSubmission;//set submission object
-        try{//set exercise and metrics (list of metrics and values)
-            exercise = exSubmission.getExercise();
-            metrics = exSubmission.getMetricList();
-        }catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
+        //set exercise and metrics (list of metrics and values)
+        exercise = exSubmission.getExercise();
+        metrics = exSubmission.getMetricList();
+
         exercises = new ArrayList<Exercise>();
         initTitle();
         initExList();
@@ -87,6 +84,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     //methods..
     private void rewriteMetrics(){
         exSubmission.setMetricList(metrics);
+        parent.fetchData();
     }
     private void clearMetrics(){
         metricLayout = new VerticalLayout();
@@ -95,7 +93,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         H1 title = new H1("Submit An Exercise:");
         add(title);
     }
-    private void initExList(){
+    private void initExList(){//add empty metriclayout immediately after
         VerticalLayout exLayout = new VerticalLayout();
         //setup combobox
         exCB.setItems(exercises);
@@ -125,6 +123,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         exLayout.add(exButtons);
 
         add(exLayout);
+        add(metricLayout);
     }
     private void initMetList(Exercise ex){//initialize with selected exercise
         clearMetrics();

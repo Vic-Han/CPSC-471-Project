@@ -7,7 +7,9 @@ import java.sql.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -15,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 
-@Route("reg")
+//@Route("reg")
 public class Register extends VerticalLayout { 
     private String[] exampleGender = {"Male", "Female", "Other"};
     private String[] profileType = {"Coach", "Athlete"};
@@ -30,19 +32,26 @@ public class Register extends VerticalLayout {
     protected NumberField weight = new NumberField("Weight(kg):");
     protected ComboBox<String> gender = new ComboBox<>("Gender:");//declare combobox
     protected ComboBox<String> type = new ComboBox<>("Profile Type:");//declare combobox
-    protected DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
+    //protected DatePicker.DatePickerI18n singleFormatI18n = new DatePicker.DatePickerI18n();
     protected DatePicker singleFormatDatePicker = new DatePicker("Date of Birth:");
     protected Button make = new Button("Make");
     protected H1 title = new H1("Register");
     protected Button cancel = new Button("Cancel");
     protected HorizontalLayout buttons = new HorizontalLayout();
 
+    private LoginController controller;
+    private int userID;
 
 
 
 
 
-    public Register (){
+
+    public Register (LoginController controller){
+        this();
+        this.controller = controller;
+    }
+    public Register(){
         setupTitle();
         setupNameFieldInput();
         date();
@@ -76,8 +85,8 @@ public class Register extends VerticalLayout {
     }
 
     private void date(){
-        singleFormatI18n.setDateFormat("yyyy-MM-dd");
-        singleFormatDatePicker.setI18n(singleFormatI18n);
+        //singleFormatI18n.setDateFormat("yyyy-MM-dd");
+        //singleFormatDatePicker.setI18n(singleFormatI18n);
         add(singleFormatDatePicker);
 
     }
@@ -97,10 +106,7 @@ public class Register extends VerticalLayout {
 
     private void makeOrCancel(){
         make.addClickListener(clickEvent -> {submit();});
-        cancel.addClickListener(e ->//set up button as a link to register...
-        cancel.getUI().ifPresent(ui ->
-           ui.navigate(""))
-        );
+        cancel.addClickListener(e -> {cancelRegister();});
         buttons.add(make,cancel);
         add(buttons);
     }
@@ -109,16 +115,16 @@ public class Register extends VerticalLayout {
         add(password);
     }
 
-    public void submit(){
-        int newId = setID();
+    protected void submit(){
+        userID = setID();
         if (weight.getValue() == null)
         {
             return;
         }
         try
         {
-            PreparedStatement query = con.prepareStatement("INSERT INTO USER VALUES(?,?,?,?,?,?,?,?,?);");
-            query.setInt(1, newId);
+            PreparedStatement query = con.prepareStatement("INSERT INTO USER(ID, Date_of_birth, Sex, First_name, Last_name, Height, Weight, Password) VALUES(?,?,?,?,?,?,?,?);");
+            query.setInt(1, userID);
             query.setDate(2, java.sql.Date.valueOf(singleFormatDatePicker.getValue())); //birthday
             query.setString(3, gender.getValue()); // gender
             query.setString(4, fName.getValue()); //fname
@@ -126,14 +132,27 @@ public class Register extends VerticalLayout {
             query.setInt(6, height.getValue().intValue()); // height
             query.setInt(7, weight.getValue().intValue()); // weight
             query.setString(8, password.getValue()); // password
-            query.setString(9,type.getValue());
             query.executeUpdate();
-            //add(new HomeScreen(newId));
+            if (type.getValue() == "Coach"){
+                PreparedStatement query2 = con.prepareStatement("INSERT INTO COACH VALUES(?);");
+                query2.setInt(1,userID);
+            }
+            else{
+                PreparedStatement query3 = con.prepareStatement("INSERT INTO ATHLETE VALUES(?);");
+                query3.setInt(1,userID);
+            }
+            controller.registerSuccess(userID);
         }
         catch (SQLException e) {
             e.printStackTrace();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Error submitting user info"));
+            d.open();
         }
 
+    }
+    protected void cancelRegister(){
+        controller.cancelRegister();
     }
 
     private int setID(){//look for most likely next available ID
@@ -148,6 +167,10 @@ public class Register extends VerticalLayout {
         catch(SQLException e)
         {
             e.printStackTrace();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Error generating userID"));
+            d.open();
+
             return 0;
         }
     }
@@ -168,6 +191,9 @@ public class Register extends VerticalLayout {
         catch(SQLException e)
         {
             e.printStackTrace();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Error accessing existing userIDs"));
+            d.open();
             return 0;
         }
     }

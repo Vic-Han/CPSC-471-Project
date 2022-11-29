@@ -8,7 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-@Route("foodView")
+//@Route("foodView")
 public class FoodView extends VerticalLayout implements Editor<Food>{
     private ArrayList<Food> foodList = new ArrayList<Food>();
     private int userID;

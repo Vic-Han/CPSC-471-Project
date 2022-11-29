@@ -1,6 +1,6 @@
 package com.example.demo;
 
-public class WorkoutEditor implements Editor<ExerciseSubmission>{
+public class WorkoutEditor {
     
     private int userID;
     private Workout workout;

@@ -8,7 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-@Route("ExView")
+//@Route("ExView")
 public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private ArrayList<Exercise> exList = new ArrayList<Exercise>();
     private int userID;

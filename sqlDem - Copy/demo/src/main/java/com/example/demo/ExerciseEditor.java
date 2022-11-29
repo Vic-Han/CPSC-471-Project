@@ -22,7 +22,7 @@ import com.vaadin.flow.component.textfield.TextField;
 
 
 
-@Route("exedit")
+//@Route("exedit")
 public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     private ArrayList<Metric> allMetricList;
     private ArrayList<Metric> exMetricList;

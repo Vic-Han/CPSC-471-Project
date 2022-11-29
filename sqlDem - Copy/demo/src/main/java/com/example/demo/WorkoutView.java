@@ -1,53 +1,60 @@
 package com.example.demo;
-import java.sql.*;
-import java.rmi.server.RemoteObject;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
+
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-public class WorkoutView implements Editor<Workout>{
-    private ArrayList<Food> foodList = new ArrayList<Food>();
+public class WorkoutView extends VerticalLayout implements Editor<Workout>{
     private int userID;
+    private LocalDate date;
+    private ArrayList<Workout> workouts;
+
+    private Accordion accordion;
+    private Paragraph noItems = new Paragraph("No workouts on this day");
+
     private Connection con;
-    private Button newFood = new Button("New Food");
-    private Button editFood = new Button("Edit Food");
-    private Button delFood = new Button("Delete Food");
-    ComboBox<Food> chooseFood = new ComboBox<Food>("Choose Food");
-    public WorkoutView(int ID)
+    public WorkoutView(LocalDate date, int ID)
     {
+        this.date = date;
         userID = ID;
-        setup();
+        initConnection();
+        fetchData();
+        initAccordion();
+        userID = ID;
     }
    
-    public void setup()
-    {
-        /* 
-        initConnection();
-        newFood.addClickListener(clickEvent -> {
-            FoodEditor editor = new FoodEditor(this);
-            editor.open();
-        });
-        add(newFood);
-
-        //make combobox...
-        fetchData();
-        chooseFood.setItemLabelGenerator(Food::getName);
-        add(chooseFood);
-        
-        //make edit exercise button...
-        editFood.addClickListener(clickEvent -> {
-            FoodEditor editor = new FoodEditor(chooseFood.getValue(),this);
-            editor.open();
-        });
-        add(editFood);
-        delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
-        add(delFood);
-        */
-
+    private void initAccordion(){
+        //build accordion
+        if (!workouts.isEmpty()){
+            accordion = new Accordion();
+            for (Workout wo: workouts){
+                accordion.add("Workout "+workouts.indexOf(wo) +":", new WorkoutEditor(this, wo));
+            }
+            add(accordion);
+            //add buttons
+            Button addWorkout = new Button("Add Workout");
+            addWorkout.addClickListener(clickEvent -> {
+                //open new editor in dialog, refresh accordion upon close and make noItems = ""
+            });
+            add(addWorkout);
+        }
+        else{
+            add(noItems);
+        }
     }
+
+    
     public void initConnection()
     {
          
@@ -65,40 +72,30 @@ public class WorkoutView implements Editor<Workout>{
     @Override
     public void fetchData()
     {
-        try
-        {
-            PreparedStatement query = con.prepareStatement("SELECT Name FROM FOOD WHERE User_ID = ?;");
-            query.setInt(1, userID);
-            ResultSet rs = query.executeQuery();
-            foodList = new ArrayList<Food>();
-            while(rs.next())
-            {
-                foodList.add(new Food(userID,rs.getString(1)));
+        workouts = new ArrayList<Workout>();
+        try{
+            PreparedStatement query1 = con.prepareStatement("SELECT Workout_ID FROM WORKOUT WHERE Day = ? AND Day_owner_ID = ?;");
+            query1.setDate(1, Date.valueOf(date));
+            query1.setInt(2, userID);
+            ResultSet rs = query1.executeQuery();
+            while (rs.next()){
+                workouts.add(new Workout(rs.getInt(1), userID));
             }
-            chooseFood.setItems(foodList);
+            
         }
-        catch(SQLException e)
-        {
-
+        catch(SQLException e){
+            e.printStackTrace();
+            Dialog d = new Dialog();
+            Paragraph p = new Paragraph("Error fetching workouts for this day in database");
+            d.add(p);
+            d.open();
         }
+        
     }
     @Override
     public void deleteObject(Workout workout)
     {
-        /* 
-        try
-        {
-            PreparedStatement query = con.prepareStatement("DELETE FROM FOOD WHERE User_ID = ? AND Name = ?;");
-            query.setInt(1, userID);
-            query.setString(2, food.getName());
-            query.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-
-        }
-        fetchData();
-        */
+        
     }
     @Override
     public void addObject(Workout workout)

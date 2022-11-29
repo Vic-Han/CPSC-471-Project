@@ -62,16 +62,7 @@ public class Workout {
         }
     }
     public void removeSubmission(ExerciseSubmission submission){
-        try
-        {
-            PreparedStatement query1 = con.prepareStatement("DELETE FROM EXERCISE_SUBMISSION WHERE SUBMISSION_ID =?;");
-            query1.setInt(1, submission.getID());
-            query1.executeUpdate();
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
+       submission.deleteSubmission();
     }
     public LocalDate getDate() throws SQLException{
          try
