@@ -40,9 +40,9 @@ public class ExerciseSubmission {
         }
         catch(SQLException e)
         {
-            Dialog d = new Dialog();
-            d.add(new Paragraph("Error fetching Exercise from database"));
-            d.open();
+            //Dialog d = new Dialog();
+           // d.add(new Paragraph("Error fetching Exercise from database"));
+            //d.open();
             return new Exercise(null, submissionID);
         }
     }
@@ -77,9 +77,9 @@ public class ExerciseSubmission {
         }
         catch(SQLException e)
         {
-            Dialog d = new Dialog();
-            d.add(new Paragraph("Failed to fetch associated metrics from database"));
-            d.open();
+            //Dialog d = new Dialog();
+           // d.add(new Paragraph("Failed to fetch associated metrics from database"));
+            //d.open();
             return new ArrayList<MetricPair>();
         }
     }
@@ -142,7 +142,7 @@ public class ExerciseSubmission {
     private void insertSubmission(int workoutID, int userID){
         try
         {
-            PreparedStatement query1 = con.prepareStatement("INSERT INTO EXERCISE_SUBMISSION(Submission_ID) VALUES(?,\"\",?,?);");
+            PreparedStatement query1 = con.prepareStatement("INSERT INTO EXERCISE_SUBMISSION VALUES(?,\"\",?,?);");
             query1.setInt(1, submissionID);
             query1.setInt(2, userID);
             query1.setInt(3, workoutID);
