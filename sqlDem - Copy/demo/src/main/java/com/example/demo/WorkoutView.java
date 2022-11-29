@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -39,7 +40,7 @@ public class WorkoutView extends VerticalLayout implements Editor<Workout>{
         if (!workouts.isEmpty()){
             accordion = new Accordion();
             for (Workout wo: workouts){
-                accordion.add("Workout "+workouts.indexOf(wo) +":", new WorkoutEditor(this, wo));
+                accordion.add("Workout "+workouts.indexOf(wo) +":",  new WorkoutEditor(this, wo));
             }
             add(accordion);
             //add buttons

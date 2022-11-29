@@ -16,7 +16,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     private Button newMet = new Button("New Metric");
     private Button editMet = new Button("Edit Metric");
     private Button delMet = new Button("Delete Metric");
-    ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
+    private ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
     public MetricView(int ID){
         userID = ID;
         setup();
@@ -36,7 +36,22 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         add(newMet);
 
         //make combobox...
-        fetchData();
+        try
+        {
+            PreparedStatement query = con.prepareStatement("SELECT Metric_name FROM PERFORMANCE_METRIC WHERE Owner_ID = ?;");
+            query.setInt(1, userID);
+            ResultSet rs = query.executeQuery();
+            metricList = new ArrayList<Metric>();
+            while(rs.next())
+            {
+                metricList.add(new Metric(rs.getString(1),userID));
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        chooseMet.setItems(metricList);
         chooseMet.setItemLabelGenerator(Metric::getName);
         add(chooseMet);
         
@@ -62,29 +77,12 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     @Override
     public void fetchData()
     {
-        try
-        {
-            PreparedStatement query = con.prepareStatement("SELECT Metric_name FROM PERFORMANCE_METRIC WHERE Owner_ID = ?;");
-            query.setInt(1, userID);
-            ResultSet rs = query.executeQuery();
-            metricList = new ArrayList<Metric>();
-            while(rs.next())
-            {
-                metricList.add(new Metric(rs.getString(1),userID));
-            }
-            chooseMet.setItems(metricList);
-        }
-        catch(SQLException e)
-        {
-
-        }
-
-
+        chooseMet.setItems(metricList);
     }
     @Override
     public void addObject(Metric metric) {
         metricList.add(metric);
-        fetchData();
+        chooseMet.setItems(metricList);
     }
     @Override
     public void deleteObject(Metric metric) {
@@ -107,8 +105,8 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         {
 
         }
-
-        fetchData();
+        metricList.remove(metric);
+        chooseMet.setItems(metricList);
     }
     @Override
     public int getUserID() {

@@ -16,7 +16,7 @@ public class Metric {
         initConnection();
         //works
         try{
-            PreparedStatement query = con.prepareStatement("INSERT INTO PERFORMANCE_METRIC VALUES(?,?,?);");
+            PreparedStatement query = con.prepareStatement("INSERT INTO PERFORMANCE_METRIC(Metric_name, Owner_ID, Units) VALUES(?,?,?);");
             query.setString(1, "");
             query.setInt(2, id);
             query.setString(3, "");

@@ -1,6 +1,8 @@
 package com.example.demo;
 
-public class WorkoutEditor implements Editor<ExerciseSubmission>{
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
+public class WorkoutEditor extends VerticalLayout implements Editor<ExerciseSubmission>{
     
     private int userID;
     private Workout workout;
@@ -15,7 +17,7 @@ public class WorkoutEditor implements Editor<ExerciseSubmission>{
         this.parent = parent;
         this.workout = workout;
     }
-    public int workoutID()
+    public int getWorkoutID()
     {
         return workout.getID();
     }

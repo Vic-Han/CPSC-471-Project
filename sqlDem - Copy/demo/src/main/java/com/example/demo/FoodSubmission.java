@@ -53,13 +53,14 @@ public class FoodSubmission {
         {
             PreparedStatement query1 = con.prepareStatement("SELECT servings FROM FOOD WHERE Name = ? AND User_ID = ?;");
             query1.setString(1,foodName);
-            query1.setInt(2,UserID);
+            query1.setInt(2,userID);
             ResultSet rs = query1.executeQuery();
             rs.next();
             return rs.getInt(1);
         }
         catch(SQLException e)
         {
+            return 0;
             //throw new SQLException();
         }
     }

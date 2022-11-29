@@ -50,7 +50,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         userID = parent.getUserID();
         this.parent = parent;
         metrics = new ArrayList<MetricPair>();
-        exSubmission = new ExerciseSubmission();
+        exSubmission = new ExerciseSubmission(parent.getWorkoutID(),parent.getUserID());
         exercises = new ArrayList<Exercise>();
         initTitle();
         initExList();
@@ -74,7 +74,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     public SubmitExercise(){//default ctor testing only
         initConnection();
         metrics = new ArrayList<MetricPair>();
-        exSubmission = new ExerciseSubmission(this.parent.workoutID(),userID);
+        exSubmission = new ExerciseSubmission(this.parent.getWorkoutID(),userID);
         exercises = new ArrayList<Exercise>();
         
         initTitle();

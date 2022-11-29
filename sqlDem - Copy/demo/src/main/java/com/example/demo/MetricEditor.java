@@ -40,6 +40,7 @@ public class MetricEditor extends Dialog{
     }
     public MetricEditor(Editor<Metric> parentEditor){
         this(parentEditor,new Metric(parentEditor.getUserID()));
+        parent.addObject(metric);
     }
     public void initConnection()
     {
@@ -75,7 +76,7 @@ public class MetricEditor extends Dialog{
     }
     private void submit(){
         metric.update(nameField.getValue(),unitField.getValue());
-        parent.addObject(metric);
+        parent.fetchData();
         this.close();
     }
     private void delete()

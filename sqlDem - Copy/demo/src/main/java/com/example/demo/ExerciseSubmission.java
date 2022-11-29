@@ -153,4 +153,8 @@ public class ExerciseSubmission {
             e.printStackTrace();
         }
     }
+    public int getID(){
+        return submissionID;
+    }
+    public void deleteSubmission(){}
 }
