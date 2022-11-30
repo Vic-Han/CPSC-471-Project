@@ -34,6 +34,7 @@ public class ExerciseSubmission {
             PreparedStatement query1 = con.prepareStatement("SELECT Exercise_name, User_ID FROM  EXERCISE_SUBMISSION WHERE Submission_ID = ?;");
             query1.setInt(1, submissionID);
             ResultSet rs = query1.executeQuery();
+            rs.next();
             String exName = rs.getString(1);
             int usID = rs.getInt(2);
             return new Exercise(exName, usID);
@@ -43,6 +44,7 @@ public class ExerciseSubmission {
             //Dialog d = new Dialog();
            // d.add(new Paragraph("Error fetching Exercise from database"));
             //d.open();
+            e.printStackTrace();
             return new Exercise(null, submissionID);
         }
     }
@@ -90,7 +92,7 @@ public class ExerciseSubmission {
             query1.setInt(1, submissionID);
             query1.executeUpdate();
             for (MetricPair m : newList){
-                PreparedStatement query2 = con.prepareStatement("INSERT INTO METRIC_MEASURES_SUBMISSION VALUES(?,?,?,?);");
+                PreparedStatement query2 = con.prepareStatement("INSERT INTO METRIC_MEASURES_SUBMISSION(Metric_name, Metric_owner_ID, Metric_value, Submission_ID) VALUES(?,?,?,?);");
                 query2.setString(1, m.getMetric().getName());
                 query2.setInt(2, m.getMetric().getID());
                 query2.setInt(3, m.getVal());

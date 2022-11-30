@@ -152,7 +152,11 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         metricLayout.add(grid);
 
         Button submitValues = new Button("Submit Values");
-        submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
+        submitValues.addClickListener(ClickListener -> {
+            setName();
+            rewriteMetrics();
+            
+        });
         metricLayout.add(submitValues);
     
         
@@ -172,8 +176,23 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         metricLayout.add(grid);
 
         Button submitValues = new Button("Submit Values");
-        submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
+        submitValues.addClickListener(ClickListener -> {
+            setName();
+            rewriteMetrics();
+        });
         metricLayout.add(submitValues);
+    }
+    private void setName() {
+        try{
+            PreparedStatement query1 = con.prepareStatement("UPDATE EXERCISE_SUBMISSION SET Exercise_name = ? WHERE Submission_ID = ?;");
+            query1.setString(1,exercise.getName());
+            query1.setInt(2,exSubmission.getID());
+            query1.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
     //inherited methods..
     @Override
