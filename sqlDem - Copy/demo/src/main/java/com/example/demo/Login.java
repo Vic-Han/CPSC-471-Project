@@ -16,7 +16,6 @@ import com.vaadin.flow.router.Route;
 
 //@Route("")
 public class Login extends VerticalLayout{
-    private int userID;
     private Connection con;
     PasswordField passwordField = new PasswordField();
     NumberField numberField = new NumberField("User ID:");
@@ -92,7 +91,7 @@ public class Login extends VerticalLayout{
         ResultSet rs = query1.executeQuery();
         
         if (rs.next()){
-            controller.loginSuccess(userID);;
+            controller.loginSuccess(numberField.getValue().intValue());;
         }
         else{
             Dialog d = new Dialog();
