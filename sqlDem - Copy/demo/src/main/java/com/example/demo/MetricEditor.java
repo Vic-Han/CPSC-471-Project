@@ -67,8 +67,8 @@ public class MetricEditor extends Dialog{
         Button submit = new Button("Submit");//declaring buttons...
         Button delete = new Button("Delete");
         submit.addClickListener(ClickEvent -> {submit();});
-        delete.addClickListener(clickEvent ->{delete();});
-        lastRow.add(submit,delete);//add all the buttons to layout
+        /*delete.addClickListener(clickEvent ->{delete();}); */
+        lastRow.add(submit);//add all the buttons to layout
         layout.add(lastRow);//add layout
     }
     private void addLayout(){
@@ -79,9 +79,9 @@ public class MetricEditor extends Dialog{
         parent.fetchData();
         this.close();
     }
-    private void delete()
+    /*private void delete()
     {
         parent.deleteObject(metric);
         this.close();
-    }
+    }*/
 }
