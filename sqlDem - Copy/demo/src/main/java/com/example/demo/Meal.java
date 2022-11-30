@@ -103,6 +103,10 @@ public class Meal{
         ArrayList<FoodSubmission> allSubs = new ArrayList<FoodSubmission>();
         return allSubs;
     }
+    public int getID()
+    {
+        return meal_ID;
+    }
     public Date getDate()
     {
         try

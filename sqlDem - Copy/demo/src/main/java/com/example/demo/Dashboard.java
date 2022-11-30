@@ -96,9 +96,7 @@ public class Dashboard extends VerticalLayout {
         }
     }*/
     private void setupMealLayout(LocalDate day){
-        mealLayout = new VerticalLayout();
-      //  updateMealLayout(day);
-        add(mealLayout);
+        add(new MealView(Date.valueOf(selected),userID));
     }/* 
     private void updateMealLayout(LocalDate day){
         mealLayout.removeAll();

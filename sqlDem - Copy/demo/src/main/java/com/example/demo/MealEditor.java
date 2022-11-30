@@ -13,11 +13,13 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
 
     public MealEditor(Editor<Meal> parentEditor,Meal inputMeal)
     {
-        
+        userID = parentEditor.getUserID();
+        meal = inputMeal;
+        parent = parentEditor;
     }
-    public MealEditor(Editor<Meal> parentEditor)
+    public MealEditor(Editor<Meal> parentEditor,Date date)
     {
-
+        this(parentEditor, new Meal(parentEditor.getUserID(), date));
     }
 
 

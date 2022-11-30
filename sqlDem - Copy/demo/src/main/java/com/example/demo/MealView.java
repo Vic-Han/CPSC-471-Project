@@ -18,47 +18,29 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     private ArrayList<Food> foodList = new ArrayList<Food>();
     private int userID;
     private Connection con;
-    private ArrayList<Meal> mealList;
+    private ArrayList<Meal> mealList = new ArrayList<Meal>();
     private Accordion mealAccordion;
     private Button newMeal = new Button("New Meal");
-    private Button editMeal = new Button("Edit Meal");
-    private Button delMeal = new Button("Delete Meal");
     private Paragraph noItems = new Paragraph("No meals on this day");
     private ArrayList<AccordionPanel> panelArray = new ArrayList<AccordionPanel>();
-    public MealView(int ID)
+    Date locDate;
+    public MealView(Date d,int ID)
     {
         userID = ID;
+        locDate = d;
         setup();
     }
     public MealView()
     {
-        this(1);
+        //this(1);
     }
     public void setup()
     {
-        /*
-        initConnection();
-        newFood.addClickListener(clickEvent -> {
-            FoodEditor editor = new MealEditor(this);
-            editor.open();
-        });
-        add(newFood);
-
-        //make combobox...
-        fetchData();
-        chooseFood.setItemLabelGenerator(Food::getName);
-        add(chooseFood);
         
-        //make edit exercise button...
-        editFood.addClickListener(clickEvent -> {
-            FoodEditor editor = new FoodEditor(chooseFood.getValue(),this);
-            editor.open();
-        });
-        add(editFood);
-        delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
-        add(delFood);
-
-        */
+        initConnection();
+        initAccordion();
+        initButton();
+        
     }
     private void initAccordion(){
         //build accordion
@@ -72,6 +54,15 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
         if (mealList.isEmpty()){
             add(noItems);
         }
+    }
+    private void initButton()
+    {
+        newMeal.addClickListener(clickEvent -> {
+            AccordionPanel tmp = new AccordionPanel("Meal " + mealList.size() + ":", new MealEditor(this,locDate));
+            panelArray.add(tmp);
+            mealAccordion.add(tmp);
+        });
+        add(newMeal);
     }
     public void initConnection()
     {
@@ -95,24 +86,27 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     @Override
     public void deleteObject(Meal meal)
     {
-        /* 
-        try
-        {
-            PreparedStatement query = con.prepareStatement("DELETE FROM FOOD WHERE User_ID = ? AND Name = ?;");
-            query.setInt(1, userID);
-            query.setString(2, food.getName());
-            query.executeUpdate();
+        //delete panel in accordion
+        AccordionPanel doomed = null;
+        for (AccordionPanel maybeDoomed : panelArray){
+            WorkoutEditor tmp = (WorkoutEditor) maybeDoomed.getContent().toArray()[0];
+            if (tmp.getWorkoutID() == meal.getID()){
+                doomed = maybeDoomed;
+                break;
+            }
         }
-        catch(SQLException e)
-        {
-
+        if (doomed != null){
+            mealAccordion.remove(doomed);
         }
-        fetchData();
-        */
     }
     @Override
     public void addObject(Meal meal)
     {
+        mealList.add(meal);
         fetchData();
+    }
+    public Date getDate()
+    {
+        return locDate;
     }
 }
