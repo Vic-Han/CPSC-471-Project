@@ -1,6 +1,8 @@
 package com.example.demo;
 import java.sql.*;
 import java.util.ArrayList;
+import java.sql.*;
+import java.util.ArrayList;
 
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Paragraph;
@@ -40,7 +42,8 @@ public class Meal{
             e.printStackTrace();
         }   
     }
-    private int setID(){//look for most likely next available ID
+    private int setID(){
+        //look for most likely next available ID
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT COUNT(Meal_ID) FROM Meal;");
@@ -60,7 +63,8 @@ public class Meal{
         }
     }
 
-    private int verifyID(int maybeID){ //check if ID is actually valid.  If so, set ID
+    private int verifyID(int maybeID)
+    { //check if ID is actually valid.  If so, set ID
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT * FROM Meal WHERE Meal_ID = ?;");
