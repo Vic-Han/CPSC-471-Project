@@ -5,17 +5,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class AthleteProfile extends ProfileScreen {
     private ArrayList<Integer> coaches = new ArrayList<Integer>(); 
-    private int userID;
+    HorizontalLayout ho = new HorizontalLayout();
     ComboBox<Integer> xd = new ComboBox<Integer>("Choose Coach:");
+    ComboBox<Integer> rem = new ComboBox<Integer>("Remove Coach:");
+    Button register = new Button("Register Coach");
 
 
     public AthleteProfile(int userID, LoginController l){
         super(userID, l); 
+        registerCoach(userID);
+        add(xd);
+        registerButton();
     }
     
 
@@ -28,7 +36,7 @@ public class AthleteProfile extends ProfileScreen {
     {
         try
         {
-        PreparedStatement query = con.prepareStatement("SELECT * FROM Coach AS C WHERE NOT EXISTS(SELECT * FROM accesses_information AS A WHERE A.coach_id = C.coach_id and A.athlete_id = ?;);");
+        PreparedStatement query = con.prepareStatement("SELECT * FROM Coach AS C WHERE NOT EXISTS(SELECT * FROM accesses_information AS A WHERE A.coach_id = C.coach_id and A.athlete_id = ?);");
         query.setInt(1, userID);
         ResultSet rs = query.executeQuery();
         coaches = new ArrayList<Integer>();
@@ -38,22 +46,51 @@ public class AthleteProfile extends ProfileScreen {
         }
         xd.setItems(coaches);
 
-
-
         }
         catch(SQLException e)
-        {
 
+        {
+            Dialog d = new Dialog();
+            Paragraph p = new Paragraph("Error");
+            d.add(p);
+            d.open();
         }
     }
 
+    public void registerButton(){
+        register.addClickListener(clickEvent -> {insertToAI(); registerCoach(userID);});
+        add(register);
+    }
+
+
+    public void insertToAI(){
+        try{
+            PreparedStatement query200 = con.prepareStatement("INSERT INTO accesses_information(Athlete_ID, Coach_ID) VALUES(?,?);");
+            query200.setInt(1, userID);
+            query200.setInt(2, xd.getValue());
+            query200.executeUpdate();
+        }
+        catch(SQLException e){
+
+        }
+
+    }
 
     // the option to remove a coach should only be available if an athlete already has a coach 
+    /* 
     public void removeCoach(int Coach_ID)
     {
         try 
         {
-            PreparedStatement query1 = con.prepareStatement("DELETE FROM accesses_information WHERE coach_id = ? AND athlete_id = ?;");
+            PreparedStatement query9000 = con.prepareStatement("SELECT Coach_ID from accesses_information where Athlete_ID = ?;");
+            query9000.setInt(1, userID);
+            ResultSet rs = query9000.executeQuery();
+            coaches = new ArrayList<Integer>();
+            while (rs.next()){
+                coaches.add(rs.getInt(1));
+            }
+            rem.setItems(coaches);
+
 
         }
         catch(SQLException e)
@@ -64,7 +101,7 @@ public class AthleteProfile extends ProfileScreen {
     
 
     }
-
+*/
 
     // add a list of coaches for the athlete to choose from in combobox
     // select coach_id from accesses_information where athlete_id = ?;
