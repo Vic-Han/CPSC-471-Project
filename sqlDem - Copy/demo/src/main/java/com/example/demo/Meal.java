@@ -10,7 +10,10 @@ import java.sql.*;
 public class Meal{
     private int meal_ID;
     private Connection con;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     public Meal(int ID)
     {
         meal_ID = ID;
