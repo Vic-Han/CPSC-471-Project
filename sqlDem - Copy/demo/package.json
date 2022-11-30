@@ -245,11 +245,7 @@
       "workbox-core": "6.5.0",
       "workbox-precaching": "6.5.0"
     },
-<<<<<<< HEAD
     "hash": "662039dbf5cda189e407be78ddc70217d61e128668d78d6307452c1d889d75ae"
-=======
-    "hash": "f045f8cba99c36e6e620cdf335dd9c4ba8f819795bc82d7724304912b2f69a48"
->>>>>>> parent of 241ac3f (Revert "add stuff")
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
