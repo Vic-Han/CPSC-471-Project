@@ -56,12 +56,12 @@ public class FoodSubmission {
     {
         return mealID;
     }
-    public void setFood(Food food)
+    public void setFood(String food)
     {
         try
         {
             PreparedStatement query1 = con.prepareStatement("UPDATE FOOD_IS_PART_OF_MEAL SET food_name = ? WHERE User_Food_ID = ? AND Meal_ID = ? AND food_name = ?;");
-            query1.setString(1,food.getName());
+            query1.setString(1,food);
             query1.setInt(2,userID);
             query1.setString(4,foodName);
             query1.setInt(3,mealID);
@@ -71,7 +71,7 @@ public class FoodSubmission {
         {
             e.printStackTrace();
         }
-        foodName = food.getName();
+        foodName = food;
     }
     public void setServings(float servings)
     {
@@ -105,6 +105,11 @@ public class FoodSubmission {
             return 0;
             //throw new SQLException();
         }
+    }
+    public void update(String food_name, float new_servings)
+    {
+        setFood(food_name);
+        setServings(new_servings);
     }
 
 }

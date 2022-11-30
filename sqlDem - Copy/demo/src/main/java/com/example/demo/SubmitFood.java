@@ -19,6 +19,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.Route;
+
+import ch.qos.logback.core.joran.conditional.ElseAction;
 public class SubmitFood extends VerticalLayout implements Editor<Food>{
     private int userID;
     private Connection con;
@@ -53,14 +55,11 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
         fetchData();
         chooseFood.setItemLabelGenerator(Food::getName);
         mealview_components.add(chooseFood);
-
         newFood.addClickListener(clickEvent -> {
             FoodEditor editor = new FoodEditor(this);
             editor.open();
         });
         mealview_components.add(newFood);
-
-
         editFood.addClickListener(clickEvent -> {
             FoodEditor editor = new FoodEditor(chooseFood.getValue(),this);
             editor.open();
@@ -69,8 +68,15 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
         delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
         mealview_components.add(delFood);
         add(mealview_components);
+        serving_input.add(quantity);
+        String[] possibleUnits = {"grams","ml","servings"};
+        units.setItems(possibleUnits);
+        serving_input.add(units);
+        submitButton.addClickListener(clickEvent -> {submit();});
+        deleteButton.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
+        buttons.add(submitButton,deleteButton);
+        add(buttons);
 
-        
     }
     public SubmitFood(Editor<FoodSubmission> parentEditor, int mealID)
     {
@@ -130,5 +136,27 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
     public void addObject(Food food)
     {
 
+    }
+    private void submit(){
+        try{
+        Food f = chooseFood.getValue();
+        Float servings = 0f;
+        if(units.getValue() == "ml")
+        {
+            servings = (quantity.getValue().floatValue()) / f.getmlPerServing();
+        }
+        else if(units.getValue() == "grams")
+        {
+            servings = (quantity.getValue().floatValue()) / f.getmlPerServing();
+        }
+        else{
+            servings = quantity.getValue().floatValue();
+        }
+        foodSub.update(f.getName(), servings);
+        }
+        catch(SQLException e)
+        {
+
+        }
     }
 }
