@@ -21,9 +21,6 @@ import com.vaadin.flow.router.Route;
 
 //@Route("ProfScreen")
 public class ProfileScreen extends Register{ 
-     private int userID;
-     private LoginController controller;
-
      public ProfileScreen(int userID)
 
      {
@@ -35,8 +32,12 @@ public class ProfileScreen extends Register{
          cancel.setText("Logout");//need to make this do something useful
      }
     public ProfileScreen(int userID, LoginController controller){
-        this(userID);
-        this.controller = controller;
+        super(controller);
+        this.userID = userID;
+        retrieveInfo();
+        title.setText("Profile");
+        make.setText("Update");
+        cancel.setText("Logout");//need to make this do something useful
     }
 
     @Override
