@@ -9,6 +9,7 @@ public class Exercise {
     private int userID;
     private Connection con;
     public Exercise(int ID){
+        TableCleaner.exerciseCleaner();
         userID = ID;
         exName = "";
         initConnection();
@@ -78,7 +79,7 @@ public class Exercise {
     
         exName = name;
     }
-    public ArrayList<Metric> getMetrics() throws SQLException
+    public ArrayList<Metric> getMetrics()
     {
         // I think it works not too many tests
         try
@@ -98,7 +99,7 @@ public class Exercise {
         catch(SQLException e)
         {
             e.printStackTrace();
-            throw new SQLException("Error");
+            return new ArrayList<Metric>();
         }
        
     }
@@ -133,9 +134,6 @@ public class Exercise {
         catch(SQLException e)
         {
             e.printStackTrace();
-            Dialog d = new Dialog();
-            d.add(new Paragraph("failed  to link metric to exercise"));
-            d.open();
 
             
         }
@@ -143,22 +141,18 @@ public class Exercise {
     public void update(String name,ArrayList<Metric> newMetricList) throws SQLException
     {
         setName(name);
-        try
+       
+        ArrayList<Metric> oldList = getMetrics();
+        for(int index = 0; index < oldList.size(); index++)
         {
-            ArrayList<Metric> oldList = getMetrics();
-            for(int index = 0; index < oldList.size(); index++)
-            {
-                removeMetric(oldList.get(index));
-            }
-            for(int index = 0; index < newMetricList.size(); index++)
-            {
-                addMetric(newMetricList.get(index));
-            }
+            removeMetric(oldList.get(index));
         }
-        catch(SQLException e)
+        for(int index = 0; index < newMetricList.size(); index++)
         {
-            throw new SQLException();
+            addMetric(newMetricList.get(index));
         }
+
+       
     }
     public int getID()
     {

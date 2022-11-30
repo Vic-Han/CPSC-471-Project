@@ -4,6 +4,7 @@ import java.rmi.server.RemoteObject;
 import java.util.ArrayList;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.theme.lumo.LumoUtility.Margin.Horizontal;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -14,7 +15,7 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private ArrayList<Exercise> exList = new ArrayList<Exercise>();
     private int userID;
     private Connection con;
-    Dialog editor = new Dialog();
+    Dialog editor;
     private Button newEx = new Button("New Exercise");
     private Button editEx = new Button("Edit Exercise");
     private Button delEx = new Button("Delete Exercise");
@@ -26,26 +27,28 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         initButtons();
     }
     private void initButtons() {
+        HorizontalLayout buttons = new HorizontalLayout();
         //init new ex
         newEx.addClickListener(clickEvent -> {
-            //remove(current);
-            Dialog d = new Dialog();
-            d.add(new ExerciseEditor(this));
-            d.open();
+            editor = new Dialog();
+            editor.add(new ExerciseEditor(this));
+            editor.open();
         });
-        add(newEx);
+        buttons.add(newEx);
 
         //init edit ex
         editEx.addClickListener(clickEvent -> {
-            
+            editor = new Dialog();
             editor.add(new ExerciseEditor(this, chooseEx.getValue()));
             editor.open();
         });
-        add(editEx);
+        buttons.add(editEx);
 
         //init delete ex
         delEx.addClickListener(clickEvent -> {deleteObject(chooseEx.getValue());});
-        add(delEx);
+        buttons.add(delEx);
+
+        add(buttons);
 
     }
     private void initCB() {
@@ -82,7 +85,9 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         }   
     }
     @Override
-    public void fetchData(){}
+    public void fetchData(){
+        editor.close();
+    }
     @Override
     public void addObject(Exercise exercise) {
         exList.add(exercise);

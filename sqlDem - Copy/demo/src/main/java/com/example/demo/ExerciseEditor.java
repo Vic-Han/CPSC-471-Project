@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -44,10 +45,17 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         initMetricButtons();
         initDone();
     }
+    public ExerciseEditor(Editor<Exercise> parent){
+        this(parent, new Exercise(parent.getUserID()));
+        parent.addObject(exercise);
+    }
     private void initDone() {
         done.addClickListener(ClickEvent -> {
             exercise.setName(nameField.getValue());
-            parent.addObject(exercise);
+            for (Metric m : usedMetrics){
+                exercise.addMetric(m);
+            }
+            
         });
         add(done);
     }
@@ -96,13 +104,15 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         add(chooseMet);
     }
     private void initGrid() {
-            
+            if (exercise != null){
+                usedMetrics = new ArrayList<Metric> (exercise.getMetrics());
+            } 
             metricGrid.addColumn(Metric::getName).setHeader("Metric name:")
             .setAutoWidth(true).setFlexGrow(1);
             metricGrid.addColumn(Metric::getUnit).setHeader("Units")
             .setAutoWidth(true).setFlexGrow(1);
             
-            metricGrid.setItems();
+            metricGrid.setItems(usedMetrics);
             //add context menu
             metricGrid.addComponentColumn(m -> {
                 MenuBar menuBar = new MenuBar();
@@ -123,22 +133,17 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
             add(metricGrid);
     }
     private void initNameField() {
+        if (exercise != null){
+            nameField.setValue(exercise.getName());
+        }
         add(nameField);
     }
-    public ExerciseEditor(Editor<Exercise> parent){
-        this(parent, new Exercise(parent.getUserID()));
-    }
+    
     private void initTitle(){
         H1 title = new H1("Exercise Editor");
         add(title);
     }
     
-
-    private void setup(){
-        initConnection();
-        //make new metric button...
-        
-    }
     public void initConnection()
     {
          
@@ -160,12 +165,10 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
         metricList.add(metric);
         chooseMet.setItems(metricList);
         useMetric(metric);
-;
         
     }
     private void useMetric(Metric metric){
         usedMetrics.add(metric);
-        exercise.addMetric(metric);
         metricGrid.setItems(usedMetrics);
         
     }

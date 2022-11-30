@@ -14,6 +14,7 @@ public class Metric {
     }
     public Metric(int id)
     {
+        TableCleaner.metricCleaner();
         metName = "";
         UserID = id;
         initConnection();
@@ -50,7 +51,7 @@ public class Metric {
     }
     public void setName(String name){
        
-        // works
+
         try{
             PreparedStatement query1 = con.prepareStatement("UPDATE PERFORMANCE_METRIC SET Metric_name = ? WHERE Owner_ID = ? AND Metric_name = ?;");
             query1.setString(1,name);
@@ -61,7 +62,7 @@ public class Metric {
         catch(SQLException e)
         {
             e.printStackTrace();
-        }
+        }/* 
         try
         {
             PreparedStatement query2 = con.prepareStatement("UPDATE METRIC_MEASURES_SUBMISSION SET Metric_name = ? WHERE Metric_name =  ? AND Metric_owner_ID = ?;");
@@ -85,7 +86,7 @@ public class Metric {
         {
             e.printStackTrace();
         }
-        
+        */
         metName = name;
     }
     public String getUnit()

@@ -34,6 +34,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     ComboBox<Exercise> exCB = new ComboBox<>("Choose exercise:");
     VerticalLayout metricLayout = new VerticalLayout();
     Grid<MetricPair> grid = new Grid<>(MetricPair.class, false);
+    Dialog exEditor;
 
     //ctors..
     public void initConnection()
@@ -96,6 +97,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private void initExList(){//add empty metriclayout immediately after
         VerticalLayout exLayout = new VerticalLayout();
         //setup combobox
+        loadExercises();
         exCB.setItems(exercises);
         if (exercise != null){//if existing submission, preset correct exercise
             exCB.setValue(exercise);
@@ -110,11 +112,11 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             exercise = (Exercise)exCB.getValue();
             initMetList(exercise);});
         newEx.addClickListener(ClickEvent ->{
-            Dialog exEditor = new Dialog();
+            exEditor = new Dialog();
             exEditor.add(new ExerciseEditor(this));
             exEditor.open();});
         edit.addClickListener(ClickEvent ->{
-            Dialog exEditor = new Dialog();
+            exEditor = new Dialog();
             exEditor.add(new ExerciseEditor(this, (Exercise)exCB.getValue()));
             exEditor.open();});
         exButtons.add(select);
@@ -128,33 +130,28 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private void initMetList(Exercise ex){//initialize with selected exercise
         clearMetrics();
         //init metrics with 0 values
-        try
-        {
-            for (Metric m : ex.getMetrics()){
-                MetricPair mp = new MetricPair(m, 0);
-                metrics.add(mp);
-            }
-            
-            grid.addColumn(MetricPair::getName).setHeader("Metric:")
-            .setAutoWidth(true).setFlexGrow(1);
-            //add number fields
-            grid.addComponentColumn(m -> {
-                NumberField nf = new NumberField();
-                nf.setValue((double) m.getVal());
-                nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
-                return nf;
-            }).setWidth("70px").setFlexGrow(0);    
-            grid.setItems(metrics);
-            metricLayout.add(grid);
+        
+        for (Metric m : ex.getMetrics()){
+            MetricPair mp = new MetricPair(m, 0);
+            metrics.add(mp);
+        }
+        
+        grid.addColumn(MetricPair::getName).setHeader("Metric:")
+        .setAutoWidth(true).setFlexGrow(1);
+        //add number fields
+        grid.addComponentColumn(m -> {
+            NumberField nf = new NumberField();
+            nf.setValue((double) m.getVal());
+            nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
+            return nf;
+        }).setWidth("70px").setFlexGrow(0);    
+        grid.setItems(metrics);
+        metricLayout.add(grid);
+
+        Button submitValues = new Button("Submit Values");
+        submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
+        metricLayout.add(submitValues);
     
-            Button submitValues = new Button("Submit Values");
-            submitValues.addClickListener(ClickListener -> {rewriteMetrics();});
-            metricLayout.add(submitValues);
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
         
 
     }
@@ -178,12 +175,14 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     //inherited methods..
     @Override
     public void addObject(Exercise exercise) {
-        exercises.add(exercise);   
+        exercises.add(exercise);
+        exCB.setItems(exercises);   
     }
 
     @Override
     public void deleteObject(Exercise exercise) {
         exercises.remove(exercise);
+        exCB.setItems(exercises);
         if (this.exercise == exercise){
             clearMetrics();
         }
@@ -224,7 +223,9 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
 
     @Override
     public void fetchData() {
-        exercises.clear();
+        exEditor.close();
+    }
+    private void loadExercises(){
         try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE Owner_ID = ? ;");
@@ -239,8 +240,6 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         {
             e.printStackTrace();
         }
-        initExList();
-        clearMetrics();
     }
         
 
