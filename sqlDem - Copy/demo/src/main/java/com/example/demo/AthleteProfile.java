@@ -11,12 +11,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 public class AthleteProfile extends ProfileScreen {
     private ArrayList<Integer> coaches = new ArrayList<Integer>(); 
     private int userID;
-    ComboBox xd = new ComboBox("Choose Coach");
+    ComboBox<Integer> xd = new ComboBox<Integer>("Choose Coach:");
 
 
     public AthleteProfile(int userID){
-        super(userID);        
-        add(xd);
+        super(userID); 
     }
     
 
@@ -29,7 +28,7 @@ public class AthleteProfile extends ProfileScreen {
     {
         try
         {
-        PreparedStatement query = con.prepareStatement("SELECT Coach_ID FROM accesses_information WHERE Athlete_ID = ?;");
+        PreparedStatement query = con.prepareStatement("SELECT * FROM Coach AS C WHERE NOT EXISTS(SELECT * FROM accesses_information AS A WHERE A.coach_id = C.coach_id and A.athlete_id = ?;);");
         query.setInt(1, userID);
         ResultSet rs = query.executeQuery();
         coaches = new ArrayList<Integer>();
@@ -48,7 +47,20 @@ public class AthleteProfile extends ProfileScreen {
         }
     }
 
-    public void removeCoach(int Coach_ID){
+
+    // the option to remove a coach should only be available if an athlete already has a coach 
+    public void removeCoach(int Coach_ID)
+    {
+        try 
+        {
+            PreparedStatement query1 = con.prepareStatement("DELETE FROM accesses_information WHERE coach_id = ? AND athlete_id = ?;");
+
+        }
+        catch(SQLException e)
+        {
+
+        }
+
     
 
     }
@@ -60,5 +72,5 @@ public class AthleteProfile extends ProfileScreen {
                                   //    not exists (select * from acceses_information as ac where athlete_id = ? and c.coach_id = ac.coach_id)  
 
 
-    // insert into accesses_information where athlete_id = ? and coach_id = ? 
+    // "INSERT INTO accesses_information (Athlete_ID, Coach_ID) VALUES(?,?);";
 }
