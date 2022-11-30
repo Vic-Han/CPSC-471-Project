@@ -14,23 +14,19 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private ArrayList<Exercise> exList = new ArrayList<Exercise>();
     private int userID;
     private Connection con;
+    Dialog editor = new Dialog();
     private Button newEx = new Button("New Exercise");
     private Button editEx = new Button("Edit Exercise");
     private Button delEx = new Button("Delete Exercise");
     ComboBox<Exercise> chooseEx = new ComboBox<Exercise>("Choose Exercise");
     public ExerciseView(int ID){
-        userID = ID;
-        setup();
-        
-
-    }
-    public ExerciseView(){
-        this(1);
-    }
-    private void setup(){
-        
         initConnection();
-        //make new metric button...
+        userID = ID;
+        initCB();
+        initButtons();
+    }
+    private void initButtons() {
+        //init new ex
         newEx.addClickListener(clickEvent -> {
             //remove(current);
             Dialog d = new Dialog();
@@ -39,36 +35,20 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         });
         add(newEx);
 
-        //make combobox...
-        fetchData();
-        chooseEx.setItemLabelGenerator(Exercise::getName);
-        add(chooseEx);
-        
-        //make edit exercise button...
+        //init edit ex
         editEx.addClickListener(clickEvent -> {
-            Dialog d = new Dialog();
-            d.add(new ExerciseEditor(this, chooseEx.getValue()));
-            d.open();
+            
+            editor.add(new ExerciseEditor(this, chooseEx.getValue()));
+            editor.open();
         });
         add(editEx);
+
+        //init delete ex
         delEx.addClickListener(clickEvent -> {deleteObject(chooseEx.getValue());});
         add(delEx);
-        
+
     }
-    public void initConnection()
-    {
-         
-        try{
-            con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }   
-    }
-    @Override
-    public void fetchData()
-    {
-         
+    private void initCB() {
         try
         {
             PreparedStatement query = con.prepareStatement("SELECT Name FROM EXERCISE WHERE User_ID = ?;");
@@ -78,46 +58,50 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
             while(rs.next())
             {
                 exList.add(new Exercise(rs.getString(1),userID));
-            }
-            chooseEx.setItems(exList);
+            }  
         }
         catch(SQLException e)
         {
-
+            e.printStackTrace();
         }
-        
-
+        chooseEx.setItems(exList);
+        chooseEx.setItemLabelGenerator(Exercise::getName);
+        add(chooseEx);
+    }
+    /*public ExerciseView(){
+        this(1);
+    }*/
+    
+    public void initConnection()
+    {
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }   
     }
     @Override
-    public void addObject(Exercise exericse) {
-        fetchData();
+    public void fetchData(){}
+    @Override
+    public void addObject(Exercise exercise) {
+        exList.add(exercise);
+        chooseEx.setItems(exList);
+        editor.close();
     }
     @Override
     public void deleteObject(Exercise exercise) {
-        /* 
+        exList.remove(exercise);
+        chooseEx.setItems(exList);
         try{
-        metricList.remove(metric);
-        PreparedStatement query1 = con.prepareStatement("DELETE FROM PERFORMANCE_METRIC WHERE Owner_ID = ? AND NAME = ? ;");
-        query1.setInt(1,userID);
-        query1.setString(2,metric.getName());
-        query1.executeUpdate();
-        PreparedStatement query2 = con.prepareStatement("DELETE FROM METRIC_DESCRIBES_EXERCISE WHERE Metric_user_ID = ? AND Metric_name = ?;");
-        query2.setInt(1,userID);
-        query2.setString(2,metric.getName());
-        query2.executeUpdate();
-        PreparedStatement query3 = con.prepareStatement("DELETE FROM METRIC MEASURES_SUBMISSION_WHERE Metric_owner_ID = ? AND Metric_name = ?;");
-        query3.setInt(1,userID);
-        query3.setString(2,metric.getName());
-        query3.executeUpdate();
-    
+            PreparedStatement query1 = con.prepareStatement("DELETE FROM EXERCISE WHERE User_ID = ? AND Name = ?;");
+            query1.setInt(1,userID);
+            query1.setString(2,exercise.getName());
+            query1.executeUpdate();
         }
-        catch(SQLException e)
-        {
-
+        catch(SQLException e){
+            e.printStackTrace();
         }
-
-        fetchData();
-        */
     }
     @Override
     public int getUserID() {

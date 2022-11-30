@@ -1,6 +1,9 @@
 package com.example.demo;
 import java.sql.*;  
 import java.util.ArrayList;
+
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Paragraph;
 public class Exercise {
     private String exName;
     private int userID;
@@ -118,7 +121,7 @@ public class Exercise {
     }
     public void addMetric(Metric metric)
     {
-        // works
+        
         try
         {
             PreparedStatement query = con.prepareStatement("INSERT INTO METRIC_DESCRIBES_EXERCISE VALUES(?,?,?);");
@@ -130,7 +133,11 @@ public class Exercise {
         catch(SQLException e)
         {
             e.printStackTrace();
-            exName ="Failed";
+            Dialog d = new Dialog();
+            d.add(new Paragraph("failed  to link metric to exercise"));
+            d.open();
+
+            
         }
     }
     public void update(String name,ArrayList<Metric> newMetricList) throws SQLException
