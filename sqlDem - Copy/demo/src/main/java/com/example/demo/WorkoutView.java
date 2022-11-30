@@ -45,6 +45,7 @@ public class WorkoutView extends VerticalLayout implements Editor<Workout>{
             AccordionPanel tmp = new AccordionPanel("Workout " + workouts.size() + ":", new WorkoutEditor(this,date));
             panelArray.add(tmp);
             accordion.add(tmp);
+            noItems = new Paragraph("");
         });
         add(addWorkout);
     }
@@ -115,6 +116,9 @@ public class WorkoutView extends VerticalLayout implements Editor<Workout>{
         }
         if (doomed != null){
             accordion.remove(doomed);
+        }
+        if (panelArray.size() == 0){
+            noItems = new Paragraph("No workouts on this day");
         }
     }
     @Override

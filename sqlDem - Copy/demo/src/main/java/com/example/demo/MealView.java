@@ -2,15 +2,19 @@ package com.example.demo;
 import java.sql.*;
 import java.rmi.server.RemoteObject;
 import java.util.ArrayList;
-
-import org.apache.logging.log4j.util.MultiFormatStringBuilderFormattable;
-
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -81,7 +85,7 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     @Override
     public void fetchData()
     {
-       
+        
     }
     @Override
     public void deleteObject(Meal meal)

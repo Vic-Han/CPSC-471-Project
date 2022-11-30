@@ -85,7 +85,6 @@ public class Login extends VerticalLayout{
         }
         try {
 
-            
         PreparedStatement query1 = con.prepareStatement("select First_name from USER where Password = ? AND ID = ?;");
         query1.setString(1, passwordField.getValue());
         query1.setInt(2, numberField.getValue().intValue());

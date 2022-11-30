@@ -10,6 +10,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
@@ -21,7 +22,7 @@ public class WorkoutEditor extends VerticalLayout implements Editor<ExerciseSubm
     private int userID;
     private Workout workout;
     private Grid<ExerciseSubmission> grid;
-    private ArrayList<ExerciseSubmission> subList = new ArrayList<ExerciseSubmission>();
+    private ArrayList<ExerciseSubmission> subList;
 
     private Editor<Workout> parent;
     private Dialog submissionDialog;
@@ -57,17 +58,21 @@ public class WorkoutEditor extends VerticalLayout implements Editor<ExerciseSubm
     }
     private void initGrid() {
         grid = new Grid<ExerciseSubmission>();
-        subList = new ArrayList<ExerciseSubmission>(workout.getSubmissionList());
+        subList = workout.getSubmissionList();
         grid.setItems(subList);
-        grid = new Grid<ExerciseSubmission>();
-        grid.addColumn(e -> {return e.getExercise().getName();});
+        grid.addColumn(e -> {
+            String tmpName = e.getExercise().getName();
+            System.out.println(tmpName);
+            return tmpName;
+        }).setHeader("Exercise").setAutoWidth(true).setFlexGrow(1);
         grid.addComponentColumn(e ->{
-            Paragraph para = new Paragraph();
+            VerticalLayout tempPara = new VerticalLayout();
             for (MetricPair m: e.getMetricList()){
-                para.add("\n" + m.getName() + ": " + m.getVal() + ' ' + m.getUnit());
+                Paragraph tempLine = new Paragraph(m.getName() + ": " + m.getVal() + ' ' + m.getUnit());
+                tempPara.add(tempLine);
             }
-            return para;
-        });
+            return tempPara;
+        }).setHeader("Stats").setAutoWidth(true).setFlexGrow(1);
         grid.addComponentColumn(e -> {
             MenuBar menuBar = new MenuBar();
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
@@ -84,6 +89,8 @@ public class WorkoutEditor extends VerticalLayout implements Editor<ExerciseSubm
             });
             return menuBar;
         }).setWidth("70px").setFlexGrow(0);
+        grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
+        grid.setWidth("600px");
         add(grid);
     }
     public int getWorkoutID()
@@ -94,20 +101,24 @@ public class WorkoutEditor extends VerticalLayout implements Editor<ExerciseSubm
     public void fetchData()
     {
      submissionDialog.close();
+     subList = workout.getSubmissionList();
      grid.setItems(subList);  
+     for (ExerciseSubmission es : subList){
+        System.out.println(es.getExercise().getName());
+     }
     }
     @Override
     public void addObject(ExerciseSubmission sub)
     {
         workout.addSubmission(sub);
-        subList.add(sub);
+        subList = workout.getSubmissionList();
         grid.setItems(subList);
     }
     @Override
     public void deleteObject(ExerciseSubmission sub)
     {
         workout.removeSubmission(sub);
-        subList.remove(sub);
+        subList = workout.getSubmissionList();
         grid.setItems(subList);
     }
     @Override

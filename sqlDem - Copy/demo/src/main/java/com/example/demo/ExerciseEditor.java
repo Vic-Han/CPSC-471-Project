@@ -26,11 +26,11 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
     private int userID;
     private Connection con;
     TextField nameField = new TextField("Exercise name");
-    private Button newMet = new Button("New Metric");
-    private Button editMet = new Button("Edit Metric");
-    private Button useMet = new Button("Use Metric");
+    private Button newMet = new Button("Create new metric");
+    private Button editMet = new Button("Edit this metric");
+    private Button useMet = new Button("Add this metric");
     private Button done = new Button("Done");
-    private ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
+    private ComboBox<Metric> chooseMet = new ComboBox<Metric>("Add a performance metric");
     private Grid<Metric> metricGrid = new Grid<Metric>();
     
     public ExerciseEditor(Editor<Exercise> parent, Exercise exercise){
