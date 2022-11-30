@@ -90,7 +90,7 @@ public class ExerciseSubmission {
             query1.setInt(1, submissionID);
             query1.executeUpdate();
             for (MetricPair m : newList){
-                PreparedStatement query2 = con.prepareStatement("INSERT INTO METRIC_MEASURES_SUBMISSION VALUES(?,?,?,?");
+                PreparedStatement query2 = con.prepareStatement("INSERT INTO METRIC_MEASURES_SUBMISSION VALUES(?,?,?,?);");
                 query2.setString(1, m.getMetric().getName());
                 query2.setInt(2, m.getMetric().getID());
                 query2.setInt(3, m.getVal());

@@ -20,10 +20,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class Dashboard extends VerticalLayout {
     Date testDay;// in reality would come from user
-    LocalDate selected;
+    LocalDate selected = LocalDate.now();
     DatePicker datePick;
     HorizontalLayout headerLayout;
-    VerticalLayout workoutLayout;
     VerticalLayout mealLayout;
     private int userID;
     MealView meals;
@@ -66,9 +65,7 @@ public class Dashboard extends VerticalLayout {
         headerLayout.add (new H2("Viewing: "+ day.toString()));
     }
     private void setupWorkoutLayout(LocalDate day){
-        workoutLayout = new VerticalLayout();
-     //   updateWorkoutLayout(day);
-        add(workoutLayout);
+        add(new WorkoutView(selected, userID));
     }/* 
     private void updateWorkoutLayout(LocalDate day){
         workoutLayout.removeAll();

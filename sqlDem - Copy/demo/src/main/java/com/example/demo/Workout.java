@@ -28,7 +28,7 @@ public class Workout {
         
     }
     //methods..
-    public ArrayList<ExerciseSubmission> getSubmissionList() throws SQLException{
+    public ArrayList<ExerciseSubmission> getSubmissionList(){
         try
         {
             ArrayList<ExerciseSubmission> subList = new ArrayList<ExerciseSubmission>();
@@ -43,14 +43,13 @@ public class Workout {
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
-            throw new SQLException();
+            return new ArrayList<ExerciseSubmission>();
         }
     }
     public void addSubmission(ExerciseSubmission submission){
         try
         {
-            PreparedStatement query1 = con.prepareStatement("UPDATE EXERCISE_SUBMISSION SET User_ID = ?, SET Workout_ID = ?, WHERE SUBMISSION_ID =?;");
+            PreparedStatement query1 = con.prepareStatement("UPDATE EXERCISE_SUBMISSION SET User_ID = ?, Workout_ID = ? WHERE Submission_ID =?;");
             query1.setInt(1, userID);
             query1.setInt(2, workoutID);
             query1.setInt(3, submission.getID());
@@ -126,10 +125,22 @@ public class Workout {
     private void insertWorkout(int userID, Date day){//put workout into database
         try
         {
-            PreparedStatement query1 = con.prepareStatement("VALUES(?,?,?);");
+            PreparedStatement query1 = con.prepareStatement("INSERT INTO WORKOUT(Workout_ID, User_ID, Day) VALUES(?,?,?);");
             query1.setInt(1, workoutID);
             query1.setInt(2, userID);
             query1.setDate(3,day);
+            query1.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public void deleteWorkout(){
+        try
+        {
+            PreparedStatement query1 = con.prepareStatement("DELETE FROM WORKOUT WHERE Workout_ID = ? ;");
+            query1.setInt(1, workoutID);
             query1.executeUpdate();
         }
         catch(SQLException e)

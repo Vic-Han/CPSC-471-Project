@@ -55,6 +55,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         exercises = new ArrayList<Exercise>();
         initTitle();
         initExList();
+        parent.addObject(exSubmission);
  
     }
     public SubmitExercise(WorkoutEditor parent, ExerciseSubmission exSubmission){
@@ -88,7 +89,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         parent.fetchData();
     }
     private void clearMetrics(){
-        metricLayout = new VerticalLayout();
+        metricLayout.removeAll();
     }
     private void initTitle(){
         H1 title = new H1("Submit An Exercise:");
@@ -102,6 +103,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         if (exercise != null){//if existing submission, preset correct exercise
             exCB.setValue(exercise);
         }
+        exCB.setItemLabelGenerator(Exercise::getName);
         exLayout.add(exCB);
         //setup buttons
         HorizontalLayout exButtons = new HorizontalLayout();
@@ -128,6 +130,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         add(metricLayout);
     }
     private void initMetList(Exercise ex){//initialize with selected exercise
+        System.out.println("opening met list");
         clearMetrics();
         //init metrics with 0 values
         
@@ -228,7 +231,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     private void loadExercises(){
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE Owner_ID = ? ;");
+            PreparedStatement query1 = con.prepareStatement("SELECT Name FROM  EXERCISE WHERE User_ID = ? ;");
             query1.setInt(1,userID);
             ResultSet rs = query1.executeQuery();
             while (rs.next()){

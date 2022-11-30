@@ -13,6 +13,9 @@ public class MetricPair {
     public String getName(){
         return metric.getName();
     }
+    public String getUnit(){
+        return metric.getUnit();
+    }
     public int getVal(){
         return metricVal;
     }
