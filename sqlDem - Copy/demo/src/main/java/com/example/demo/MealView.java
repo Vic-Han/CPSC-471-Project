@@ -8,49 +8,72 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-public class MealView implements Editor<Meal>{
+
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.accordion.AccordionPanel;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
+public class MealView extends VerticalLayout implements Editor<Meal>{
     private ArrayList<Food> foodList = new ArrayList<Food>();
     private int userID;
     private Connection con;
+    private ArrayList<Meal> mealList = new ArrayList<Meal>();
+    private Accordion mealAccordion;
     private Button newMeal = new Button("New Meal");
-    private Button editMeal = new Button("Edit Meal");
-    private Button delMeal = new Button("Delete Meal");
-    ComboBox<Food> chooseFood = new ComboBox<Food>("Choose Meal");
-    public MealView(int ID)
+    private Paragraph noItems = new Paragraph("No meals on this day");
+    private ArrayList<AccordionPanel> panelArray = new ArrayList<AccordionPanel>();
+    Date locDate;
+    public MealView(Date d,int ID)
     {
+
         userID = ID;
+        locDate = d;
         setup();
     }
     public MealView()
     {
-        this(1);
+        //this(1);
     }
     public void setup()
     {
-        /*
-        initConnection();
-        newFood.addClickListener(clickEvent -> {
-            FoodEditor editor = new MealEditor(this);
-            editor.open();
-        });
-        add(newFood);
-
-        //make combobox...
-        fetchData();
-        chooseFood.setItemLabelGenerator(Food::getName);
-        add(chooseFood);
         
-        //make edit exercise button...
-        editFood.addClickListener(clickEvent -> {
-            FoodEditor editor = new FoodEditor(chooseFood.getValue(),this);
-            editor.open();
-        });
-        add(editFood);
-        delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
-        add(delFood);
-
-        */
+        initConnection();
+        initAccordion();
+        initButton();
+        
     }
+
+    private void initAccordion(){
+        //build accordion
+        mealAccordion = new Accordion();
+        for (Meal m: mealList){
+            AccordionPanel tmp = new AccordionPanel("Workout "+mealList.indexOf(m) +":",  new MealEditor(this, m));
+            panelArray.add(tmp);
+            mealAccordion.add(tmp);
+        }
+        add(mealAccordion);
+        if (mealList.isEmpty()){
+            add(noItems);
+        }
+    }
+    private void initButton()
+    {
+        newMeal.addClickListener(clickEvent -> {
+            AccordionPanel tmp = new AccordionPanel("Meal " + mealList.size() + ":", new MealEditor(this,locDate));
+            panelArray.add(tmp);
+            mealAccordion.add(tmp);
+        });
+        add(newMeal);
+    }
+   
+
+
     public void initConnection()
     {
          
@@ -68,44 +91,34 @@ public class MealView implements Editor<Meal>{
     @Override
     public void fetchData()
     {
-        try
-        {
-            PreparedStatement query = con.prepareStatement("SELECT Name FROM FOOD WHERE User_ID = ?;");
-            query.setInt(1, userID);
-            ResultSet rs = query.executeQuery();
-            foodList = new ArrayList<Food>();
-            while(rs.next())
-            {
-                foodList.add(new Food(userID,rs.getString(1)));
-            }
-            chooseFood.setItems(foodList);
-        }
-        catch(SQLException e)
-        {
 
-        }
+    
+      
     }
     @Override
     public void deleteObject(Meal meal)
     {
-        /* 
-        try
-        {
-            PreparedStatement query = con.prepareStatement("DELETE FROM FOOD WHERE User_ID = ? AND Name = ?;");
-            query.setInt(1, userID);
-            query.setString(2, food.getName());
-            query.executeUpdate();
+        //delete panel in accordion
+        AccordionPanel doomed = null;
+        for (AccordionPanel maybeDoomed : panelArray){
+            WorkoutEditor tmp = (WorkoutEditor) maybeDoomed.getContent().toArray()[0];
+            if (tmp.getWorkoutID() == meal.getID()){
+                doomed = maybeDoomed;
+                break;
+            }
         }
-        catch(SQLException e)
-        {
-
+        if (doomed != null){
+            mealAccordion.remove(doomed);
         }
-        fetchData();
-        */
     }
     @Override
     public void addObject(Meal meal)
     {
+        mealList.add(meal);
         fetchData();
+    }
+    public Date getDate()
+    {
+        return locDate;
     }
 }
