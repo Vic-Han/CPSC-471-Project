@@ -44,9 +44,9 @@ public class FoodSubmission {
             e.printStackTrace();
         }   
     }
-    public String getFoodName()
+    public Food getFood()
     {
-        return foodName;
+        return new Food(userID,foodName);
     }
     public int getUserID()
     {

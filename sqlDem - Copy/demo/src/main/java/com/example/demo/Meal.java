@@ -1,11 +1,12 @@
 package com.example.demo;
 import java.sql.*;
 import java.util.ArrayList;
-import java.sql.*;
-import java.util.ArrayList;
+
 
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Paragraph;
+import java.sql.*;
+
 public class Meal{
     private int meal_ID;
     private Connection con;

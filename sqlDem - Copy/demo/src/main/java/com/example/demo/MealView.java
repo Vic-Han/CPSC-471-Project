@@ -2,9 +2,6 @@ package com.example.demo;
 import java.sql.*;
 import java.rmi.server.RemoteObject;
 import java.util.ArrayList;
-
-import org.apache.logging.log4j.util.MultiFormatStringBuilderFormattable;
-
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.component.accordion.Accordion;
@@ -37,6 +34,7 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     Date locDate;
     public MealView(Date d,int ID)
     {
+
         userID = ID;
         locDate = d;
         setup();
