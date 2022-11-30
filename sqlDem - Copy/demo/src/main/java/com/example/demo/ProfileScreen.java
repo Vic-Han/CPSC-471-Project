@@ -254,11 +254,41 @@ public class ProfileScreen extends Register{
         }
     }
 
+    public void updatePassword(){
+        try
+        {
+            PreparedStatement query2 = con.prepareStatement("Update USER SET Password = ? WHERE ID = ?");
+            query2.setString(1, password.getValue()); //fname
+            query2.setInt(2, userID);
+            query2.executeUpdate();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    // we are woke 
+    public void updateGender() {
+        try
+        {
+            PreparedStatement query1 = con.prepareStatement("UPDATE USER SET Sex = ? WHERE ID = ?;");
+            query1.setString(1, gender.getValue());
+            query1.setInt(2, userID);
+            query1.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateInfo(){
         updateFname();
         updateLname();
         updateWeight();
         updateHeight();
+        updateGender();
+        updatePassword();
     }
 }
 

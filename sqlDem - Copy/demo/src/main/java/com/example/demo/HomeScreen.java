@@ -79,8 +79,8 @@ public class HomeScreen extends AppLayout{
         } else if (tab.equals(profile)) 
         {
             // if the user's ID is in athlete or coach then load that corresponding profile screen
-            if (true){
-                content.add(new AthleteProfile(userID, controller));
+            if (true){ // we are manually loading in athlete profile, need to fix this 
+                 content.add(new AthleteProfile(userID, controller));
             }
             else{
                 content.add(new CoachProfile(userID, controller));
@@ -110,9 +110,7 @@ public class HomeScreen extends AppLayout{
         }
         }
         catch(SQLException e){
-            Dialog d = new Dialog();
-            d.add(new Paragraph("u suck"));
-            d.open();
+            content.add(new ExerciseView(userID));
             return true; 
 
 
