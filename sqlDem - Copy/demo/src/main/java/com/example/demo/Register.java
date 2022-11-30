@@ -38,6 +38,7 @@ public class Register extends VerticalLayout {
     protected H1 title = new H1("Register");
     protected Button cancel = new Button("Cancel");
     protected HorizontalLayout buttons = new HorizontalLayout();
+    protected Date today;
 
     private LoginController controller;
     private int userID;
@@ -50,6 +51,7 @@ public class Register extends VerticalLayout {
     public Register (LoginController controller){
         this();
         this.controller = controller;
+        today = Date.valueOf(LocalDate.now());
     }
     public Register(){
         setupTitle();
@@ -143,6 +145,7 @@ public class Register extends VerticalLayout {
                 query3.setInt(1,userID);
                 query3.executeUpdate();
             }
+            verifyDay();
             controller.registerSuccess(userID);
         }
         catch (SQLException e) {
@@ -199,23 +202,16 @@ public class Register extends VerticalLayout {
             return 0;
         }
     }
-/* 
-    private void verifyDay(){
+
+    protected void verifyDay(){
         //check if today exists in database.  If not, insert day
         try{
-            PreparedStatement query1 = con.prepareStatement("SELECT * FROM DAY WHERE Date = ? AND Day_owner_ID = ?;");
-            query1.setDate(1, Date.valueOf(LocalDate.now()));
-            query1.setInt(2, userID);
+            PreparedStatement query1 = con.prepareStatement("SELECT * FROM DAY WHERE Date = '2022-11-30' AND Day_owner_ID = 16;");
+        //    query1.setDate(1, today);
+         //   query1.setInt(1, userID);
             ResultSet rs = query1.executeQuery();
             if (rs.next()){
                 return;
-            }
-            else{
-                PreparedStatement query2 = con.prepareStatement("INSERT INTO DAY(Date, Day_owner_ID, Weight) VALUES(?,?,?);");
-                query2.setDate(1, Date.valueOf(LocalDate.now()));
-                query2.setInt(2, userID);
-                query2.setInt(3, weight.getValue().intValue());
-                query2.executeUpdate();
             }
         }
         catch(SQLException e){
@@ -225,7 +221,23 @@ public class Register extends VerticalLayout {
             d.add(p);
             d.open();
         }
+        try{
+            PreparedStatement query2 = con.prepareStatement("INSERT INTO DAY(Date, Day_owner_ID, Weight) VALUES(?,?,?);");
+            query2.setDate(1, today);
+            query2.setInt(2, userID);
+            query2.setInt(3, weight.getValue().intValue());
+            query2.executeUpdate();
+
+        }
             
+        catch(SQLException e){
+            e.printStackTrace();
+            Dialog d = new Dialog();
+            Paragraph p = new Paragraph("Error creating date in database");
+            d.add(p);
+            d.open();
+
+        }
     }
-    */
+    
 }

@@ -103,8 +103,9 @@ public class ProfileScreen extends Register{
     public void retrieveWeight() {
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT weight from USER WHERE ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT weight from Day WHERE Day_owner_ID = ? and Date = '2022-11-30';");
             query1.setInt(1, userID);
+           // query1.setDate(2, today);
             ResultSet rs = query1.executeQuery();
             rs.next();
             double d = rs.getInt(1);
@@ -113,6 +114,10 @@ public class ProfileScreen extends Register{
         }
         catch (SQLException e) {
             e.printStackTrace();
+            Dialog d = new Dialog();
+            Paragraph p = new Paragraph("Error in retrieve weight");
+            d.add(p);
+            d.open();
         }
     }
 
@@ -178,32 +183,7 @@ public class ProfileScreen extends Register{
             e.printStackTrace();
         }
     }
-    private void verifyDay(){
-        //check if today exists in database.  If not, insert day
-        try{
-            PreparedStatement query1 = con.prepareStatement("SELECT * FROM DAY WHERE Date = ? AND Day_owner_ID = ?;");
-            query1.setDate(1, Date.valueOf(LocalDate.now()));
-            query1.setInt(2, userID);
-            ResultSet rs = query1.executeQuery();
-            if (rs.next()){
-                return;
-            }
-            else{
-                PreparedStatement query2 = con.prepareStatement("INSERT INTO DAY(Date, Day_owner_ID) VALUES(?,?);");
-                query2.setDate(1, Date.valueOf(LocalDate.now()));
-                query2.setInt(2, userID);
-                query2.executeUpdate();
-            }
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-            Dialog d = new Dialog();
-            Paragraph p = new Paragraph("Error accessing date in database");
-            d.add(p);
-            d.open();
-        }
-            
-    }
+
     public void retrieveInfo(){
       //  retrieveBirthDay();
         retrieveFname();
@@ -261,9 +241,11 @@ public class ProfileScreen extends Register{
     public void updateWeight(){
         try
         {
-            PreparedStatement query2 = con.prepareStatement("Update USER SET weight = ? WHERE ID = ?");
+            verifyDay();
+            PreparedStatement query2 = con.prepareStatement("Update Day SET weight = ? WHERE Day_owner_ID = ? AND Date = ?;");
             query2.setInt(1, weight.getValue().intValue()); 
             query2.setInt(2, userID);
+            query2.setDate(3, today);
             query2.executeUpdate();
         }
         catch (SQLException e){

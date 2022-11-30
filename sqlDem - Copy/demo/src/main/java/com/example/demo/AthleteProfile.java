@@ -14,8 +14,8 @@ public class AthleteProfile extends ProfileScreen {
     ComboBox<Integer> xd = new ComboBox<Integer>("Choose Coach:");
 
 
-    public AthleteProfile(int userID){
-        super(userID); 
+    public AthleteProfile(int userID, LoginController l){
+        super(userID, l); 
     }
     
 

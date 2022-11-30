@@ -1,7 +1,13 @@
 package com.example.demo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,6 +28,7 @@ public class HomeScreen extends AppLayout{
     private VerticalLayout content;
     private int userID;
     private LoginController controller;
+    private Connection con;
     public HomeScreen(int userID) {
         this.userID = userID;
         DrawerToggle toggle = new DrawerToggle();
@@ -71,7 +78,13 @@ public class HomeScreen extends AppLayout{
             content.add(new Dashboard(userID));
         } else if (tab.equals(profile)) 
         {
-            content.add(new ProfileScreen(userID, controller));
+            // if the user's ID is in athlete or coach then load that corresponding profile screen
+            if (true){
+                content.add(new AthleteProfile(userID, controller));
+            }
+            else{
+                content.add(new CoachProfile(userID, controller));
+            }
         } else if (tab.equals(food)) 
         {
             content.add(new FoodView(userID));
@@ -82,6 +95,29 @@ public class HomeScreen extends AppLayout{
         } else {
             content.add(new Paragraph("This is the graph tab"));
         }
+    }
+
+    private boolean athleteOrCoach(int userID){
+        try{
+        PreparedStatement query = con.prepareStatement("SELECT * FROM Athlete WHERE Athlete_ID = ?;");
+        query.setInt(1, userID);
+        ResultSet rs = query.executeQuery();
+        if(rs.next()){
+            return true;
+        }
+        else{
+            return false;
+        }
+        }
+        catch(SQLException e){
+            Dialog d = new Dialog();
+            d.add(new Paragraph("u suck"));
+            d.open();
+            return true; 
+
+
+        }
+
     }
 
 }
