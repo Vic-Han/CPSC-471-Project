@@ -47,22 +47,25 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     {
         
         initConnection();
-        initAccordion();
+        //setupAccordion();
+        //add(mealAccordion);
         initButton();
         
     }
-    private void initAccordion(){
+    private void setupAccordion(){
         //build accordion
+        fetchData();
+        
         mealAccordion = new Accordion();
         for (Meal m: mealList){
             AccordionPanel tmp = new AccordionPanel("Meal: "+mealList.indexOf(m) +":",  new MealEditor(this, m));
             panelArray.add(tmp);
             mealAccordion.add(tmp);
         }
-        add(mealAccordion);
         if (mealList.isEmpty()){
             add(noItems);
         }
+        
     }
     private void initButton()
     {
@@ -91,16 +94,31 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     @Override
     public void fetchData()
     {
-
+        try
+        {
+            PreparedStatement query = con.prepareStatement("SELECT Meal_ID FROM Meal WHERE USer_ID = ?;");
+            query.setInt(1, userID);
+            ResultSet rs = query.executeQuery();
+            mealList = new ArrayList<Meal>();
+            while(rs.next())
+            {
+                mealList.add(new Meal(rs.getInt(1)));
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
     @Override
     public void deleteObject(Meal meal)
     {
         //delete panel in accordion
+        
         AccordionPanel doomed = null;
         for (AccordionPanel maybeDoomed : panelArray){
-            WorkoutEditor tmp = (WorkoutEditor) maybeDoomed.getContent().toArray()[0];
-            if (tmp.getWorkoutID() == meal.getID()){
+            MealEditor tmp = (MealEditor) maybeDoomed.getContent().toArray()[0];
+            if (tmp.getMealID() == meal.getID()){
                 doomed = maybeDoomed;
                 break;
             }
@@ -108,6 +126,19 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
         if (doomed != null){
             mealAccordion.remove(doomed);
         }
+        /* 
+        try{
+            PreparedStatement query1 = con.prepareStatement("DELETE FROM Meal WHERE Meal_ID = ? ;");
+            query1.setInt(1,meal.getID());
+            query1.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+
+        }
+        mealList.remove(meal);
+        setupAccordion();
+        */
     }
     @Override
     public void addObject(Meal meal)

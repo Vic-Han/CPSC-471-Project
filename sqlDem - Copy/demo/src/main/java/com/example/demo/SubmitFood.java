@@ -15,6 +15,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -27,11 +28,11 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
     private ArrayList<Food> foodList; 
     private FoodSubmission foodSub;
     private Editor<FoodSubmission> parent;
-    private HorizontalLayout mealview_components; 
+    private HorizontalLayout mealview_components = new HorizontalLayout(); 
     private NumberField quantity = new NumberField("Quantity");
     private ComboBox<String> units = new ComboBox<String>("Unit");
-    private HorizontalLayout serving_input;
-    private HorizontalLayout buttons;
+    private HorizontalLayout serving_input = new HorizontalLayout();
+    private HorizontalLayout buttons = new HorizontalLayout();
     private Button submitButton = new Button("Submit");
     private Button deleteButton = new Button("Delete");
     private Button newFood = new Button("New Food");
@@ -51,10 +52,11 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
 
 
     }
-    private void setupButtons(){
-        fetchData();
+    private void setupMealView()
+    {
         chooseFood.setItemLabelGenerator(Food::getName);
         mealview_components.add(chooseFood);
+
         newFood.addClickListener(clickEvent -> {
             FoodEditor editor = new FoodEditor(this);
             editor.open();
@@ -68,15 +70,23 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
         delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
         mealview_components.add(delFood);
         add(mealview_components);
+    }
+    private void setupQuantityFeild()
+    {
         serving_input.add(quantity);
         String[] possibleUnits = {"grams","ml","servings"};
         units.setItems(possibleUnits);
         serving_input.add(units);
+        add(serving_input);
+    }
+    private void setupButtons(){
+        fetchData();
+        setupMealView();
+        setupQuantityFeild();
         submitButton.addClickListener(clickEvent -> {submit();});
         deleteButton.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
         buttons.add(submitButton,deleteButton);
         add(buttons);
-
     }
     public SubmitFood(Editor<FoodSubmission> parentEditor, int mealID)
     {
@@ -113,7 +123,10 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
         }
         catch(SQLException e)
         {
-
+            e.printStackTrace();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Trouble fetching data food submission"));
+            d.open();
         }
     }
     @Override
@@ -139,24 +152,25 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
     }
     private void submit(){
         try{
-        Food f = chooseFood.getValue();
-        Float servings = 0f;
-        if(units.getValue() == "ml")
-        {
-            servings = (quantity.getValue().floatValue()) / f.getmlPerServing();
-        }
-        else if(units.getValue() == "grams")
-        {
-            servings = (quantity.getValue().floatValue()) / f.getmlPerServing();
-        }
-        else{
-            servings = quantity.getValue().floatValue();
-        }
-        foodSub.update(f.getName(), servings);
+            Food f = chooseFood.getValue();
+            Float servings = 0f;
+            if(units.getValue() == "ml")
+            {
+                servings = (quantity.getValue().floatValue()) / f.getmlPerServing();
+            }
+            else if(units.getValue() == "grams")
+            {
+                servings = (quantity.getValue().floatValue()) / f.getGramsPerServing();
+            }
+            else{
+                servings = quantity.getValue().floatValue();
+            }
+            foodSub.update(f.getName(), servings);
         }
         catch(SQLException e)
         {
 
         }
+        parent.addObject(foodSub);
     }
 }

@@ -34,6 +34,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
         HorizontalLayout buttons = new HorizontalLayout();
         Button addSubmission = new Button("Add food submission");
         addSubmission.addClickListener(ClickEvent -> {
+            TableCleaner.foodSubCleaner();
             submissionDialog = new Dialog();
             submissionDialog.add(new SubmitFood(this,getMealID()));
             submissionDialog.open();
@@ -64,13 +65,15 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
     @Override
     public void addObject(FoodSubmission foodsub)
     {
-
+        foodsubList.add(foodsub);
+        grid.setItems(foodsub);
+        submissionDialog.close();
     }
 
     @Override
     public void deleteObject(FoodSubmission foodsub)
     {
-
+        submissionDialog.close();
     }
     @Override
     public void fetchData()

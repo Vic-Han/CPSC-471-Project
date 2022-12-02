@@ -106,7 +106,36 @@ public class Meal{
     public ArrayList<FoodSubmission> getAllSubmissions()
     {
         ArrayList<FoodSubmission> allSubs = new ArrayList<FoodSubmission>();
+        try
+        {
+            PreparedStatement query = con.prepareStatement("SELECT Name From Food_is_part_of_meal WHERE Meal_ID = ?;");
+            query.setInt(1, meal_ID);
+            ResultSet rs = query.executeQuery();
+            while(rs.next())
+            {
+                allSubs.add(new FoodSubmission(getUserID(),meal_ID,rs.getString(1)));
+            }
+        }
+        catch(SQLException e)
+        {
+
+        }
         return allSubs;
+    }
+    public int getUserID()
+    {
+        try
+        {
+            PreparedStatement query = con.prepareStatement("SELECT User_ID From Meal WHERE Meal_ID = ?;");
+            query.setInt(1, meal_ID);
+            ResultSet rs = query.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        }
+        catch(SQLException e)
+        {
+            return 0;
+        }
     }
     public int getID()
     {

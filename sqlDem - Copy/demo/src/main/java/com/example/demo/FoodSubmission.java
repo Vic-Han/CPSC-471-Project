@@ -93,9 +93,10 @@ public class FoodSubmission {
     {
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT servings FROM FOOD WHERE Name = ? AND User_ID = ?;");
+            PreparedStatement query1 = con.prepareStatement("SELECT servings FROM food_is_part_of_meal FOOD WHERE Food_Name = ? AND User_Food_ID = ? And Meal_ID = ?;");
             query1.setString(1,foodName);
             query1.setInt(2,userID);
+            query1.setInt(3,mealID);
             ResultSet rs = query1.executeQuery();
             rs.next();
             return rs.getFloat(1);
