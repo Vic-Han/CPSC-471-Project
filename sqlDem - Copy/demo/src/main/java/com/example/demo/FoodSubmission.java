@@ -28,7 +28,7 @@ public class FoodSubmission {
         catch (SQLException e) {
             e.printStackTrace();
             Dialog d = new Dialog();
-            d.add(new Paragraph("fuck you"+ userID));
+            d.add(new Paragraph("Could not create food submission"));
             d.open();
         }  
 

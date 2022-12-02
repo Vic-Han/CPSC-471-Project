@@ -55,7 +55,7 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
         //build accordion
         mealAccordion = new Accordion();
         for (Meal m: mealList){
-            AccordionPanel tmp = new AccordionPanel("Workout "+mealList.indexOf(m) +":",  new MealEditor(this, m));
+            AccordionPanel tmp = new AccordionPanel("Meal: "+mealList.indexOf(m) +":",  new MealEditor(this, m));
             panelArray.add(tmp);
             mealAccordion.add(tmp);
         }

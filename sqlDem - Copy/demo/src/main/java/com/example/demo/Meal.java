@@ -19,16 +19,16 @@ public class Meal{
         initConnection();
         meal_ID = setID();
         try{
-            PreparedStatement query = con.prepareStatement("INSERT INTO MEAL(Meal_ID, Day, Day_Owner_ID) VALUES(?,?,?);");
+            PreparedStatement query = con.prepareStatement("INSERT INTO MEAL(Meal_ID, User_ID, Day) VALUES(?,?,?);");
             query.setInt(1, meal_ID);
-            query.setDate(2, day);
-            query.setInt(3, user);
+            query.setDate(3, day);
+            query.setInt(2, user);
             query.executeUpdate();
         }
         catch (SQLException e) {
             e.printStackTrace();
             Dialog d = new Dialog();
-            d.add(new Paragraph("fuck you"+ meal_ID));
+            d.add(new Paragraph("Trouble Creating new meal"));
             d.open();
         }  
         
@@ -99,7 +99,7 @@ public class Meal{
         catch (SQLException e) {
             e.printStackTrace();
             Dialog d = new Dialog();
-            d.add(new Paragraph("fuck you"+ meal_ID));
+            d.add(new Paragraph("Error trying to remove submission"+ meal_ID));
             d.open();
         }  
     }
