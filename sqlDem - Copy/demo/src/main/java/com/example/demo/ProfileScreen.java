@@ -104,9 +104,9 @@ public class ProfileScreen extends Register{
     public void retrieveWeight() {
         try
         {
-            PreparedStatement query1 = con.prepareStatement("SELECT weight from Day WHERE Day_owner_ID = ? and Date = '2022-11-30';");
+            PreparedStatement query1 = con.prepareStatement("SELECT WEIGHT FROM DAY AS d1 where d1.day_owner_id = ? and NOT EXISTS(SELECT * FROM DAY AS d2 where d2.day_owner_id = ? and d2.date > d1.date);");
             query1.setInt(1, userID);
-           // query1.setDate(2, today);
+            query1.setInt(2, userID);
             ResultSet rs = query1.executeQuery();
             rs.next();
             double d = rs.getInt(1);

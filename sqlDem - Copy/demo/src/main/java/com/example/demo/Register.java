@@ -211,10 +211,6 @@ public class Register extends VerticalLayout {
             query1.setInt(2, userID);
             ResultSet rs = query1.executeQuery();
             if (rs.next()){
-                Dialog d = new Dialog();
-                Paragraph p = new Paragraph("Error");
-                d.add(p);
-                d.open();
                 return;
             }
         }
