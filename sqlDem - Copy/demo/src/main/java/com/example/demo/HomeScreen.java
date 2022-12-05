@@ -62,9 +62,8 @@ public class HomeScreen extends AppLayout{
         food = new Tab("Foods");
         exercise = new Tab("Exercises");
         performanceMetric = new Tab("Performance Metrics");
-        graph = new Tab("Graph");
         
-        tabs.add( dashboard, profile, food, exercise, performanceMetric, graph);
+        tabs.add( dashboard, profile, food, exercise, performanceMetric);
         tabs.addSelectedChangeListener(
                 event -> setContent(event.getSelectedTab()));
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
@@ -92,9 +91,7 @@ public class HomeScreen extends AppLayout{
             content.add(new ExerciseView(userID));
         } else if (tab.equals(performanceMetric)) {
             content.add(new MetricView(userID));
-        } else {
-            content.add(new Paragraph("This is the graph tab"));
-        }
+        } 
     }
 
     private boolean athleteOrCoach(int userID){

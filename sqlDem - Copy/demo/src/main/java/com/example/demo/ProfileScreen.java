@@ -258,7 +258,7 @@ public class ProfileScreen extends Register{
         try
         {
             PreparedStatement query2 = con.prepareStatement("Update USER SET Password = ? WHERE ID = ?");
-            query2.setString(1, password.getValue()); //fname
+            query2.setString(1, password.getValue()); 
             query2.setInt(2, userID);
             query2.executeUpdate();
         }

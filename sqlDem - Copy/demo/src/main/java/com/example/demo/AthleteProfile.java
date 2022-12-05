@@ -17,6 +17,8 @@ public class AthleteProfile extends ProfileScreen {
     ComboBox<Integer> xd = new ComboBox<Integer>("Choose Coach:");
     ComboBox<Integer> rem = new ComboBox<Integer>("Remove Coach:");
     Button register = new Button("Register Coach");
+    Button remove = new Button("Remove Coach");
+
 
 
     public AthleteProfile(int userID, LoginController l){
@@ -24,6 +26,9 @@ public class AthleteProfile extends ProfileScreen {
         registerCoach(userID);
         add(xd);
         registerButton();
+        removeCoach(userID);
+        add(rem);
+        removeButton();
     }
     
 
@@ -58,11 +63,12 @@ public class AthleteProfile extends ProfileScreen {
     }
 
     public void registerButton(){
-        register.addClickListener(clickEvent -> {insertToAI(); registerCoach(userID);});
+        register.addClickListener(clickEvent -> {insertToAI(); registerCoach(userID); removeCoach(userID);});
         add(register);
     }
 
 
+    // accesses_information query 
     public void insertToAI(){
         try{
             PreparedStatement query200 = con.prepareStatement("INSERT INTO accesses_information(Athlete_ID, Coach_ID) VALUES(?,?);");
@@ -77,7 +83,7 @@ public class AthleteProfile extends ProfileScreen {
     }
 
     // the option to remove a coach should only be available if an athlete already has a coach 
-    /* 
+    // works
     public void removeCoach(int Coach_ID)
     {
         try 
@@ -96,18 +102,26 @@ public class AthleteProfile extends ProfileScreen {
         catch(SQLException e)
         {
 
-        }
-
-    
-
+        } 
     }
-*/
+  
+    public void deleteFromAI()
+    {
+        try
+        {
+            PreparedStatement query420 = con.prepareStatement("DELETE FROM accesses_information WHERE Athlete_ID = ? AND Coach_ID = ?;");
+            query420.setInt(1, userID);
+            query420.setInt(2, rem.getValue().intValue());
+            query420.executeUpdate();
+        }
+        catch(SQLException e){
 
-    // add a list of coaches for the athlete to choose from in combobox
-    // select coach_id from accesses_information where athlete_id = ?;
-    // select coach_id from coach as c where 
-                                  //    not exists (select * from acceses_information as ac where athlete_id = ? and c.coach_id = ac.coach_id)  
+        }
+    }
 
+    public void removeButton(){
+        remove.addClickListener(clickEvent -> {deleteFromAI(); removeCoach(userID); registerCoach(userID);});
+        add(remove);
+   }
 
-    // "INSERT INTO accesses_information (Athlete_ID, Coach_ID) VALUES(?,?);";
 }
