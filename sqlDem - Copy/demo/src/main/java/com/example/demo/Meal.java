@@ -13,6 +13,7 @@ public class Meal{
     public Meal(int ID)
     {
         meal_ID = ID;
+        initConnection();
     }
     public Meal(int user, Date day)
     {
@@ -108,17 +109,19 @@ public class Meal{
         ArrayList<FoodSubmission> allSubs = new ArrayList<FoodSubmission>();
         try
         {
-            PreparedStatement query = con.prepareStatement("SELECT Name From Food_is_part_of_meal WHERE Meal_ID = ?;");
+            PreparedStatement query = con.prepareStatement("SELECT Food_Name From Food_is_part_of_meal WHERE Meal_ID = ?;");
             query.setInt(1, meal_ID);
             ResultSet rs = query.executeQuery();
             while(rs.next())
             {
-                allSubs.add(new FoodSubmission(getUserID(),meal_ID,rs.getString(1)));
+                allSubs.add(new FoodSubmission(getUserID(), meal_ID, rs.getString(1)));
             }
         }
         catch(SQLException e)
         {
-
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Error trying to get submissions"+ meal_ID));
+            d.open();
         }
         return allSubs;
     }

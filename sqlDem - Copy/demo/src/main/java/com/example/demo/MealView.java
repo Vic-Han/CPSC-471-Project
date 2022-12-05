@@ -47,8 +47,8 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     {
         
         initConnection();
-        //setupAccordion();
-        //add(mealAccordion);
+        setupAccordion();
+        add(mealAccordion);
         initButton();
         
     }
@@ -126,7 +126,7 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
         if (doomed != null){
             mealAccordion.remove(doomed);
         }
-        /* 
+     
         try{
             PreparedStatement query1 = con.prepareStatement("DELETE FROM Meal WHERE Meal_ID = ? ;");
             query1.setInt(1,meal.getID());
@@ -137,8 +137,7 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
 
         }
         mealList.remove(meal);
-        setupAccordion();
-        */
+    
     }
     @Override
     public void addObject(Meal meal)

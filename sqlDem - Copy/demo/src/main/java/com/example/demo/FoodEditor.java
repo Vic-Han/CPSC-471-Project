@@ -77,21 +77,21 @@ public class FoodEditor extends Dialog{
     private void setupNutritionFacts(){
         HorizontalLayout nutritionFacts = new HorizontalLayout();
         try{
-        H1 title = new H1("Nutrients");
-        add(title);
-        double d = food.getProtien();
-        protein.setValue(d);
-        nutritionFacts.add(protein);
-        d = food.getCarbs();
-        carbohydrates.setValue(d);
-        nutritionFacts.add(carbohydrates);
-        d = food.getFats();
-        fats.setValue(d);
-        nutritionFacts.add(fats);
-        d = food.getCalories();
-        calories.setValue(d);
-        nutritionFacts.add(calories);
-        add(nutritionFacts);
+            H1 title = new H1("Nutrients");
+            add(title);
+            double d = food.getProtien();
+            protein.setValue(d);
+            nutritionFacts.add(protein);
+            d = food.getCarbs();
+            carbohydrates.setValue(d);
+            nutritionFacts.add(carbohydrates);
+            d = food.getFats();
+            fats.setValue(d);
+            nutritionFacts.add(fats);
+            d = food.getCalories();
+            calories.setValue(d);
+            nutritionFacts.add(calories);
+            add(nutritionFacts);
         }
         catch(SQLException e)
         {

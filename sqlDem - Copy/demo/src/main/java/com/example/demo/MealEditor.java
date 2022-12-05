@@ -6,15 +6,21 @@ import java.sql.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 
 public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>{
     private int userID;
     private int mealID;
     private Editor<Meal> parent;
     private Meal meal;
-    private ArrayList<FoodSubmission> foodsubList;
+    private ArrayList<FoodSubmission> foodsubList = new ArrayList<FoodSubmission>();
     private Grid<FoodSubmission> grid;
     private Dialog submissionDialog;
     public MealEditor(Editor<Meal> parentEditor,Meal inputMeal)
@@ -48,14 +54,34 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
         add(buttons);
 
     }
+    /**
+     * 
+     */
     private void initGrid() {
         grid = new Grid<FoodSubmission>();
         grid.addColumn(FoodSubmission::getFoodName).setHeader("Food:")
         .setAutoWidth(true).setFlexGrow(1);
         grid.addColumn(FoodSubmission::getServings).setHeader("Servings:")
         .setAutoWidth(true).setFlexGrow(1);
+        grid.addComponentColumn(e -> {
+            MenuBar menuBar = new MenuBar();
+            menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
+            MenuItem menuItem = menuBar.addItem("•••");
+            menuItem.getElement().setAttribute("aria-label", "More options");
+            SubMenu subMenu = menuItem.getSubMenu();
+            subMenu.addItem("Edit", event -> {
+                submissionDialog = new Dialog();
+                submissionDialog.add(new SubmitFood(this, e));
+                submissionDialog.open();
+            });
+            subMenu.addItem("Delete", event -> {
+                deleteObject(e);
+            });
+            return menuBar;
+        }).setWidth("70px").setFlexGrow(0);
         foodsubList = meal.getAllSubmissions();
         grid.setItems(foodsubList);
+
         add(grid);
     }
     public int getMealID()
