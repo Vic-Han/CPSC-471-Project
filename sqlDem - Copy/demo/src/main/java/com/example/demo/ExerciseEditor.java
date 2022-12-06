@@ -55,7 +55,7 @@ public class ExerciseEditor extends VerticalLayout implements Editor<Metric>{
             for (Metric m : usedMetrics){
                 exercise.addMetric(m);
             }
-            
+            parent.fetchData();
         });
         add(done);
     }

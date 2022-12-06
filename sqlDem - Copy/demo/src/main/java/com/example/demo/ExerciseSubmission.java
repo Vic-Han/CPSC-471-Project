@@ -158,5 +158,18 @@ public class ExerciseSubmission {
     public int getID(){
         return submissionID;
     }
-    public void deleteSubmission(){}
+    public void deleteSubmission(){
+        try{
+            PreparedStatement query = con.prepareStatement("Delete FROM metric_measures_submission WHERE submission_ID = ? ;");
+            query.setInt(1,submissionID);
+            query.executeUpdate();
+            PreparedStatement query6 = con.prepareStatement("Delete FROM EXERCISE_submission WHERE submission_ID = ? ;");
+            query6.setInt(1,submissionID);
+            query6.executeUpdate();
+        }
+        catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

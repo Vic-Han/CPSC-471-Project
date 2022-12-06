@@ -18,6 +18,8 @@ import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+//import net.bytebuddy.pool.TypePool.Default.LazyTypeDescription.TypeContainment.SelfContained;
+
 public class Dashboard extends VerticalLayout {
     Date testDay;// in reality would come from user
     LocalDate selected = LocalDate.now();
@@ -31,9 +33,9 @@ public class Dashboard extends VerticalLayout {
         this.userID = userID;
         testDay = java.sql.Date.valueOf(LocalDate.now());
         setupDateLayout();
-        setupHeader(LocalDate.now());
-        setupWorkoutLayout(LocalDate.now());
-        setupMealLayout(LocalDate.now());
+        setupHeader(selected);
+        setupWorkoutLayout(selected);
+        setupMealLayout(selected);
     }
 
     public Dashboard(){//testing only
@@ -48,8 +50,8 @@ public class Dashboard extends VerticalLayout {
         search.addClickListener(clickEvent -> {
             selected = datePick.getValue();
             updateHeader(selected);
-      //      updateWorkoutLayout(selected);
-      //      updateMealLayout(selected);
+            updateWorkoutLayout(selected);
+            updateMealLayout(selected);
 
         });
         dateLayout.add(search);
@@ -65,7 +67,16 @@ public class Dashboard extends VerticalLayout {
         headerLayout.add (new H2("Viewing: "+ day.toString()));
     }
     private void setupWorkoutLayout(LocalDate day){
-        add(new WorkoutView(selected, userID));
+        workouts = new WorkoutView(selected, userID);
+        add(workouts);
+    }
+    private void updateWorkoutLayout(LocalDate selected)
+    {
+        workouts = new WorkoutView(selected, userID);
+    }
+    private void updateMealLayout(LocalDate selected)
+    {
+        meals = new MealView(Date.valueOf(selected),userID);
     }/* 
     private void updateWorkoutLayout(LocalDate day){
         workoutLayout.removeAll();
@@ -96,7 +107,8 @@ public class Dashboard extends VerticalLayout {
         }
     }*/
     private void setupMealLayout(LocalDate day){
-        add(new MealView(Date.valueOf(selected),userID));
+        meals = new MealView(Date.valueOf(selected),userID);
+        add(meals);
     }/* 
     private void updateMealLayout(LocalDate day){
         mealLayout.removeAll();

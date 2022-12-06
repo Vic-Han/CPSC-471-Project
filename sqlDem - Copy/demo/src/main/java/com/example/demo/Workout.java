@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Paragraph;
+
 public class Workout {
     private int userID;
     private int workoutID;
@@ -64,7 +67,7 @@ public class Workout {
        submission.deleteSubmission();
     }
     public LocalDate getDate() throws SQLException{
-         try
+        try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT Day FROM WORKOUT WHERE Workout_ID =?;");
             query1.setInt(1, workoutID);
@@ -134,11 +137,17 @@ public class Workout {
         catch(SQLException e)
         {
             e.printStackTrace();
+            Dialog d = new Dialog();
+            d.add(new Paragraph("Trouble inserting workout into database"));
+            d.open();
         }
     }
     public void deleteWorkout(){
         try
         {
+            PreparedStatement query2 = con.prepareStatement("DELETE FROM Exercise_submission WHERE Workout_ID = ? ;");
+            query2.setInt(1, workoutID);
+            query2.executeUpdate();
             PreparedStatement query1 = con.prepareStatement("DELETE FROM WORKOUT WHERE Workout_ID = ? ;");
             query1.setInt(1, workoutID);
             query1.executeUpdate();
