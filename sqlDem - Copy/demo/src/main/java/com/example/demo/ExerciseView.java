@@ -99,6 +99,22 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
         exList.remove(exercise);
         chooseEx.setItems(exList);
         try{
+            PreparedStatement query4 = con.prepareStatement("SELECT submission_id FROM EXERCISE_submission WHERE User_ID = ? AND Exercise_Name = ?;");
+            query4.setInt(1,userID);
+            query4.setString(2,exercise.getName());
+            ResultSet subIDset = query4.executeQuery();
+            while (subIDset.next()){
+                PreparedStatement query = con.prepareStatement("Delete FROM metric_measures_submission WHERE submission_ID = ? ;");
+                query.setInt(1,subIDset.getInt(1));
+                query.executeUpdate();
+                PreparedStatement query6 = con.prepareStatement("Delete FROM EXERCISE_submission WHERE submission_ID = ? ;");
+                query6.setInt(1,subIDset.getInt(1));
+                query6.executeUpdate();
+            }
+            PreparedStatement query2 = con.prepareStatement("DELETE FROM Metric_describes_EXERCISE WHERE Metric_user_ID = ? AND Exercise_Name = ?;");
+            query2.setInt(1,userID);
+            query2.setString(2,exercise.getName());
+            query2.executeUpdate();
             PreparedStatement query1 = con.prepareStatement("DELETE FROM EXERCISE WHERE User_ID = ? AND Name = ?;");
             query1.setInt(1,userID);
             query1.setString(2,exercise.getName());
