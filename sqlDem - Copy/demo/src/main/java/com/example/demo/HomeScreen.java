@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,14 +45,29 @@ public class HomeScreen extends AppLayout{
 
         addToDrawer(tabs);
         addToNavbar(toggle, title);
+        initializeConnection();
     }
     public HomeScreen(int userID, LoginController controller) {
         this(userID);
         this.controller = controller;
+        initializeConnection();
+        
     }
 
     public HomeScreen(){//testing only.. get rid of this shit asap
         this(1);
+        initializeConnection();
+    }
+
+    public void initializeConnection(){
+        
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }   
+    
     }
 
     private Tabs getTabs() {
@@ -75,17 +91,15 @@ public class HomeScreen extends AppLayout{
 
         if (tab.equals(dashboard)) {
             content.add(new Dashboard(userID));
-        } else if (tab.equals(profile)) 
-        {
+        } else if (tab.equals(profile)) {
             // if the user's ID is in athlete or coach then load that corresponding profile screen
-            if (true){ // we are manually loading in athlete profile, need to fix this 
+            if (athleteOrCoach(userID)){ 
                  content.add(new AthleteProfile(userID, controller));
             }
             else{
                 content.add(new CoachProfile(userID, controller));
             }
-        } else if (tab.equals(food)) 
-        {
+        } else if (tab.equals(food)) {
             content.add(new FoodView(userID));
         } else if (tab.equals(exercise)) {
             content.add(new ExerciseView(userID));
@@ -96,23 +110,25 @@ public class HomeScreen extends AppLayout{
 
     private boolean athleteOrCoach(int userID){
         try{
-        PreparedStatement query = con.prepareStatement("SELECT * FROM Athlete WHERE Athlete_ID = ?;");
+        PreparedStatement query = con.prepareStatement("SELECT Athlete_ID FROM Athlete WHERE Athlete_ID = ?;");
         query.setInt(1, userID);
         ResultSet rs = query.executeQuery();
-        if(rs.next()){
-            return true;
-        }
-        else{
-            return false;
-        }
+            if(rs.next()){ // if next row is not null, return true
+                return true;
+            }
+            else{
+                return false;
+            }
         }
         catch(SQLException e){
-            content.add(new ExerciseView(userID));
-            return true; 
-
+            Dialog d = new Dialog();
+            Paragraph p = new Paragraph("Error");
+            d.add(p);
+            d.open();
+            return true;
 
         }
-
-    }
-
+    
+    } 
+    
 }

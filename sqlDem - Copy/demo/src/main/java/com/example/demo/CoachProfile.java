@@ -5,19 +5,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.example.demo.Dashboard;
 
 public class CoachProfile extends ProfileScreen {
     private ArrayList<Integer> athletes = new ArrayList<Integer>(); 
-    ComboBox<Integer> xd = new ComboBox<Integer>("View Athlete:");
+    ComboBox<Integer> athleteBox = new ComboBox<Integer>("View Athlete:");
+    Button view = new Button("View Athlete");
 
-    public CoachProfile(int userID, LoginController l){
-        super(userID, l);
+
+    public CoachProfile(int userID, LoginController controller){
+        super(userID, controller);
+        getAthlete(userID);
+        add(athleteBox);
+        viewButton();
     }
 
-    public void viewAthlete(int Athlete_ID)
+    public void getAthlete(int Athlete_ID)
     {
         try
         {
@@ -29,8 +37,8 @@ public class CoachProfile extends ProfileScreen {
         {
             athletes.add(rs.getInt(1));
         }
-        xd.setItems(athletes);
-        add(xd);
+        athleteBox.setItems(athletes);
+        add(athleteBox);
 
         }
         catch(SQLException e)
@@ -43,6 +51,24 @@ public class CoachProfile extends ProfileScreen {
         }
     }
     
-        // select athlete_id from accesses_information where coach_id = ?;
+    public void viewAthlete(int Athlete_id){
+
+        Dialog dialog = new Dialog();
+
+        dialog.setHeaderTitle(String.format("Athlete ID: %d", Athlete_id));
+
+        dialog.add(new Dashboard(Athlete_id));
+
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        dialog.getFooter().add(cancelButton);
+        dialog.open();
+
+    }
+
+
+    public void viewButton(){
+        view.addClickListener(clickEvent -> {viewAthlete(athleteBox.getValue().intValue());});
+        add(view);
+    }
 
 }

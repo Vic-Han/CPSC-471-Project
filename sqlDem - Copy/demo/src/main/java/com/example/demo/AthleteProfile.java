@@ -21,8 +21,8 @@ public class AthleteProfile extends ProfileScreen {
 
 
 
-    public AthleteProfile(int userID, LoginController l){
-        super(userID, l); 
+    public AthleteProfile(int userID, LoginController controller){
+        super(userID, controller); 
         registerCoach(userID);
         add(xd);
         registerButton();
@@ -83,7 +83,6 @@ public class AthleteProfile extends ProfileScreen {
     }
 
     // the option to remove a coach should only be available if an athlete already has a coach 
-    // works
     public void removeCoach(int Coach_ID)
     {
         try 
