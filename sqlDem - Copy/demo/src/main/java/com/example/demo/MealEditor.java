@@ -20,6 +20,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
     private int mealID;
     private Editor<Meal> parent;
     private Meal meal;
+    private Connection con;
     private ArrayList<FoodSubmission> foodsubList = new ArrayList<FoodSubmission>();
     private Grid<FoodSubmission> grid;
     private Dialog submissionDialog;
@@ -30,6 +31,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
         parent = parentEditor;
         initButtons();
         initGrid();
+        initializeConnection();
     }
     public MealEditor(Editor<Meal> parentEditor,Date date)
     {
@@ -43,6 +45,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
             TableCleaner.foodSubCleaner();
             submissionDialog = new Dialog();
             submissionDialog.add(new SubmitFood(this,getMealID()));
+            //submissionDialog.addDialogCloseActionListener(TableCleaner.foodSubCleaner(););
             submissionDialog.open();
         });
         buttons.add(addSubmission);
@@ -54,9 +57,17 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
         add(buttons);
 
     }
-    /**
-     * 
-     */
+    public void initializeConnection(){
+        
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://localhost/tracker", "athlete", "cpsc");
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }   
+    
+    }
+    
     private void initGrid() {
         grid = new Grid<FoodSubmission>();
         grid.addColumn(FoodSubmission::getFoodName).setHeader("Food:")
@@ -92,19 +103,35 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
     public void addObject(FoodSubmission foodsub)
     {
         foodsubList.add(foodsub);
-        grid.setItems(foodsub);
+        grid.setItems(foodsubList);
         submissionDialog.close();
     }
 
     @Override
     public void deleteObject(FoodSubmission foodsub)
     {
+        try
+        {
+            PreparedStatement query = con.prepareStatement("DELETE FROM FOOD_is_part_of_meal WHERE User_Food_ID = ? AND Food_Name = ? AND meal_ID = ?;");
+            query.setInt(1, userID);
+            query.setString(2, foodsub.getFoodName());
+            query.setInt(3,mealID);
+            query.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+
+        }
+        foodsubList.remove(foodsub);
+        grid.setItems(foodsubList);
         submissionDialog.close();
     }
     @Override
     public void fetchData()
     {
-
+        foodsubList = meal.getAllSubmissions();
+        grid.setItems(foodsubList);
+        submissionDialog.close();
     }
     @Override
     public int getUserID()

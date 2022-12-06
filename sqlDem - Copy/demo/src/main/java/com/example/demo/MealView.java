@@ -131,6 +131,9 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
             PreparedStatement query1 = con.prepareStatement("DELETE FROM Meal WHERE Meal_ID = ? ;");
             query1.setInt(1,meal.getID());
             query1.executeUpdate();
+            PreparedStatement query2 = con.prepareStatement("DELETE FROM FOOD_IS_PART_OF_MEAL WHERE MEAL_ID = ?");
+            query2.setInt(1,meal.getID());
+            query2.executeUpdate();
         }
         catch(SQLException e)
         {

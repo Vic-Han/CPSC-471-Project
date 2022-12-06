@@ -47,14 +47,15 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
         foodSub = currentsub;
         initConnection();
         setupButtons();
-       
-
-
 
     }
     private void setupMealView()
     {
         chooseFood.setItemLabelGenerator(Food::getName);
+        if(!(foodSub.getFoodName() == ""))
+        {
+            chooseFood.setValue(new Food(userID,foodSub.getFoodName()));
+        }
         mealview_components.add(chooseFood);
 
         newFood.addClickListener(clickEvent -> {
@@ -73,9 +74,12 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
     }
     private void setupQuantityFeild()
     {
+        double d = foodSub.getServings();
+        quantity.setValue(d);
         serving_input.add(quantity);
         String[] possibleUnits = {"grams","ml","servings"};
         units.setItems(possibleUnits);
+        units.setValue("servings");
         serving_input.add(units);
         add(serving_input);
     }
@@ -84,13 +88,14 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
         setupMealView();
         setupQuantityFeild();
         submitButton.addClickListener(clickEvent -> {submit();});
-        deleteButton.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
+        deleteButton.addClickListener(clickEvent -> {parent.deleteObject(foodSub);});
         buttons.add(submitButton,deleteButton);
         add(buttons);
     }
     public SubmitFood(Editor<FoodSubmission> parentEditor, int mealID)
     {
         this(parentEditor,new FoodSubmission(parentEditor.getUserID(), mealID));
+        parent.addObject(foodSub);
     }
     public void initConnection()
     {
@@ -171,6 +176,6 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
         {
 
         }
-        parent.addObject(foodSub);
+        parent.fetchData();
     }
 }

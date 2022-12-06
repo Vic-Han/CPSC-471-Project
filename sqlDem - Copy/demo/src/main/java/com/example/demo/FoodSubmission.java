@@ -109,7 +109,7 @@ public class FoodSubmission {
     }
     public void update(String food_name, float new_servings)
     {
-        try
+       /*  try
         {
             PreparedStatement query1 = con.prepareStatement("SELECT servings FROM food_is_part_of_meal WHERE Food_Name = ? AND User_Food_ID = ? And Meal_ID = ?;");
             query1.setString(1,food_name);
@@ -124,13 +124,14 @@ public class FoodSubmission {
                 query2.setInt(4,mealID);
                 query2.setFloat(1,new_servings + rs.getFloat(1));
             }
-            else{
+            else*/
+            {
                 setFood(food_name);
                 setServings(new_servings);
             }
         
-        }
-        catch(SQLException e)
+        //}
+        //catch(SQLException e)
         {
             //throw new SQLException();
         }
