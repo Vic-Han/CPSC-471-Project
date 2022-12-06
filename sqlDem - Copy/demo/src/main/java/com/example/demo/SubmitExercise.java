@@ -90,6 +90,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     }
     private void clearMetrics(){
         metricLayout.removeAll();
+        //metricLayout = new VerticalLayout();
     }
     private void initTitle(){
         H1 title = new H1("Submit An Exercise:");
@@ -199,6 +200,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     public void addObject(Exercise exercise) {
         exercises.add(exercise);
         exCB.setItems(exercises);   
+        exEditor.close();
     }
 
     @Override
@@ -240,6 +242,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         {
             e.printStackTrace();
         }
+        exEditor.close();
         
     }
 
