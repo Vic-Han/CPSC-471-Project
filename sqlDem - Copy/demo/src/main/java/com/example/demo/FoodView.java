@@ -91,7 +91,11 @@ public class FoodView extends VerticalLayout implements Editor<Food>{
     {
         try
         {
-            PreparedStatement query = con.prepareStatement("DELETE FROM FOOD WHERE User_ID = ? AND Name = ?;");
+            PreparedStatement query2 = con.prepareStatement("DELETE FROM FOOD_IS_PART_OF_MEAL WHERE User_food_ID = ? AND Food_Name = ?;");
+            query2.setInt(1, userID);
+            query2.setString(2, food.getName());
+            query2.executeUpdate();
+            PreparedStatement query = con.prepareStatement("delete from food where user_id = ? and name = ?");
             query.setInt(1, userID);
             query.setString(2, food.getName());
             query.executeUpdate();
