@@ -154,7 +154,9 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             nf.setValue((double) m.getVal());
             nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
             return nf;
-        }).setWidth("70px").setFlexGrow(0);    
+        }).setWidth("70px").setFlexGrow(0);
+        grid.addColumn(MetricPair::getUnit).setHeader("Units:")
+        .setAutoWidth(true).setFlexGrow(1);    
         grid.setItems(metrics);
         gridLayout.add(grid);
         metricLayout.add(gridLayout);
@@ -181,7 +183,9 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             nf.setValue((double) m.getVal());
             nf.addValueChangeListener(ChangeListener ->{m.setVal(nf.getValue().intValue());});
             return nf;
-        }).setWidth("70px").setFlexGrow(0);    
+        }).setWidth("70px").setFlexGrow(0); 
+        grid.addColumn(MetricPair::getUnit).setHeader("Units:")
+        .setAutoWidth(true).setFlexGrow(1);   
         grid.setItems(metrics);
         gridLayout.add(grid);
         metricLayout.add(gridLayout);

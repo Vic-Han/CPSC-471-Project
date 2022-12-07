@@ -34,7 +34,7 @@ public class HomeScreen extends AppLayout{
         this.userID = userID;
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1("Health Tracker.......UserID: "+ userID);
+        H1 title = new H1("Fitness Notepad: Your user ID is "+ userID);
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 

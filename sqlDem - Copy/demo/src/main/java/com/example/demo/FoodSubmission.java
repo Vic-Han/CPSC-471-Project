@@ -117,7 +117,13 @@ public class FoodSubmission {
             query1.setInt(2,userID);
             query1.setInt(3,mealID);
             ResultSet rs = query1.executeQuery();
-            if(rs.next())
+            //if there is a blank one it means that the duplicate entry is from a new submission, not an edit
+            PreparedStatement checkBlank = con.prepareStatement("SELECT * FROM food_is_part_of_meal WHERE Food_Name = ? AND User_Food_ID = ? And Meal_ID = ?;");
+            checkBlank.setString(1,"");
+            checkBlank.setInt(2,userID);
+            checkBlank.setInt(3,mealID);
+            ResultSet blankSet = checkBlank.executeQuery();
+            if(rs.next() && blankSet.next())
             {
                 System.out.println("Confirmed foodsub needs to be stacked.. attempting to stack");
                 PreparedStatement query2 = con.prepareStatement("Update food_is_part_of_meal SET servings = ? WHERE Food_Name = ? AND User_Food_ID = ? And Meal_ID = ?;");

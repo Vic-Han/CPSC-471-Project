@@ -6,8 +6,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 //@Route("metView")
 public class MetricView extends VerticalLayout implements Editor<Metric>{
     private ArrayList<Metric> metricList = new ArrayList<Metric>();
@@ -18,6 +20,7 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     private Button delMet = new Button("Delete Metric");
     private ComboBox<Metric> chooseMet = new ComboBox<Metric>("Choose metric");
     public MetricView(int ID){
+        setAlignItems(FlexComponent.Alignment.CENTER);
         userID = ID;
         setup();
         
@@ -28,13 +31,6 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
     }*/
     private void setup(){
         initConnection();
-        //make new metric button...
-        newMet.addClickListener(clickEvent -> {
-            MetricEditor editor = new MetricEditor(this);
-            editor.open();
-        });
-        add(newMet);
-
         //make combobox...
         try
         {
@@ -54,15 +50,23 @@ public class MetricView extends VerticalLayout implements Editor<Metric>{
         chooseMet.setItems(metricList);
         chooseMet.setItemLabelGenerator(Metric::getName);
         add(chooseMet);
-        
+        HorizontalLayout buttons = new HorizontalLayout();
+        //make new metric button...
+        newMet.addClickListener(clickEvent -> {
+            MetricEditor editor = new MetricEditor(this);
+            editor.open();
+        });
+        buttons.add(newMet);
+
         //make edit exercise button...
         editMet.addClickListener(clickEvent -> {
             MetricEditor editor = new MetricEditor(this,chooseMet.getValue());
             editor.open();
         });
-        add(editMet);
+        buttons.add(editMet);
         delMet.addClickListener(clickEvent -> {deleteObject(chooseMet.getValue());});
-        add(delMet);
+        buttons.add(delMet);
+        add(buttons);
     }
     public void initConnection()
     {

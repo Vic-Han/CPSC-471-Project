@@ -10,6 +10,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 //@Route("ExView")
 public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private ArrayList<Exercise> exList = new ArrayList<Exercise>();
@@ -21,6 +22,7 @@ public class ExerciseView extends VerticalLayout implements Editor<Exercise>{
     private Button delEx = new Button("Delete Exercise");
     ComboBox<Exercise> chooseEx = new ComboBox<Exercise>("Choose Exercise");
     public ExerciseView(int ID){
+        setAlignItems(FlexComponent.Alignment.CENTER);
         initConnection();
         userID = ID;
         initCB();

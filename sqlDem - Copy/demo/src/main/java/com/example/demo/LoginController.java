@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 
 @Route("")
 public class LoginController extends VerticalLayout{
@@ -9,6 +10,7 @@ public class LoginController extends VerticalLayout{
     HomeScreen h;
     Register r;
     public LoginController(){
+        setAlignItems(FlexComponent.Alignment.CENTER);
         l = new Login(this);
         add(l);
    }

@@ -6,8 +6,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 //@Route("foodView")
 public class FoodView extends VerticalLayout implements Editor<Food>{
     private ArrayList<Food> foodList = new ArrayList<Food>();
@@ -19,35 +21,34 @@ public class FoodView extends VerticalLayout implements Editor<Food>{
     ComboBox<Food> chooseFood = new ComboBox<Food>("Choose Food");
     public FoodView(int ID)
     {
+        setAlignItems(FlexComponent.Alignment.CENTER);
         userID = ID;
         setup();
-    }
-    public FoodView()
-    {
-        this(1);
     }
     public void setup()
     {
         initConnection();
-        newFood.addClickListener(clickEvent -> {
-            FoodEditor editor = new FoodEditor(this);
-            editor.open();
-        });
-        add(newFood);
 
         //make combobox...
         fetchData();
         chooseFood.setItemLabelGenerator(Food::getName);
         add(chooseFood);
-        
-        //make edit exercise button...
+        HorizontalLayout buttons = new HorizontalLayout();
+        //make new food button
+        newFood.addClickListener(clickEvent -> {
+            FoodEditor editor = new FoodEditor(this);
+            editor.open();
+        });
+        buttons.add(newFood);
+        //make edit food button...
         editFood.addClickListener(clickEvent -> {
             FoodEditor editor = new FoodEditor(chooseFood.getValue(),this);
             editor.open();
         });
-        add(editFood);
+        buttons.add(editFood);
         delFood.addClickListener(clickEvent -> {deleteObject(chooseFood.getValue());});
-        add(delFood);
+        buttons.add(delFood);
+        add(buttons);
 
 
     }

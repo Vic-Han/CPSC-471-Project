@@ -17,6 +17,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 public class WorkoutView extends VerticalLayout implements Editor<Workout>{
     private int userID;
     private LocalDate date;
@@ -29,6 +30,7 @@ public class WorkoutView extends VerticalLayout implements Editor<Workout>{
     private Connection con;
     public WorkoutView(LocalDate date, int ID)
     {
+        setAlignItems(FlexComponent.Alignment.CENTER);
         this.date = date;
         userID = ID;
         initConnection();
@@ -45,7 +47,7 @@ public class WorkoutView extends VerticalLayout implements Editor<Workout>{
             AccordionPanel tmp = new AccordionPanel("Workout " + workouts.size() + ":", new WorkoutEditor(this,date));
             panelArray.add(tmp);
             accordion.add(tmp);
-            noItems = new Paragraph("");
+            noItems.setVisible(false);;
         });
         add(addWorkout);
     }
@@ -118,7 +120,7 @@ public class WorkoutView extends VerticalLayout implements Editor<Workout>{
             accordion.remove(doomed);
         }
         if (panelArray.size() == 0){
-            noItems = new Paragraph("No workouts on this day");
+            noItems.setVisible(true);
         }
     }
     @Override

@@ -17,6 +17,7 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 
 //import net.bytebuddy.pool.TypePool.Default.LazyTypeDescription.TypeContainment.SelfContained;
 
@@ -25,22 +26,20 @@ public class Dashboard extends VerticalLayout {
     LocalDate selected = LocalDate.now();
     DatePicker datePick;
     HorizontalLayout headerLayout;
-    VerticalLayout mealLayout;
     private int userID;
     MealView meals;
     WorkoutView workouts;
     public Dashboard(int userID){
+        setAlignItems(FlexComponent.Alignment.CENTER);
         this.userID = userID;
         testDay = java.sql.Date.valueOf(LocalDate.now());
-        setupDateLayout();
         setupHeader(selected);
+        setupDateLayout();
         setupWorkoutLayout(selected);
         setupMealLayout(selected);
     }
 
-    public Dashboard(){//testing only
-        this(1);
-    }
+
 
     private void setupDateLayout(){
         HorizontalLayout dateLayout = new HorizontalLayout();
@@ -64,7 +63,7 @@ public class Dashboard extends VerticalLayout {
     }
     private void updateHeader(LocalDate day){
         headerLayout.removeAll();
-        headerLayout.add (new H2("Viewing: "+ day.toString()));
+        headerLayout.add (new Paragraph("Viewing meals and workouts from "+ day.toString()));
     }
     private void setupWorkoutLayout(LocalDate day){
         workouts = new WorkoutView(selected, userID);
@@ -75,9 +74,11 @@ public class Dashboard extends VerticalLayout {
         remove(workouts);
         workouts = new WorkoutView(selected, userID);
         add(workouts);
+
     }
     private void updateMealLayout(LocalDate selected)
     {  
+        System.out.println("Attempting to update meal layout");
         remove(meals);
         meals = new MealView(Date.valueOf(selected),userID);
         add(meals);

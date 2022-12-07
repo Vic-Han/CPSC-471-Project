@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 
 
 //@Route("reg")
@@ -53,6 +54,7 @@ public class Register extends VerticalLayout {
         this.controller = controller;
     }
     public Register(){
+        setAlignItems(FlexComponent.Alignment.CENTER);
         setupTitle();
         setupNameFieldInput();
         date();

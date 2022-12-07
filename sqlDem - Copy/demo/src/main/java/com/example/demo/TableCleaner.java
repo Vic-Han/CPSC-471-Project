@@ -99,6 +99,5 @@ public class TableCleaner {
             e.printStackTrace();
         } 
     }
-    
 
 }

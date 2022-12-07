@@ -21,6 +21,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 
 public class MealView extends VerticalLayout implements Editor<Meal>{
     private ArrayList<Food> foodList = new ArrayList<Food>();
@@ -34,14 +35,10 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     Date locDate;
     public MealView(Date d,int ID)
     {
-
+        setAlignItems(FlexComponent.Alignment.CENTER);
         userID = ID;
         locDate = d;
         setup();
-    }
-    public MealView()
-    {
-        //this(1);
     }
     public void setup()
     {
@@ -49,6 +46,8 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
         initConnection();
         setupAccordion();
         add(mealAccordion);
+        noItems.setVisible(true);
+        add(noItems);
         initButton();
         
     }
@@ -62,8 +61,9 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
             panelArray.add(tmp);
             mealAccordion.add(tmp);
         }
-        if (mealList.isEmpty()){
-            add(noItems);
+        
+        if (!mealList.isEmpty()){
+            noItems.setVisible(false);
         }
         
     }
@@ -73,8 +73,10 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
             AccordionPanel tmp = new AccordionPanel("Meal " + mealList.size() + ":", new MealEditor(this,locDate));
             panelArray.add(tmp);
             mealAccordion.add(tmp);
+
         });
         add(newMeal);
+        noItems.setVisible(false);
     }
    
     public void initConnection()
@@ -96,8 +98,9 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
     {
         try
         {
-            PreparedStatement query = con.prepareStatement("SELECT Meal_ID FROM Meal WHERE USer_ID = ?;");
+            PreparedStatement query = con.prepareStatement("SELECT Meal_ID FROM Meal WHERE USer_ID = ? AND Day = ?;");
             query.setInt(1, userID);
+            query.setDate(2, locDate);
             ResultSet rs = query.executeQuery();
             mealList = new ArrayList<Meal>();
             while(rs.next())
@@ -140,6 +143,9 @@ public class MealView extends VerticalLayout implements Editor<Meal>{
         {
             e.printStackTrace();
 
+        }
+        if (mealList.isEmpty()){
+            noItems.setVisible(true);;
         }
 
         
