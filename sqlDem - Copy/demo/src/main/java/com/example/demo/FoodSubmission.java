@@ -110,7 +110,8 @@ public class FoodSubmission {
     public void update(String food_name, float new_servings)
     {
          try
-        {
+        {   
+            System.out.println("Checking if foodsub needs to be stacked");
             PreparedStatement query1 = con.prepareStatement("SELECT servings FROM food_is_part_of_meal WHERE Food_Name = ? AND User_Food_ID = ? And Meal_ID = ?;");
             query1.setString(1,food_name);
             query1.setInt(2,userID);
@@ -118,11 +119,14 @@ public class FoodSubmission {
             ResultSet rs = query1.executeQuery();
             if(rs.next())
             {
+                System.out.println("Confirmed foodsub needs to be stacked.. attempting to stack");
                 PreparedStatement query2 = con.prepareStatement("Update food_is_part_of_meal SET servings = ? WHERE Food_Name = ? AND User_Food_ID = ? And Meal_ID = ?;");
                 query2.setString(2,food_name);
                 query2.setInt(3,userID);
                 query2.setInt(4,mealID);
                 query2.setFloat(1,new_servings + rs.getFloat(1));
+                query2.executeUpdate();
+                System.out.println("stacking: add old servings: "+ rs.getFloat(1)+"to new servings: "+ new_servings);
             }
             else
             {

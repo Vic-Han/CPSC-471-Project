@@ -153,7 +153,8 @@ public class SubmitFood extends VerticalLayout implements Editor<Food>{
     @Override
     public void addObject(Food food)
     {
-
+        foodList.add(food);
+        chooseFood.setItems(foodList);
     }
     private void submit(){
         try{

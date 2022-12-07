@@ -46,7 +46,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
             TableCleaner.foodSubCleaner();
             submissionDialog = new Dialog();
             submissionDialog.add(new SubmitFood(this,getMealID()));
-            //submissionDialog.addDialogCloseActionListener(TableCleaner.foodSubCleaner(););
+            //submissionDialog.addDialogCloseActionListener(CloseAction -> {TableCleaner.foodSubCleaner();});
             submissionDialog.open();
         });
         buttons.add(addSubmission);
@@ -130,6 +130,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
     @Override
     public void fetchData()
     {
+        TableCleaner.foodSubCleaner();
         foodsubList = meal.getAllSubmissions();
         grid.setItems(foodsubList);
         submissionDialog.close();
