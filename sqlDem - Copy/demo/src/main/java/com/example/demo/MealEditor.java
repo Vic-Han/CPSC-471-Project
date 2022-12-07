@@ -3,6 +3,7 @@ package com.example.demo;
 import java.util.ArrayList;
 import java.sql.*;
 
+import com.vaadin.base.devserver.DevServerOutputTracker.Result;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -75,6 +76,58 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
         .setAutoWidth(true).setFlexGrow(1);
         grid.addColumn(FoodSubmission::getServings).setHeader("Servings:")
         .setAutoWidth(true).setFlexGrow(1);
+        grid.addColumn(f->{
+            try (PreparedStatement q = con.prepareStatement("SELECT Fats FROM food WHERE Name =?;")) {
+                q.setString(1, f.getFoodName());
+                ResultSet rs = q.executeQuery();
+                rs.next();
+                int i = rs.getInt(1);
+                return (i*f.getServings());
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                return 0;
+            }
+        }).setHeader("Fats:")
+        .setAutoWidth(true).setFlexGrow(1);
+        grid.addColumn(f->{
+            try (PreparedStatement q = con.prepareStatement("SELECT Carbs FROM food WHERE Name =?;")) {
+                q.setString(1, f.getFoodName());
+                ResultSet rs = q.executeQuery();
+                rs.next();
+                int i = rs.getInt(1);
+                return (i*f.getServings());
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                return 0;
+            }
+        }).setHeader("Carbs:")
+        .setAutoWidth(true).setFlexGrow(1);
+        grid.addColumn(f->{
+            try (PreparedStatement q = con.prepareStatement("SELECT Protein FROM food WHERE Name =?;")) {
+                q.setString(1, f.getFoodName());
+                ResultSet rs = q.executeQuery();
+                rs.next();
+                int i = rs.getInt(1);
+                return (i*f.getServings());
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                return 0;
+            }
+        }).setHeader("Protein:")
+        .setAutoWidth(true).setFlexGrow(1);
+        grid.addColumn(f->{
+            try (PreparedStatement q = con.prepareStatement("SELECT Calories FROM food WHERE Name =?;")) {
+                q.setString(1, f.getFoodName());
+                ResultSet rs = q.executeQuery();
+                rs.next();
+                int i = rs.getInt(1);
+                return (i*f.getServings());
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                return 0;
+            }
+        }).setHeader("Calories:")
+        .setAutoWidth(true).setFlexGrow(1);
         grid.addComponentColumn(e -> {
             MenuBar menuBar = new MenuBar();
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
@@ -93,6 +146,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
         }).setWidth("70px").setFlexGrow(0);
         foodsubList = meal.getAllSubmissions();
         grid.setItems(foodsubList);
+        grid.setWidth("700px");
 
         add(grid);
     }

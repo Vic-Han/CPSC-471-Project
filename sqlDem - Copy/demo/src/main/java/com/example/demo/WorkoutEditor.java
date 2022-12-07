@@ -90,7 +90,7 @@ public class WorkoutEditor extends VerticalLayout implements Editor<ExerciseSubm
             return menuBar;
         }).setWidth("70px").setFlexGrow(0);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-        grid.setWidth("600px");
+        grid.setWidth("700px");
         add(grid);
     }
     public int getWorkoutID()

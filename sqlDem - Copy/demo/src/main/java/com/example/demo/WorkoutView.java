@@ -55,6 +55,7 @@ public class WorkoutView extends VerticalLayout implements Editor<Workout>{
     private void initAccordion(){
         //build accordion
         accordion = new Accordion();
+        accordion.setWidth("700px");
         for (Workout wo: workouts){
             AccordionPanel tmp = new AccordionPanel("Workout "+workouts.indexOf(wo) +":",  new WorkoutEditor(this, wo));
             panelArray.add(tmp);
