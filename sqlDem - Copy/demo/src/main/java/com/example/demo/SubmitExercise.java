@@ -33,8 +33,10 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     //front end shit..
     ComboBox<Exercise> exCB = new ComboBox<>("Choose exercise:");
     VerticalLayout metricLayout = new VerticalLayout();
+    VerticalLayout gridLayout = new VerticalLayout();
     Grid<MetricPair> grid = new Grid<>(MetricPair.class, false);
     Dialog exEditor;
+    Button submitValues;
 
     //ctors..
     public void initConnection()
@@ -73,7 +75,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         initExList();
         initMetList();//initializes with data from submission
     }
-    public SubmitExercise(){//default ctor testing only
+    /*public SubmitExercise(){//default ctor testing only
         initConnection();
         metrics = new ArrayList<MetricPair>();
         exSubmission = new ExerciseSubmission(this.parent.getWorkoutID(),userID);
@@ -82,14 +84,18 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
         initTitle();
         initExList();
  
-    }
+    }*/
     //methods..
     private void rewriteMetrics(){
         exSubmission.setMetricList(metrics);
         parent.fetchData();
     }
     private void clearMetrics(){
-        metricLayout.removeAll();
+        metrics = new ArrayList<MetricPair>();
+        gridLayout.remove(grid);
+        grid.setItems(metrics);
+        //gridLayout.add(grid);
+        //metricLayout.removeAll();
         //metricLayout = new VerticalLayout();
     }
     private void initTitle(){
@@ -132,9 +138,9 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
     }
     private void initMetList(Exercise ex){//initialize with selected exercise
         System.out.println("opening met list");
-        clearMetrics();
         //init metrics with 0 values
-        
+        metrics = new ArrayList<MetricPair>();
+        grid.removeAllColumns(); 
         for (Metric m : ex.getMetrics()){
             MetricPair mp = new MetricPair(m, 0);
             metrics.add(mp);
@@ -150,15 +156,18 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             return nf;
         }).setWidth("70px").setFlexGrow(0);    
         grid.setItems(metrics);
-        metricLayout.add(grid);
-
-        Button submitValues = new Button("Submit Values");
-        submitValues.addClickListener(ClickListener -> {
-            setName();
-            rewriteMetrics();
-            
-        });
-        metricLayout.add(submitValues);
+        gridLayout.add(grid);
+        metricLayout.add(gridLayout);
+        
+        if (submitValues == null){
+            submitValues = new Button("Submit Values");
+            submitValues.addClickListener(ClickListener -> {
+                setName();
+                rewriteMetrics();   
+            });
+            metricLayout.add(submitValues);
+        }
+        
     
         
 
@@ -174,14 +183,17 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
             return nf;
         }).setWidth("70px").setFlexGrow(0);    
         grid.setItems(metrics);
-        metricLayout.add(grid);
+        gridLayout.add(grid);
+        metricLayout.add(gridLayout);
 
-        Button submitValues = new Button("Submit Values");
-        submitValues.addClickListener(ClickListener -> {
-            setName();
-            rewriteMetrics();
-        });
-        metricLayout.add(submitValues);
+        if (submitValues == null){
+            submitValues = new Button("Submit Values");
+            submitValues.addClickListener(ClickListener -> {
+                setName();
+                rewriteMetrics();   
+            });
+            metricLayout.add(submitValues);
+        }
     }
     private void setName() {
         try{
@@ -248,6 +260,7 @@ public class SubmitExercise extends VerticalLayout implements Editor<Exercise> {
 
     @Override
     public void fetchData() {
+        clearMetrics();
         exEditor.close();
     }
     private void loadExercises(){

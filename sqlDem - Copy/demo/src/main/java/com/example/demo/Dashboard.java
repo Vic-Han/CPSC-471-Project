@@ -72,11 +72,15 @@ public class Dashboard extends VerticalLayout {
     }
     private void updateWorkoutLayout(LocalDate selected)
     {
+        remove(workouts);
         workouts = new WorkoutView(selected, userID);
+        add(workouts);
     }
     private void updateMealLayout(LocalDate selected)
-    {
+    {  
+        remove(meals);
         meals = new MealView(Date.valueOf(selected),userID);
+        add(meals);
     }/* 
     private void updateWorkoutLayout(LocalDate day){
         workoutLayout.removeAll();

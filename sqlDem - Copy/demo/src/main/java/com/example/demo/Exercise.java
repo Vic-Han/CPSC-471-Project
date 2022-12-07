@@ -57,7 +57,7 @@ public class Exercise {
         }
         try
         {
-            PreparedStatement query2 = con.prepareStatement("UPDATE SUBMISSION SET Exercise_Name =? WHERE Exercise_Name =  ? ;");
+            PreparedStatement query2 = con.prepareStatement("UPDATE exercise_submission SET Exercise_Name =? WHERE Exercise_Name =  ? ;");
             query2.setString(1,name);
             query2.setString(2,exName);
             query2.executeUpdate();

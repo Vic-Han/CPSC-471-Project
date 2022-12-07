@@ -124,7 +124,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
         }
         foodsubList.remove(foodsub);
         grid.setItems(foodsubList);
-        submissionDialog.close();
+        //submissionDialog.close();
     }
     @Override
     public void fetchData()
