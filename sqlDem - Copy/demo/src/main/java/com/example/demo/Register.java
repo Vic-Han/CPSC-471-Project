@@ -204,13 +204,18 @@ public class Register extends VerticalLayout {
     }
 
     protected void verifyDay(){
-        //check if today exists in database.  If not, insert day
+        //check if today exists in database.  If so, update weight. If not, insert day
         try{
             PreparedStatement query1 = con.prepareStatement("SELECT * FROM DAY WHERE Date = ? AND Day_owner_ID = ?;");
             query1.setDate(1, today);
             query1.setInt(2, userID);
             ResultSet rs = query1.executeQuery();
             if (rs.next()){
+                PreparedStatement query2 = con.prepareStatement("UPDATE DAY SET Weight = ? WHERE DATE = ? AND Day_owner_ID = ?;");
+                query2.setDate(2, today);
+                query2.setInt(3, userID);
+                query2.setInt(1, weight.getValue().intValue());
+                query2.executeUpdate();
                 return;
             }
         }

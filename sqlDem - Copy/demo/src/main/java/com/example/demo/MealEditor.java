@@ -27,6 +27,7 @@ public class MealEditor extends VerticalLayout implements Editor<FoodSubmission>
     public MealEditor(Editor<Meal> parentEditor,Meal inputMeal)
     {
         userID = parentEditor.getUserID();
+        mealID = inputMeal.getID();
         meal = inputMeal;
         parent = parentEditor;
         initButtons();

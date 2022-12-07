@@ -20,6 +20,7 @@ public class Food{
   }
   public Food(int ID)
   {
+        TableCleaner.foodCleaner();
         foodName = "";
         UserID = ID;
         initConnection();
@@ -36,6 +37,7 @@ public class Food{
   }
   public Food(int ID, String name)
   {
+        TableCleaner.foodCleaner();    
         foodName = name;
         UserID = ID;
         initConnection();
